@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layouts.index');
+});
+
+Route::get('sidebar', function() {
+    return view('layouts.sidebar');
 });
