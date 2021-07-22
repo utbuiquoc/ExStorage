@@ -14,7 +14,11 @@
 
 		<div class="wrapper-in">
 			@include('layouts.navbar')
+
+			@yield('content')
 		</div>
 	</div>
+
+	<script type="text/javascript" src="js/sidebar/script.js"></script>
 </body>
 </html>

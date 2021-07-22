@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('layouts.index');
+    return view('home.home-page');
 });
 
 Route::get('sidebar', function() {

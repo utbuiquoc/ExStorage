@@ -1,5 +1,5 @@
 .sidebar {
-	/*position: fixed;*/
+	position: fixed;
 	flex-direction: column;
 	height: 100vh;
 	justify-content: space-between;
@@ -43,4 +43,69 @@
 	background-color: #000;
 	border-radius: 0 12px 12px 0;
 	box-shadow: 0px 0px 8px 0px #8392a6;
+}
+
+/*Phần chữ bổ sung*/
+
+.file-btn--description {
+	color: #fff;
+	width: 100px;
+	display: none;
+}
+
+.sidebar-extended {
+	width: 150px;
+	animation: extendSidebar 0.5s ease;
+}
+
+.sidebar-inExtended {
+	width: 50px;
+	animation: inExtendSidebar 0.5s ease;
+}
+
+.extend-for-sidebar {
+	width: calc(100% - 150px);
+	margin-left: 150px;
+	animation: extendForSidebar 0.5s ease;
+}
+
+.inExtend-for-sidebar {
+	width: calc(100% - 50px);
+	margin-left: 50px;
+	animation: inExtendForSidebar 0.5s ease;
+}
+
+@-webkit-keyframes extendSidebar {
+	from {
+		width: 50px;
+	} to {
+		width: 150px;
+	}
+}
+
+@-webkit-keyframes inExtendSidebar {
+	from {
+		width: 150px;
+	} to {
+		width: 50px;
+	}
+}
+
+@-webkit-keyframes extendForSidebar {
+	from {
+		width: calc(100% - 50px);
+		margin-left: 50px;
+	} to {
+		width: calc(100% - 150px);
+		margin-left: 150px;
+	}
+}
+@-webkit-keyframes inExtendForSidebar {
+	from {
+		width: calc(100% - 150px);
+		margin-left: 150px;
+	} to {
+		width: calc(100% - 50px);
+		margin-left: 50px;
+	}
 }

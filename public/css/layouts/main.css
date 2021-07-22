@@ -4,5 +4,8 @@
 }
 
 .wrapper-in {
-	width: 100%;
+	width: calc(100% - 50px);
+	background-color: #eee;
+	margin-left: 50px;
+	min-height: 100vh;
 }
