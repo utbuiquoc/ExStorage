@@ -20,12 +20,14 @@
 	<div class="col col-md-5 d-flex login-place">
 		<form action="" method="POST" class="form-user d-flex card p-3">
 			<div class="p-2">
-				<h3 class="text-center">Đăng nhập</h3>
+				<h3 class="text-center">Đăng ký</h3>
 
 				<div class="login-form">
-					<input type="text" name="username" class="form-control mt-3" placeholder="Tên đăng nhập">
+					<input type="text" name="username" class="form-control mt-3" placeholder="Nhập tên đăng nhập">
+					<input type="text" name="email" class="form-control mt-3" placeholder="Nhập email">
 
-					<input type="text" name="username" class="form-control mt-3" placeholder="Mật khẩu">
+					<input type="text" name="username" class="form-control mt-3" placeholder="Nhập mật khẩu">
+					<input type="text" name="username" class="form-control mt-2" placeholder="Nhập lại mật khẩu">
 				</div>
 
 				<input type="submit" class="btn btn-outline-primary form-control mt-4" value="Đăng nhập">
@@ -33,8 +35,9 @@
 
 			<hr>
 
-			<div class="redirect-register d-flex justify-content-center">
-				<a href="sign-up" class="btn btn-outline-success">Tạo tài khoản mới</a>
+			<div class="redirect-register d-flex justify-content-center flex-column">
+				<h3 class="text-center">Đã có tài khoản ?</h3>
+				<a href="login" class="btn btn-outline-success">Đăng ký</a>
 			</div>
 
 		</form>

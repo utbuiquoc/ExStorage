@@ -61,3 +61,31 @@
 	font-size: 11.4px;
 	opacity: 0.5;
 }
+
+/*Phần kéo ra dãn vào của sidebar cho navbar*/
+
+.navbar-extends {
+	width: calc(100% - 150px);	
+	animation: extendSidebarForNavbar 0.5s ease;
+}
+
+.navbar-inExtends {
+	width: calc(100% - 50px);
+	animation: inExtendSidebarForNavbar 0.5s ease;
+}
+
+@-webkit-keyframes extendSidebarForNavbar {
+	from {
+		width: calc(100% - 50px);
+	} to {
+		width: calc(100% - 150px);
+	}
+}
+
+@-webkit-keyframes inExtendSidebarForNavbar {
+	from {
+		width: calc(100% - 150px);
+	} to {
+		width: calc(100% - 50px);
+	}
+}

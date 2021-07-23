@@ -12,9 +12,17 @@
 */
 
 Route::get('/', function () {
-    return view('home.home-page');
+    return view('home.home-page', ['title' => 'Trang chủ']);
 });
 
-Route::get('sidebar', function() {
-    return view('layouts.sidebar');
+Route::get('login', function() {
+    return view('user.login', ['title' => 'Đăng nhập']);
+});
+
+Route::get('sign-up', function() {
+    return view('user.signup', ['title' => 'Đăng ký']);
+});
+
+Route::get('library', function() {
+    return view('user-function.library', ['title' => 'Thư viện']);
 });

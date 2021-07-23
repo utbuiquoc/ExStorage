@@ -1,6 +1,11 @@
 @extends('layouts.index')
 
+@section('itemSidebarSelected')
+<input type="hidden" id="itemSidebar-Selected" value="home-btn--unlogined">
+@endsection
 @section('content')
+	@include('navbar.home-navbar')
+
 	<link rel="stylesheet" type="text/css" href="css/home/style.css">
 
 	<div class="container-fluid home-page">

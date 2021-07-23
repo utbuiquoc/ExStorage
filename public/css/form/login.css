@@ -1,0 +1,14 @@
+.form-user {
+	width: 400px;
+	margin: auto 0;
+}
+
+.description-text {
+	margin: 120px auto auto auto;
+	padding: 80px 50px;
+}
+
+.description-text__title {
+	color: #5294e2;
+	margin-left: 10px;
+}
