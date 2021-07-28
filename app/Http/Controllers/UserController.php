@@ -37,48 +37,43 @@ class UserController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = md5($request->password);
+        $user->password = bcrypt($request->password);
         $user->save();
 
         return redirect('sign-in')->with('thongbao', 'Đăng kí thành công');
     }
 
     public function postSignin(Request $request) {
-        // $this->validate($request, [
-        //     'email'         => 'required|email',
-        //     'password'      => 'required|min:6|max:32'
-        // ], [
-        //     'email.required'         => 'Bạn chưa nhập email',
-        //     'email.email'            => 'Bạn chưa nhập đúng định dạng email',
-        //     'password.required'      => 'Bạn chưa nhập mật khẩu',
-        //     'password.min'           => 'Mật khẩu phải có ít nhất 6 ký tự',
-        //     'password.max'           => 'Mật khẩu phải có tối đa nhất 32 ký tự'
-        // ]);
+        $this->validate($request, [
+            'email'         => 'required|email',
+            'password'      => 'required|min:6|max:32'
+        ], [
+            'email.required'         => 'Bạn chưa nhập email',
+            'email.email'            => 'Bạn chưa nhập đúng định dạng email',
+            'password.required'      => 'Bạn chưa nhập mật khẩu',
+            'password.min'           => 'Mật khẩu phải có ít nhất 6 ký tự',
+            'password.max'           => 'Mật khẩu phải có tối đa nhất 32 ký tự'
+        ]);
 
         $email = $request->email;
-        $password = md5($request->password);
-
-        // $data = User::where('email', $email)->where('password', $password)->get();
-        
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-
+        $password = $request->password;
         $data = array(
-            'email' => 'nguyenvanb@gmail.com',
-            'password' => '123456'
+            'email' => $email,
+            'password' => $password
         );
+        if (Auth::attempt($data)) {
+            return redirect('/');
+        } else {
+            return redirect('sign-in')->with('thongbao', 'Đăng nhập thất bại');
+        }
+    }
 
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
+    public function logout() {
+        Auth::logout();
+        return redirect('sign-in');
+    }
 
-        var_dump(Auth::attempt($data));
-
-        // if (Auth::attempt($data)) {
-        //     echo 'Thanh cong';
-        // } else {
-        //     return redirect('sign-in')->with('thongbao', 'Đăng nhập thất bại');
-        // }
+    public function test() {
+        var_dump(Auth::check());
     }
 }

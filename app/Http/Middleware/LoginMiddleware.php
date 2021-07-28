@@ -20,7 +20,7 @@ class LoginMiddleware
         if (Auth::check()) {
             return $next($request);
         } else {
-            return redirect('sign-in');
+            return redirect('sign-in')->with('thongbao', 'Bạn chưa đăng nhập');
         }
     }
 }

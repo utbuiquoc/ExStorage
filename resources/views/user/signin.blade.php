@@ -38,7 +38,7 @@
                 @endif
 
                 @if (session('thongbao'))
-                    <div class="alert alert-success mt-2">
+                    <div class="alert alert-danger mt-2">
                         {{session('thongbao')}}
                     </div>
                 @endif
