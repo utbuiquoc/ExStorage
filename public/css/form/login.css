@@ -4,8 +4,9 @@
 }
 
 .description-text {
-	margin: 120px auto auto auto;
-	padding: 80px 50px;
+	margin: auto;
+	padding: 0 50px;
+	padding-bottom: 100px;
 }
 
 .description-text__title {

@@ -18,15 +18,30 @@
 	</div>
 
 	<div class="col col-md-5 d-flex login-place">
-		<form action="" method="POST" class="form-user d-flex card p-3">
+		<form action="sign-in" method="POST" class="form-user d-flex card p-3">
+			{{csrf_field()}}
 			<div class="p-2">
 				<h3 class="text-center">Đăng nhập</h3>
 
 				<div class="login-form">
-					<input type="text" name="username" class="form-control mt-3" placeholder="Tên đăng nhập">
+					<input type="text" name="email" class="form-control mt-3" placeholder="Tên đăng nhập">
 
-					<input type="text" name="username" class="form-control mt-3" placeholder="Mật khẩu">
+					<input type="password" name="password" class="form-control mt-3" placeholder="Mật khẩu">
 				</div>
+
+				@if (count($errors) > 0)
+                    <div class="alert alert-danger mt-2">
+                        @foreach ($errors->all() as $err)
+                            {{$err}}<br/>
+                        @endforeach
+                    </div>
+                @endif
+
+                @if (session('thongbao'))
+                    <div class="alert alert-success mt-2">
+                        {{session('thongbao')}}
+                    </div>
+                @endif
 
 				<input type="submit" class="btn btn-outline-primary form-control mt-4" value="Đăng nhập">
 			</div>

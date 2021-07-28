@@ -13,16 +13,24 @@
 
 Route::get('/', function () {
     return view('home.home-page', ['title' => 'Trang chủ']);
-});
-
-Route::get('login', function() {
-    return view('user.login', ['title' => 'Đăng nhập']);
-});
-
-Route::get('sign-up', function() {
-    return view('user.signup', ['title' => 'Đăng ký']);
-});
+})->middleware('login');
 
 Route::get('library', function() {
     return view('user-function.library', ['title' => 'Thư viện']);
 });
+
+Route::get('viewer', function() {
+    return view('viewer');
+});
+
+
+Route::get('sign-in', function() {
+    return view('user.signin', ['title' => 'Đăng nhập']);
+});
+Route::get('sign-up', function() {
+    return view('user.signup', ['title' => 'Đăng ký']);
+});
+Route::post('sign-up', 'UserController@postSignup');
+Route::post('sign-in', 'UserController@postSignin')->name('signin');
+
+Route::get('test', 'UserController@postSignin');

@@ -1,0 +1,174 @@
+body {
+	overflow: hidden;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.type-selection {
+	display: flex;
+}
+
+.type-selection__icon {
+	font-size: 24px;
+	padding: 0 16px 0 8px;
+}
+
+.selection {
+	height: 100%;
+}
+
+.minisize {
+	cursor: pointer;
+}
+
+.card-library {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid rgba(0,0,0,.125);
+}
+
+.select-type {
+	border-radius: 0;
+}
+.select-type:focus {
+	box-shadow: none;
+}
+
+/*Item - File*/
+
+.file-item {
+	flex-direction: row;
+}
+
+.file-type {
+	flex: 1;
+}
+
+.file-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	flex: 5;
+	padding: 0 7px;
+}
+
+.file-info__name {
+	margin: 0;
+	font-size: 14px;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.file-info__time {
+	font-size: 10px;
+	margin: 0;
+}
+
+.file-info__type {
+	font-size: 11px;
+	margin: 0;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.file-info__extends {
+	align-items: flex-end;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+.file-share {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+}
+
+.file-share i {
+	font-size: 18px;
+	display: none;
+}
+
+.file-item:hover i {
+	display: block;
+	animation: showBtn 0.3s ease;
+}
+
+.list-file {
+	overflow-y: auto;
+	height: calc(100vh - 93px);
+}
+
+.showSidebar {
+	animation: showSidebar 1s ease;
+}
+
+.hideSidebar {
+	width: 0%;
+	animation: hideSidebar 1s ease;
+}
+
+.extendPreviewDocs {
+	width: 100%;
+	animation: extendPreviewDocs 1s ease;
+}
+
+.minisizePreviewDocs {
+	width: 66.66666667%;
+	animation: minisizePreviewDocs 1s ease;
+}
+
+@keyframes showBtn {
+	from {
+		opacity: 0.5;
+	} to {
+		opacity: 1;
+	}
+}
+
+@keyframes hideSidebar {
+	from {
+		width: 33.33333333%;
+	} to {
+		width: 0%;
+	}
+}
+
+@keyframes extendPreviewDocs {
+	from {
+		width: 66.66666667%;
+	} to {
+		width: 100%;
+	}
+}
+
+@keyframes minisizePreviewDocs {
+	from {
+		width: 100%;
+	} to {
+		width: 66.66666667%;
+	}
+}
+
+@keyframes showSidebar {
+	from {
+		width: 0%;
+	} to {
+		width: 33.33333333%;
+	}
+}

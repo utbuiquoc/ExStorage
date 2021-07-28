@@ -53,6 +53,7 @@
 .user__name {
 	margin: 0;
 	padding: 0;
+	font-size: 16px;
 }
 
 .user__id {
@@ -88,4 +89,8 @@
 	} to {
 		width: calc(100% - 50px);
 	}
+}
+
+.extendsize {
+	display: none;
 }

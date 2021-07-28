@@ -1,3 +1,8 @@
+* {
+	scrollbar-color: grey lightgrey;
+	scrollbar-width: thin;
+}
+
 .wrapper {
 	width: 100%;
 	display: flex;
@@ -9,4 +14,19 @@
 	margin-left: 50px;
 	min-height: 100vh;
 	display: flex;
+}
+
+.wrapper-on {
+	width: 100%;
+	min-height: calc(100vh - 55px);
+	margin-top: 55px;
+	display: flex;
+}
+::-webkit-scrollbar-thumb {
+	background-color: grey;
+	border-radius: 3px;
+}
+::-webkit-scrollbar {
+	width: 4px;
+	background-color: lightgrey;
 }
