@@ -8,19 +8,33 @@
 	@include('navbar.home-navbar')
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/library.css">
-	<link rel="stylesheet" href="pdfjs/web/viewer.css">
 
 	<div class="wrapper-on">
 		<div class="col col-md-4 d-flex flex-column sidebar-menu">
 			<div class="type-selection flex-row">
 				<div class="file-type-icon card-library">
-					<i class="bi bi-files-alt type-selection__icon"></i>
+					<i class="bi bi-gear-wide-connected type-selection__icon"></i>
 				</div>
-				<select class="form-select select-type">
-					<option selected>Thể loại: Tài liệu dạy học</option>
-					<option value="1">One</option>
-					<option value="2">Two</option>
-					<option value="3">Three</option>
+
+				<select class="form-select select-type" id="selection" onchange="genderChanged(this)">
+					{{-- Get list of type (category) --}}
+					<?php 
+						$type = new App\Dir();
+						//Set dữ liệu cho $typeDir = type đầu tiên
+						if (!isset($typeDir)) {
+							$typeDir = $type->where('owner', Auth::user()->name)->take(1)->get();
+							$typeDir = $typeDir[0]->dir;			
+						}
+						$typeItem = $type->where('owner', Auth::user()->name)->where('parent', 'root')->get();
+						foreach ($typeItem as $key => $value) {
+							if ($typeDir == $value->dir) {
+								$select = 'selected';
+							} else {
+								$select = '';
+							}
+							echo "<option ". $select ." value='$value->dir'>Loại: " . $value->dir . "</option>";
+						}
+					?>
 				</select>
 
 				<div class="minisize card-library">
@@ -28,335 +42,81 @@
 				</div>
 			</div>
 			
-			<div class="selection d-flex">
+			<div class="selection d-flex flex-column">
 				<div class="col col-md-12 card-library p-1 list-file">
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
 
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6Giáo án ngữ văn 6Giáo án ngữ văn 6Giáo án ngữ văn 6Giáo án ngữ văn 6Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
+				<?php 
+					$folder = new App\Dir;
+					$item = $folder->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
+					foreach ($item as $key => $value) {
+						$arrayP = explode('/', $value->dir);
+						if (count($arrayP) === 2) { ?>
+							<div class="folder-item d-flex card mt-1">
+								<input type="hidden" class="folder-address" value="<?php echo $arrayP[1]; ?>">
+								<div class="file-type">
+									<img src="img/docs-icon/folder-icon.png" alt="">
+								</div>
+
+								<div class="file-info">
+									<h6 class="file-info__name"><?php echo $arrayP[1]; ?></h6>
+									<div class="file-info__extends d-flex">
+										<p class="file-info__time"><?php echo $value->created_at; ?></p>
+										<p class="file-info__type">Folder</p>
+									</div>
+								</div>
+
+								<div class="file-share">
+									<i class="bi bi-three-dots-vertical"></i>
+								</div>
 							</div>
-						</div>
+							<?php
+						}
+					}
+				?>
 
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
+				{{-- Get data file --}}
+				<?php 
+					$file = new App\File;
+					$item = $file->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
+					if (count($item) > 0) foreach ($item as $key => $value) {
+				?>
 
 					<div class="file-item d-flex card mt-1">
+						<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
+						<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
 						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
+							<img src="img/docs-icon/<?php 
+							if ($value->type == 'docx') { echo 'docx-icon.png'; }
+							else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
+							else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+							 ?>" alt="">
 						</div>
 
 						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
+							<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
 							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
+								<p class="file-info__time"><?php echo $value->created_at; ?></p>
+								<p class="file-info__type">.<?php echo $value->type ?> file</p>
 							</div>
 						</div>
 
 						<div class="file-share">
-							<i class="bi bi-share"></i>
+							<i class="bi bi-three-dots-vertical"></i>
 						</div>
 					</div>
 
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item d-flex card mt-1">
-						<div class="file-type">
-							<img src="img/docs-icon/docx-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Giáo án ngữ văn 6</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">07/07/2021</p>
-								<p class="file-info__type">.docx file</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
-
-					<div class="file-item folder d-flex card mt-1">
-						<div class="file-type folder-img">
-							<img src="img/docs-icon/folder-icon.png" alt="">
-						</div>
-
-						<div class="file-info">
-							<h6 class="file-info__name">Đề cương cho học sinh</h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time">08/07/2021</p>
-								<p class="file-info__type">Folder</p>
-							</div>
-						</div>
-
-						<div class="file-share">
-							<i class="bi bi-share"></i>
-						</div>
-					</div>
+				<?php } ?>
 				</div>
 
-				<div class="{{-- col col-md-6 --}} card-library p-1 list-file">
-				
+				<div class="card-library d-flex option">
+					<div class="btn-group d-flex">
+						<div class="add-option col col-sm-6">
+							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-plus-lg"></i></button>
+						</div>
+						<div class="setting-option col col-sm-6">
+							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-gear-fill"></i></button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -365,5 +125,186 @@
 			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 
+		<div class="modal-library" style="
+		<?php
+			if (count($errors) > 0 || session('thongbao')) {
+				echo 'display: flex !important;';
+			} else {
+				echo 'display: none !important;';
+			}
+		?>
+		">
+			<div class="d-flex create-new-type card p-3" style='display: none !important;'>
+				<ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+				    <li class="nav-item" role="presentation">
+				    	<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#createType" type="button" role="tab" aria-controls="home" aria-selected="true">Tạo loại mới</button>
+				    </li>
+				    <li class="nav-item" role="presentation">
+				    	<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#removeType" type="button" role="tab" aria-controls="profile" aria-selected="false">Xóa loại</button>
+				    </li>
+				</ul>
+				<hr class="bar" style="color: black">
+
+				<div class="tab-content" id="myTabContent">
+
+				    <div class="tab-pane fade show active" id="createType" role="tabpanel" aria-labelledby="home-tab">
+				    	{{-- Upload File mới --}}
+				    	<form action="createType" method="POST" class="d-flex flex-column">
+							{{csrf_field()}}
+							<div class="input-group type-input mt-3">
+								<label class="input-group-text">Tên loại mới</label>
+								<input type="text" class="form-control" name="newType">
+							</div>
+
+							<div class="form-check mt-2">
+								<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+								<label class="form-check-label">Cho phép chia sẻ</label>
+							</div>
+
+							<div class="form-submit d-flex mt-2">
+								<div class="col col-md-6 pe-2">
+									<input type="submit" class="btn btn-outline-primary form-control" value="Tạo mới">
+								</div>
+								<div class="col col-md-6 ps-2">
+									<input type="button" class="btn btn-outline-danger form-control cancel-btn" value="Hủy bỏ">
+								</div>
+							</div>
+						</form>
+				    </div>
+
+				    <div class="tab-pane fade" id="removeType" role="tabpanel" aria-labelledby="profile-tab">
+					    {{-- Tạo thư mục mới --}}
+					    <form action="removeType" method="POST" class="d-flex flex-column">
+							{{csrf_field()}}
+							<div class="type-input mt-3">
+								<label class="form-label">Tên loại</label>
+								<select class="form-select mb-1" name="dirToRemove" id="selection">
+									{{-- Get list of type (category) --}}
+									<?php 
+										$type = new App\Dir();
+										$typeItem = $type->where('owner', Auth::user()->name)->get();
+										foreach ($typeItem as $key => $value) {
+											$arrayP = explode('/', $value->dir);
+											if (count($arrayP) === 2) {
+												echo "<option selected value='$value->dir'>Loại: " . $value->dir . "</option>";
+											}
+										}
+									?>
+								</select>
+							</div>
+
+							<div class="form-submit d-flex mt-2">
+								<div class="col col-md-6 pe-2">
+									<input type="submit" class="btn btn-outline-primary form-control" value="Xóa">
+								</div>
+								<div class="col col-md-6 ps-2">
+									<input type="button" class="btn btn-outline-danger form-control cancel-btn" value="Hủy bỏ">
+								</div>
+							</div>
+						</form>
+				    </div>
+				</div>
+			</div>
+
+			<div class="d-flex add-modal card p-3" style='display: none !important;'>
+				<ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+				    <li class="nav-item" role="presentation">
+				    	<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#uploadFile" type="button" role="tab" aria-controls="home" aria-selected="true">Thêm tệp tin</button>
+				    </li>
+				    <li class="nav-item" role="presentation">
+				    	<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#createFolder" type="button" role="tab" aria-controls="profile" aria-selected="false">Thêm thư mục</button>
+				    </li>
+				</ul>
+				<hr class="bar" style="color: black">
+
+				<div class="tab-content" id="myTabContent">
+
+				    <div class="tab-pane fade show active" id="uploadFile" role="tabpanel" aria-labelledby="home-tab">
+				    	{{-- Upload File mới --}}
+				    	<form action="uploadFile" method="POST" enctype="multipart/form-data">
+				    		{{csrf_field()}}
+				    		<input type="hidden" name="fileDir" class='selectValue' name='currentDir'>
+				    		<div class="input-group type-input mt-3">
+								<input type="file" class="form-control" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx">
+							</div>
+
+							<div class="form-check mt-2">
+								<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+								<label class="form-check-label">Cho phép chia sẻ</label>
+							</div>
+
+							<div class="form-submit d-flex mt-2">
+								<div class="col col-md-6 pe-2">
+									<input type="submit" class="btn btn-outline-primary form-control" value="Tạo mới">
+								</div>
+								<div class="col col-md-6 ps-2">
+									<input type="button" class="btn btn-outline-danger form-control cancel-add-btn" value="Hủy bỏ">
+								</div>
+							</div>
+				    	</form>
+				    </div>
+
+				    <div class="tab-pane fade" id="createFolder" role="tabpanel" aria-labelledby="profile-tab">
+					    {{-- Tạo thư mục mới --}}
+					    <form action="createFolder" method="POST">
+					    	{{csrf_field()}}
+				    		<input type="hidden" class='selectValue' name='currentDir'>
+					    	<div class="input-group type-input mt-3">
+								<input type="text" class="form-control" name="newFolder" placeholder="Nhập tên thư mục">
+							</div>
+
+							<div class="form-check mt-2">
+								<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+								<label class="form-check-label">Cho phép chia sẻ</label>
+							</div>
+
+							<div class="form-submit d-flex mt-2">
+								<div class="col col-md-6 pe-2">
+									<input type="submit" class="btn btn-outline-primary form-control" value="Tạo mới">
+								</div>
+								<div class="col col-md-6 ps-2">
+									<input type="button" class="btn btn-outline-danger form-control cancel-add-btn" value="Hủy bỏ">
+								</div>
+							</div>
+					    </form>
+				    </div>
+
+				    
+				</div>
+			</div>
+
+			<div class="d-flex error-modal card p-3" style="
+			<?php
+				if (count($errors) > 0 || session('thongbao')) {
+					echo 'display: flex !important;';
+				} else {
+					echo 'display: none !important;';
+				}
+			?>
+			">
+				<div class="d-flex justify-content-between">
+					<h4>Thông báo</h4>
+					<i class="bi bi-x-lg cancel-icon"></i>
+				</div>
+				<hr class="bar" style="color: black"/>
+				<div class="create-form">
+					@if (count($errors) > 0)
+	                    <div class="alert alert-danger mt-2">
+	                        @foreach ($errors->all() as $err)
+	                            {{$err}}<br/>
+	                        @endforeach
+	                    </div>
+	                @endif
+
+	                @if (session('thongbao'))
+	                    <div class="alert alert-success mt-2">
+	                        {{session('thongbao')}}
+	                    </div>
+	                @endif
+				</div>
+			</div>
+		</div>
+
 	<script type="text/javascript" src="js/user-function/library.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @endsection

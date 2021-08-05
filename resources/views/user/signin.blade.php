@@ -24,7 +24,7 @@
 				<h3 class="text-center">Đăng nhập</h3>
 
 				<div class="login-form">
-					<input type="text" name="email" class="form-control mt-3" placeholder="Tên đăng nhập">
+					<input type="email" name="email" class="form-control mt-3" placeholder="Nhập email tài khoản">
 
 					<input type="password" name="password" class="form-control mt-3" placeholder="Mật khẩu">
 				</div>

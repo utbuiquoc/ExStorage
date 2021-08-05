@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\File;
+use App\Dir;
 
 class UserController extends Controller
 {
@@ -39,6 +41,12 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
+
+        $dir = new dir;
+        $dir->parent = 'root';
+        $dir->owner = $request->name;
+        $dir->viewer = $request->name;
+        $dir->save();
 
         return redirect('sign-in')->with('thongbao', 'Đăng kí thành công');
     }
@@ -74,6 +82,12 @@ class UserController extends Controller
     }
 
     public function test() {
-        var_dump(Auth::check());
+        $file = new File;
+        //$item = $file->all();
+        $item = $file->orderBy('id', 'desc')->take(5)->get();
+
+        echo "<pre>";
+        print_r($item);
+        echo "</pre>";
     }
 }

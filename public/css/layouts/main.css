@@ -21,6 +21,7 @@
 	min-height: calc(100vh - 55px);
 	margin-top: 55px;
 	display: flex;
+	position: relative;
 }
 ::-webkit-scrollbar-thumb {
 	background-color: grey;

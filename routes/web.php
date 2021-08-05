@@ -15,10 +15,16 @@ Route::group(['middleware' => 'login'], function() {
     Route::get('/', function () {
         return view('home.home-page', ['title' => 'Trang chủ']);
     })->middleware('login');
+    Route::post('/', 'FileController@upload');
 
     Route::get('library', function() {
         return view('user-function.library', ['title' => 'Thư viện']);
     });
+    Route::get('library/{type?}', 'FileController@typeData');
+    Route::post('createType', 'FileController@createType');
+    Route::post('uploadFile', 'FileController@uploadFile');
+    Route::post('createFolder', 'FileController@createFolder');
+    Route::post('removeType', 'FileController@removeType');
 
     Route::get('viewer', function() {
         return view('viewer');
@@ -28,7 +34,11 @@ Route::group(['middleware' => 'login'], function() {
 
 // Route Đăng nhập, đăng kí, đăng xuất
 Route::get('sign-in', function() {
-    return view('user.signin', ['title' => 'Đăng nhập']);
+    if (Auth::check()) {
+        return redirect('/');
+    } else {
+        return view('user.signin', ['title' => 'Đăng nhập']);
+    }
 });
 Route::get('sign-up', function() {
     return view('user.signup', ['title' => 'Đăng ký']);

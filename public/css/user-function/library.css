@@ -1,4 +1,4 @@
-body {
+	body {
 	overflow: hidden;
 }
 
@@ -15,6 +15,7 @@ body {
 .type-selection__icon {
 	font-size: 24px;
 	padding: 0 16px 0 8px;
+	cursor: pointer;
 }
 
 .selection {
@@ -45,12 +46,13 @@ body {
 
 /*Item - File*/
 
-.file-item {
+.file-item, .folder-item {
 	flex-direction: row;
 }
 
 .file-type {
 	flex: 1;
+	cursor: pointer;
 }
 
 .file-info {
@@ -59,6 +61,7 @@ body {
 	justify-content: space-around;
 	flex: 5;
 	padding: 0 7px;
+	cursor: pointer;
 }
 
 .file-info__name {
@@ -102,6 +105,7 @@ body {
 .file-share i {
 	font-size: 18px;
 	display: none;
+	cursor: pointer;
 }
 
 .file-item:hover i {
@@ -111,7 +115,7 @@ body {
 
 .list-file {
 	overflow-y: auto;
-	height: calc(100vh - 93px);
+	height: calc(100vh - 133px);
 }
 
 .showSidebar {
@@ -171,4 +175,39 @@ body {
 	} to {
 		width: 33.33333333%;
 	}
+}
+
+/*Phần modal*/
+
+.modal-library {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: flex;
+	background-color: rgba(0, 0, 0, 0.3);
+	flex-direction: column;
+}
+
+.create-new-type {
+	width: 500px;
+	margin: auto;
+	transform: translate(-50px,-55px);
+}
+
+.add-modal,
+.error-modal {
+	width: 400px;
+	margin: auto;
+	transform: translate(-50px,-55px);
+}
+
+.cancel-icon {
+	font-size: 22px;
+	line-height: 22px;
+	cursor: pointer;
+}
+
+/*Bật modal*/
+.option {
+	height: 40px;
 }

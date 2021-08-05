@@ -1,5 +1,8 @@
 .home-page {
     margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /*Phần upload*/
@@ -174,10 +177,18 @@
     margin: 0;
 }
 
+.file-item__content h5 {
+    width: 300px;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
 .file-item__content-location {
     display: flex;
     font-size: 12px;
     opacity: 0.6;
+    justify-content: center;
 }
 
 .file-item__timeuploaded,
@@ -188,9 +199,46 @@
     display: flex;
     flex-direction: column;
 }
+
+.file-item__content {
+    flex: 3;
+    text-align: center;
+}
+
+.file-item__timeuploaded {
+    flex: 3;
+    text-align: center;
+}
+
+.file-item__action {
+    flex: 1;
+}
+
+.file-item__img {
+    flex: 1;
+}
+
+.file-item__img>img {
+    width: 48px;
+    height: 48px;
+    margin: auto;
+}
     
 .file-tab {
     font-size: 20px;
     text-align: center;
     
+}
+
+.dir {
+    margin-left: 5px;
+}
+
+.notificate {
+    height: 25vh;
+    display: flex;
+}
+.notificate h3 {
+    margin: auto;
+    opacity: 0.6;
 }

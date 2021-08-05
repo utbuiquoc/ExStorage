@@ -57,13 +57,12 @@ var fileSelection = document.querySelector('#file-btn');
 var folderSelection = document.querySelector('#folder-btn');
 var firendSelection = document.querySelector('#firend-btn');
 var groupSelection = document.querySelector('#group-btn');
-var homeUnloginedSelection = document.querySelector('#home-btn--unlogined');
+var homeSelection = document.querySelector('#home-btn');
 var loginSelection = document.querySelector('#login-btn');
-var homeLoginedSelection = document.querySelector('#home-btn--logined');
 var userSelection = document.querySelector('#user-btn');
 var logoutSelection = document.querySelector('#logout-btn');
 
-var sidebarSelection = [fileSelection, folderSelection, firendSelection, groupSelection, homeUnloginedSelection, loginSelection, homeLoginedSelection, userSelection, logoutSelection];
+var sidebarSelection = [fileSelection, folderSelection, firendSelection, groupSelection, homeSelection, loginSelection, userSelection, logoutSelection];
 
 sidebarSelection.forEach(function(sidebarItem) {
 	if (itemSelection.value == sidebarItem.id) {

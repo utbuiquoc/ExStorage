@@ -374,11 +374,9 @@
 <!-- outerContainer -->
 <div id="printContainer"></div>
 
-
-
-<script>
-    window.addEventListener("load", function () {
-        console.log("there");
-        PDFViewerApplicationOptions.set("defaultUrl", 'pdfFile/test.pdf');
+<script type="text/javascript">
+    bannerElement = document.querySelectorAll('.col-inner>.banner');
+    bannerElement.forEach(function(item) {
+        item.classList.remove('banner');
     });
 </script>
