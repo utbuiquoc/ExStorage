@@ -41,24 +41,32 @@
 					<i class="bi bi-arrow-left type-selection__icon"></i>
 				</div>
 			</div>
+
+			{{-- Current Dir --}}
+			<input type="hidden" value="<?php echo $typeDir; ?>" id="currentDir">
 			
 			<div class="selection d-flex flex-column">
 				<div class="col col-md-12 card-library p-1 list-file">
+
+				<div class="card back-btn d-none mt-1 flex-row justify-content-center">
+					<i class="bi bi-file-arrow-up me-2"></i>Trở lại
+				</div>
 
 				<?php 
 					$folder = new App\Dir;
 					$item = $folder->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
 					foreach ($item as $key => $value) {
 						$arrayP = explode('/', $value->dir);
-						if (count($arrayP) === 2) { ?>
-							<div class="folder-item d-flex card mt-1">
-								<input type="hidden" class="folder-address" value="<?php echo $arrayP[1]; ?>">
+						$folderName = end($arrayP);
+						if (count($arrayP) >= 2) { ?>
+							<div class="dirItem folder-item d-none card mt-1">
+								<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
 								<div class="file-type">
 									<img src="img/docs-icon/folder-icon.png" alt="">
 								</div>
 
 								<div class="file-info">
-									<h6 class="file-info__name"><?php echo $arrayP[1]; ?></h6>
+									<h6 class="file-info__name"><?php echo $folderName; ?></h6>
 									<div class="file-info__extends d-flex">
 										<p class="file-info__time"><?php echo $value->created_at; ?></p>
 										<p class="file-info__type">Folder</p>
@@ -81,7 +89,7 @@
 					if (count($item) > 0) foreach ($item as $key => $value) {
 				?>
 
-					<div class="file-item d-flex card mt-1">
+					<div class="dirItem file-item d-none card mt-1">
 						<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
 						<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
 						<div class="file-type">
@@ -223,7 +231,8 @@
 				    	{{-- Upload File mới --}}
 				    	<form action="uploadFile" method="POST" enctype="multipart/form-data">
 				    		{{csrf_field()}}
-				    		<input type="hidden" name="fileDir" class='selectValue' name='currentDir'>
+				    		<input type="hidden" class='selectValue' name='currentDir'>
+				    		<input type="hidden" name='rootDir' value="<?php echo $typeDir; ?>">
 				    		<div class="input-group type-input mt-3">
 								<input type="file" class="form-control" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx">
 							</div>
@@ -249,6 +258,7 @@
 					    <form action="createFolder" method="POST">
 					    	{{csrf_field()}}
 				    		<input type="hidden" class='selectValue' name='currentDir'>
+				    		<input type="hidden" name='rootDir' value="<?php echo $typeDir; ?>">
 					    	<div class="input-group type-input mt-3">
 								<input type="text" class="form-control" name="newFolder" placeholder="Nhập tên thư mục">
 							</div>

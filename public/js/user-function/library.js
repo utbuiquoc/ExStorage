@@ -83,12 +83,6 @@ cancelAddBtn.forEach(function(cancelBtn) {
 	}
 });
 
-var value = selection.value;
-selectValue.forEach(function(selectInput) {
-	selectInput.value = value;
-});
-
-
 function genderChanged(obj) {
     var value = obj.value;
     // selectValue.forEach(function(selectInput) {
@@ -97,16 +91,106 @@ function genderChanged(obj) {
     window.location = '/library/' + value;
 }
 
-// Xuất ra file của folder
+// Xuất ra file của folder, nút back
 var indexLevel = 0;
 var folderAddress = document.querySelectorAll(".folder-address");
+var folder = document.querySelectorAll('.folder-item');
+var currentRootDir = document.querySelector('#currentDir').value;
+console.log(currentDir);
+var backBtn = document.querySelector('.back-btn');
+var dirItem = document.querySelectorAll('.dirItem');
+var dirCache = [];
 
-file.forEach(function(fileItem) {
-	var fileElement = fileItem.parentElement;
-	console.log(fileElement.childNodes[3]);
+function addCache() {
+	var currentDir = document.querySelector('#currentDir').value;
+	dirCache.push(currentDir);
+	// console.log(dirCache);
+}
+
+function getItemDir(item) { //Chuyển dir của item thành current dir
+	newArrayDir = item.split('/');
+	if (newArrayDir.length > 1) {
+		newArrayDir.pop();
+		return newArrayDir.join('/');
+	}
+}
+
+function showFile(dir) {
+	var currentDir = document.querySelector('#currentDir').value;
+	file.forEach(function(fileItem) {
+		var fileElement = fileItem.parentElement;
+		var fileDir = fileElement.childNodes[3].value;
+		if (typeof dir != "undefined") {
+			if (fileDir === dir) { //Nếu có tùy chọn
+				fileElement.classList.replace('d-none', 'd-flex');
+			}
+		} else { //Mặc định
+			if (fileDir === currentDir) {
+				fileElement.classList.replace('d-none', 'd-flex');
+			}
+		}
+	});
+}
+
+function showFolder() {
+	folder.forEach(function(folderItem) {
+		var currentDir = document.querySelector('#currentDir').value;
+		var folderDir = folderItem.querySelector('.folder-address').value;
+		var folderDirDefault = getItemDir(folderDir);
+
+		if (folderDirDefault === currentDir) {
+			folderItem.classList.replace('d-none', 'd-flex');
+			console.log('folderDir: ' + folderDir);
+		}
+	});
+}
+
+function hideFile () {
+	dirItem.forEach(function(item) {
+		item.classList.replace('d-flex', 'd-none');
+	});
+}
+
+
+
+function currentDir() { //Hàm để get dữ liệu cho các thẻ input selectValue;
+	var value = document.querySelector('#currentDir').value;
+	// console.log(value);
+	selectValue.forEach(function(selectInput) {
+		selectInput.value = value;
+	});
+}
+
+currentDir() //Chạy hàm currentDir để lấy giá trị cho các thẻ input selectValue
+
+
+folderAddress.forEach(function(folderItemAddress) { //Onclick cho folder
+    var folderElement = folderItemAddress.parentElement;
+    folderElement.onclick = function() {
+        hideFile();
+        addCache();
+        backBtn.classList.replace('d-none', 'd-flex'); //Hiện lên nút back khi nhấp vào folder
+        folderDir = folderElement.childNodes[1].value;
+        document.querySelector('#currentDir').value = folderDir;
+        currentDir();
+        showFile();
+        showFolder()
+    }
 });
 
-folderAddress.forEach(function(folderItemAddress) {
-	var folderElement = folderItemAddress.parentElement;
-	// console.log(folderElement);
-});
+backBtn.onclick = function() {
+	// Gán dir trước cho currentDir
+	newDir = dirCache.pop();
+	document.querySelector('#currentDir').value = newDir;
+
+	if (document.querySelector('#currentDir').value === currentRootDir) {
+		backBtn.classList.replace('d-flex', 'd-none'); //Nếu currentDir là root thì ẩn nút back
+	}
+	hideFile();
+	showFolder();
+	currentDir();
+	showFile();
+}
+
+showFolder();
+showFile();

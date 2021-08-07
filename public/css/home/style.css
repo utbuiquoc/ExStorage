@@ -18,6 +18,10 @@
     flex: 2;
 }
 
+.upload-input {
+    padding: 0 100px;
+}
+
 .file-upload-btn {
     width: 100%;
     margin: 0;

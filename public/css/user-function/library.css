@@ -211,3 +211,13 @@
 .option {
 	height: 40px;
 }
+
+/*Back-btn*/
+.back-btn {
+	line-height: 30px;
+	cursor: pointer;
+}
+
+.back-btn i {
+	font-size: 20px;
+}

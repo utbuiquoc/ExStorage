@@ -99,14 +99,14 @@ class FileController extends Controller
 
             $file->move('fileUploaded', $fileNameToSave);
 
-            $dir = $request->fileDir;
+            $dir = $request->currentDir;
 
             // Lưu thông tin file vào File database
             $fileDb = new File;
             $fileDb->name = $fileNameToSave;
             $fileDb->fileName = $fileName;
             $fileDb->dir = $dir;
-            $fileDb->parent = $request->fileDir;
+            $fileDb->parent = $request->rootDir;
             $fileDb->type = $fileExtension;
             $fileDb->owner = Auth::user()->name;
             $fileDb->viewer = Auth::user()->name;
@@ -133,7 +133,7 @@ class FileController extends Controller
         // Lưu thư mục mới tạo vào Dir Database
         $dirDb = new Dir;
         $dirDb->dir = $currentDir;
-        $dirDb->parent = $request->currentDir;
+        $dirDb->parent = $request->rootDir;
         $dirDb->owner = Auth::user()->name;
         $dirDb->viewer = Auth::user()->name;
         if ($request->allcanview === 'true') {
