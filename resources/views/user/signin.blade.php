@@ -42,6 +42,11 @@
                         {{session('thongbao')}}
                     </div>
                 @endif
+                @if (session('thongbaodk'))
+                    <div class="alert alert-success mt-2">
+                        {{session('thongbaodk')}}
+                    </div>
+                @endif
 
 				<input type="submit" class="btn btn-outline-primary form-control mt-4" value="Đăng nhập">
 			</div>

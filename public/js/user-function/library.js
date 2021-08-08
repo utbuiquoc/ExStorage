@@ -31,8 +31,9 @@ var preview = document.querySelector('#pdf-js-viewer');
 
 file.forEach(function(item) {
 	itemElement = item.parentElement;
+	itemSelector = itemElement.querySelector('.selector');
 
-	itemElement.addEventListener('click', () => {
+	itemSelector.addEventListener('click', () => {
 	// change src attribute of iframe
 	preview.src = 'http://docsstorage.dev/viewer?file=fileUploaded/' + item.value;
 	})

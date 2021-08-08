@@ -50,6 +50,11 @@
 	flex-direction: row;
 }
 
+.selector {
+	display: flex;
+	flex: 6;
+}
+
 .file-type {
 	flex: 1;
 	cursor: pointer;
@@ -220,4 +225,8 @@
 
 .back-btn i {
 	font-size: 20px;
+}
+
+.upload-input {
+	padding: 0 100px;
 }

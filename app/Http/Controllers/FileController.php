@@ -47,6 +47,9 @@ class FileController extends Controller
             $fileDb->name = $fileNameToSave;
             $fileDb->fileName = $fileName;
             $fileDb->dir = $dir;
+            if ($request->allcanview === 'true') {
+                $fileDb->allcanview = true;
+            }
             $fileDb->parent = $request->mainDir;
             $fileDb->type = $fileExtension;
             $fileDb->owner = Auth::user()->name;
@@ -75,7 +78,7 @@ class FileController extends Controller
         }
         $dir->save();
 
-        return redirect('/library')->with('thongbao', 'Tạo mới thành công.');
+        return redirect()->back()->with('thongbao', 'Tạo mới thành công.');
     }
 
     public function uploadFile(Request $request) {
@@ -116,7 +119,7 @@ class FileController extends Controller
             }
             $fileDb->save();
 
-            return redirect('library');
+            return redirect()->back();
         }
     }
 
@@ -142,7 +145,7 @@ class FileController extends Controller
         }
         $dirDb->save();
 
-        return redirect('library');
+        return redirect()->back();
     }
 
     public function removeType(Request $request) {

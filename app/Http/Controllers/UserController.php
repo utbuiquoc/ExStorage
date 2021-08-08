@@ -48,7 +48,7 @@ class UserController extends Controller
         $dir->viewer = $request->name;
         $dir->save();
 
-        return redirect('sign-in')->with('thongbao', 'Đăng kí thành công');
+        return redirect('sign-in')->with('thongbaodk', 'Đăng kí thành công');
     }
 
     public function postSignin(Request $request) {

@@ -92,19 +92,21 @@
 					<div class="dirItem file-item d-none card mt-1">
 						<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
 						<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
-						<div class="file-type">
-							<img src="img/docs-icon/<?php 
-							if ($value->type == 'docx') { echo 'docx-icon.png'; }
-							else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-							else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
-							 ?>" alt="">
-						</div>
+						<div class="selector">
+							<div class="file-type">
+								<img src="img/docs-icon/<?php 
+								if ($value->type == 'docx') { echo 'docx-icon.png'; }
+								else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
+								else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+								 ?>" alt="">
+							</div>
 
-						<div class="file-info">
-							<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
-							<div class="file-info__extends d-flex">
-								<p class="file-info__time"><?php echo $value->created_at; ?></p>
-								<p class="file-info__type">.<?php echo $value->type ?> file</p>
+							<div class="file-info">
+								<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
+								<div class="file-info__extends d-flex">
+									<p class="file-info__time"><?php echo $value->created_at; ?></p>
+									<p class="file-info__type">.<?php echo $value->type ?> file</p>
+								</div>
 							</div>
 						</div>
 

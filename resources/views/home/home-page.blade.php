@@ -42,24 +42,42 @@
 				  	<div class="file-upload-content">
 					    <div class="file-upload-section p-3">
 					    	<div class="file-controll">
-					    		<label class="form-control-label">Chọn nơi lưu trữ</label>
+
+					    		<div class="input-group">
+					    			<label class="input-group-text">Tên tài liệu</label>
+					    			<input type="text" name='docsName' class="form-control" placeholder="(Tùy chọn)">
+					    		</div>
+
+					    		<label class="form-control-label mt-2">Chọn nơi lưu trữ</label>
 					    		<select name="mainDir" class="form-select mt-2">
-					    			<option value="default" selected="">-- Mặc định --</option>
+					    			<?php 
+										$type = new App\Dir();
+										//Set dữ liệu cho $typeDir = type đầu tiên
+										if (!isset($typeDir)) {
+											$typeDir = $type->where('owner', Auth::user()->name)->take(1)->get();
+											$typeDir = $typeDir[0]->dir;			
+										}
+										$typeItem = $type->where('owner', Auth::user()->name)->where('parent', 'root')->get();
+										foreach ($typeItem as $key => $value) {
+											if ($typeDir == $value->dir) {
+												$select = 'selected';
+											} else {
+												$select = '';
+											}
+											echo "<option ". $select ." value='$value->dir'>Loại: " . $value->dir . "</option>";
+										}
+									?>
 					    		</select>
 
-					    		<label class="form-control-label mt-3">Chọn thư mục</label>
-					    		<select name="folder" class="form-select mt-2">
-					    			<option value="" selected="">-- Mặc định --</option>
-					    		</select>
+					    		<div class="form-check mt-2 d-flex justify-content-center">
+									<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+									<label class="form-check-label ms-1">Cho phép chia sẻ</label>
+								</div>
 					    	</div>
 					    	<div class="file-img">
 					    		<img class="file-upload-type" src="img/docs-icon/document.png" alt="docs">
 					    	</div>
 					    	<div class="file-title-wrap">
-					    		<div class="input-group">
-					    			<label class="input-group-text">Tên tài liệu</label>
-					    			<input type="text" name='docsName' class="form-control" placeholder="(Không bắt buộc)">
-					    		</div>
 					      		<button type="button" onclick="removeUpload()" class="remove-file m-auto">Remove <span class="image-title">Uploaded Image</span></button>
 					      		<button type="submit" class="upload-file m-auto">Tải lên</button>
 					    	</div>
