@@ -81,6 +81,10 @@ class UserController extends Controller
         return redirect('sign-in');
     }
 
+    public function shareItem() {
+        return view('user-function.share', ['title' => 'Share']);
+    }
+
     public function test() {
         $file = new File;
         //$item = $file->all();

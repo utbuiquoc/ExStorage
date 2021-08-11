@@ -97,7 +97,7 @@
 					</div>
 
 					<?php 
-						$file = new App\File;
+						$file = new App\Files;
 						$item = $file->orderBy('id', 'desc')->where('owner', Auth::user()->name)->take(5)->get();
 						if (count($item) > 0) foreach ($item as $key => $value) {
 					?>

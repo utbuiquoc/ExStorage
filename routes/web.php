@@ -21,11 +21,14 @@ Route::group(['middleware' => 'login'], function() {
         return view('user-function.library', ['title' => 'Thư viện']);
     });
     Route::get('library/{type?}', 'FileController@typeData');
-    Route::post('createType', 'FileController@createType');
-    Route::post('uploadFile', 'FileController@uploadFile');
-    Route::post('createFolder', 'FileController@createFolder');
-    Route::post('removeType', 'FileController@removeType');
+        Route::post('createType', 'FileController@createType');
+        Route::post('uploadFile', 'FileController@uploadFile');
+        Route::post('createFolder', 'FileController@createFolder');
+        Route::post('removeType', 'FileController@removeType');
+        Route::post('removeItem', 'FileController@removeItem');
+        Route::post('renameItem', 'FileController@renameItem');
 
+    Route::get('share', 'UserController@shareItem');
     Route::get('viewer', function() {
         return view('viewer');
     });

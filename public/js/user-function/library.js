@@ -97,7 +97,6 @@ var indexLevel = 0;
 var folderAddress = document.querySelectorAll(".folder-address");
 var folder = document.querySelectorAll('.folder-item');
 var currentRootDir = document.querySelector('#currentDir').value;
-console.log(currentDir);
 var backBtn = document.querySelector('.back-btn');
 var dirItem = document.querySelectorAll('.dirItem');
 var dirCache = [];
@@ -105,7 +104,6 @@ var dirCache = [];
 function addCache() {
 	var currentDir = document.querySelector('#currentDir').value;
 	dirCache.push(currentDir);
-	// console.log(dirCache);
 }
 
 function getItemDir(item) { //Chuyển dir của item thành current dir
@@ -141,7 +139,6 @@ function showFolder() {
 
 		if (folderDirDefault === currentDir) {
 			folderItem.classList.replace('d-none', 'd-flex');
-			console.log('folderDir: ' + folderDir);
 		}
 	});
 }
@@ -156,7 +153,6 @@ function hideFile () {
 
 function currentDir() { //Hàm để get dữ liệu cho các thẻ input selectValue;
 	var value = document.querySelector('#currentDir').value;
-	// console.log(value);
 	selectValue.forEach(function(selectInput) {
 		selectInput.value = value;
 	});
@@ -195,3 +191,110 @@ backBtn.onclick = function() {
 
 showFolder();
 showFile();
+
+// Thao tác với option
+var fileItemElement = document.querySelectorAll('.file-item');
+var coverPage = document.querySelector('.cover-page');
+var optionDialogs = document.querySelectorAll('.option-dialog');
+var optionBtns = document.querySelectorAll('.option-btn');
+var itemSelected = document.querySelector('#item-selected');
+// modal variable
+var confirmModal = document.querySelector('.confirm-modal');
+var cancelConfirmBtn = document.querySelector('.cancel-confirm');
+var renameModal = document.querySelector('.rename-modal');
+var cancelRenameBtn = document.querySelector('.cancel-rename');
+
+fileItemElement.forEach(function(item) {
+	var optionBtn = item.querySelector('.option-btn');
+	var optionDialog = item.querySelector('.option-dialog');
+	var isOpen = false;
+
+	// Ẩn hiện option
+	function Open() {
+		isOpen = true;
+		optionDialog.classList.replace('d-none', 'd-flex');
+		coverPage.classList.remove('d-none');
+		optionBtn.classList.add('d-flex');
+	}
+
+	function Close() {
+		isOpen = false;
+		optionDialog.classList.replace('d-flex', 'd-none');
+		coverPage.classList.add('d-none');
+		optionBtn.classList.remove('d-flex');
+	}
+
+	function moveDialog() {
+		console.log(document.body.clientHeight - 135);
+		if (optionDialog.getBoundingClientRect().top < 92) {
+			optionDialog.classList.remove('mb-5');
+			optionDialog.classList.add('mt-5');
+		}
+		if (optionDialog.getBoundingClientRect().top > (document.body.clientHeight - 135)) {
+			optionDialog.classList.add('mb-5');
+			optionDialog.classList.remove('mt-5');
+		}
+	}
+
+	optionBtn.onclick = function() {
+		// Tạo value (dir item) cho form
+		var itemDir = item.querySelector('.file-dir').value;
+		document.querySelectorAll('.itemDir-selected').forEach(function(item) {
+			item.value = itemDir;
+		});
+		
+		var itemName = item.querySelector('.file-address').value;
+		document.querySelectorAll('.itemName-selected').forEach(function(item) {
+			item.value = itemName;
+		});
+
+
+		if (isOpen) {			
+			Close();
+		} else {
+			Open();
+		}
+
+		coverPage.onclick = function() {
+			isOpen = false;
+			coverPage.classList.add('d-none');
+			optionDialogs.forEach(function(item) {
+				item.classList.replace('d-flex', 'd-none');
+			});
+			optionBtns.forEach(function(item) {
+				item.classList.remove('d-flex');
+			});
+		}
+
+		moveDialog();
+	}
+
+
+	var shareOption = item.querySelector('.share-option');
+	var renameOption = item.querySelector('.rename-option');
+	var removeOption = item.querySelector('.remove-option');
+
+	// Mở remove Modal
+	removeOption.onclick = function() {
+		Close();
+		modalLibrary.setAttribute('style', 'display:flex !important');
+		confirmModal.classList.replace('d-none', 'd-flex');
+	}
+
+	// Mở rename Modal
+	renameOption.onclick = function() {
+		Close();
+		modalLibrary.setAttribute('style', 'display:flex !important');
+		renameModal.classList.replace('d-none', 'd-flex');
+	}
+});
+
+cancelConfirmBtn.onclick = function() {
+	modalLibrary.setAttribute('style', 'display:none !important');
+	confirmModal.classList.replace('d-flex', 'd-none');
+}
+
+cancelRenameBtn.onclick = function() {
+	modalLibrary.setAttribute('style', 'display:none !important');
+	renameModal.classList.replace('d-flex', 'd-none');
+}
