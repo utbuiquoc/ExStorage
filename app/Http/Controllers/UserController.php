@@ -81,8 +81,40 @@ class UserController extends Controller
         return redirect('sign-in');
     }
 
-    public function shareItem() {
-        return view('user-function.share', ['title' => 'Share']);
+    public function shareFile($itemDir = null) {
+        if ($itemDir) {
+            $itemDir = explode('/', $itemDir);
+            
+            // echo "<pre>";
+            // print_r($itemDir);
+            // echo "</pre>";
+
+            $fileName = explode('_', end($itemDir));
+            array_shift($fileName);
+            $fileName = implode('', $fileName);
+
+            return view('user-function.shareFile', ['title' => $fileName, 'itemInfo' => $itemDir]);
+        } else {
+            return view('user-function.shareFile', ['title' => 'Share']);
+        }
+    }
+
+    public function shareFolder($owner = null, $itemDir = null) {
+        if ($itemDir) {
+            $itemDirArray = explode('/', $itemDir);
+            
+            // echo "<pre>";
+            // print_r($itemDir);
+            // echo "</pre>";
+
+            // // $fileName = explode('_', end($itemDir));
+            // // array_shift($fileName);
+            // $fileName = implode('', $fileName);
+            // echo $itemDir;
+            return view('user-function.shareFolder', ['title' => end($itemDirArray), 'folderInfo' => $itemDir, 'owner' => $owner, 'folderParent' => reset($itemDirArray)]);
+        } else {
+            return view('user-function.shareFolder', ['title' => 'Share']);
+        }
     }
 
     public function test() {

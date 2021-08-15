@@ -1,0 +1,270 @@
+	body {
+	overflow: hidden;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.type-selection {
+	display: flex;
+}
+
+.type-selection__icon {
+	font-size: 24px;
+	padding: 0 16px 0 8px;
+	cursor: pointer;
+}
+
+.selection {
+	height: 100%;
+}
+
+.minisize {
+	cursor: pointer;
+}
+
+.card-library {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid rgba(0,0,0,.125);
+}
+
+.select-type {
+	border-radius: 0;
+}
+.select-type:focus {
+	box-shadow: none;
+}
+
+/*Item - File*/
+
+.file-item, .folder-item {
+	flex-direction: row;
+}
+
+.selector {
+	display: flex;
+	flex: 6;
+}
+
+.file-type {
+	flex: 1;
+	cursor: pointer;
+}
+
+.file-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	flex: 7;
+	padding: 0 12px;
+	cursor: pointer;
+}
+
+.file-info__name {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.file-info__time {
+	font-size: 10px;
+	margin: 0;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.file-info__type {
+	font-size: 11px;
+	margin: 0;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.file-info__extends {
+	align-items: flex-end;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+.list-file {
+	overflow-y: auto;
+	height: calc(100vh - 133px);
+}
+
+.showSidebar {
+	animation: showSidebar 1s ease;
+}
+
+.hideSidebar {
+	width: 0%;
+	animation: hideSidebar 1s ease;
+}
+
+.extendPreviewDocs {
+	width: 100%;
+	animation: extendPreviewDocs 1s ease;
+}
+
+.minisizePreviewDocs {
+	width: 66.66666667%;
+	animation: minisizePreviewDocs 1s ease;
+}
+
+@keyframes showBtn {
+	from {
+		opacity: 0.5;
+	} to {
+		opacity: 1;
+	}
+}
+
+@keyframes hideSidebar {
+	from {
+		width: 33.33333333%;
+	} to {
+		width: 0%;
+	}
+}
+
+@keyframes extendPreviewDocs {
+	from {
+		width: 66.66666667%;
+	} to {
+		width: 100%;
+	}
+}
+
+@keyframes minisizePreviewDocs {
+	from {
+		width: 100%;
+	} to {
+		width: 66.66666667%;
+	}
+}
+
+@keyframes showSidebar {
+	from {
+		width: 0%;
+	} to {
+		width: 33.33333333%;
+	}
+}
+
+/*Phần modal*/
+
+.modal-library {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: flex;
+	background-color: rgba(0, 0, 0, 0.3);
+	flex-direction: column;
+}
+
+.create-new-type {
+	width: 500px;
+	margin: auto;
+	transform: translate(-50px,-55px);
+}
+
+.add-modal,
+.error-modal,
+.confirm-modal,
+.rename-modal {
+	width: 400px;
+	margin: auto;
+	transform: translate(-50px,-55px);
+}
+
+.cancel-icon {
+	font-size: 22px;
+	line-height: 22px;
+	cursor: pointer;
+}
+
+/*Bật modal*/
+.option {
+	height: 40px;
+}
+
+/*Back-btn*/
+.back-btn {
+	line-height: 30px;
+	cursor: pointer;
+}
+
+.back-btn i {
+	font-size: 20px;
+}
+
+.upload-input {
+	padding: 0 100px;
+}
+
+/*Option dialog*/
+.option-dialog {
+	box-shadow: 0px 1px 1px 3px #ccc;
+	background-color: #fff;
+	position: absolute;
+	margin-right: 110px;
+	border-radius: 5px;
+	z-index: 5;
+}
+
+.option-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.option-list__item {
+	display: flex;
+    white-space: nowrap;
+    padding: 3px;
+    cursor: pointer;
+}
+.option-list__item:hover {
+	background-color: #ccc6;
+}
+
+.option-text {
+	padding: 0 5px;
+	margin: 0;
+}
+
+.cover-page {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 4;
+}
+
+/*Confirm modal*/
+.create-form {
+	margin-top: 10px;
+}
+
+.confirm-modal__form {
+	display: flex;
+	flex-direction: column;
+}

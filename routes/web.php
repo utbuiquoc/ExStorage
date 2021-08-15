@@ -28,7 +28,8 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('removeItem', 'FileController@removeItem');
         Route::post('renameItem', 'FileController@renameItem');
 
-    Route::get('share', 'UserController@shareItem');
+    Route::get('share/file/{itemDir?}', 'UserController@shareFile')->where('itemDir', '.*');;
+    Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
     Route::get('viewer', function() {
         return view('viewer');
     });
