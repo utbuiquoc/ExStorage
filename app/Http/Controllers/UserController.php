@@ -117,13 +117,43 @@ class UserController extends Controller
         }
     }
 
-    public function test() {
-        $file = new File;
-        //$item = $file->all();
-        $item = $file->orderBy('id', 'desc')->take(5)->get();
+    public function testGet(Request $request) {
+        return view('test');
+    }
 
-        echo "<pre>";
-        print_r($item);
-        echo "</pre>";
+    public function testPost(Request $request) {
+        // $user = new User;
+        // $user->name = $request->name;
+        // $user->email = $request->email;
+        // $user->password = $request->password;
+        // $user->save();
+
+        // // return $request->name;
+        // echo 'Thành công';
+
+        $file = $request->file('fileUpload');
+
+        if ($request->docsName != '') {
+            $fileName = $request->docsName;
+        } else {
+            $fileName = $file->getClientOriginalName();
+        }
+
+        
+        $fileExtension = $file->getClientOriginalExtension();
+
+        // Tạo tên file
+        $pages = range(1,20);
+        shuffle($pages);
+        $prefix = array_shift($pages);
+        if ($request->docsName != '') {
+            $fileNameToSave = time() . Auth::user()->id . $prefix . '_' . $request->docsName;
+        } else {
+            $fileNameToSave = time() . Auth::user()->id . $prefix . '_' . $fileName;
+        }
+
+        $file->move('fileUploaded', $fileNameToSave);
+
+        echo "Thành công";
     }
 }

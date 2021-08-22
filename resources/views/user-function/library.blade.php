@@ -8,6 +8,7 @@
 	@include('navbar.home-navbar')
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/library.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 	<div class="wrapper-on">
 		<div class="col col-md-4 d-flex flex-column sidebar-menu">
@@ -241,22 +242,26 @@
 
 				    <div class="tab-pane fade show active" id="uploadFile" role="tabpanel" aria-labelledby="home-tab">
 				    	{{-- Upload File mới --}}
-				    	<form action="uploadFile" method="POST" enctype="multipart/form-data">
+				    	<form action="uploadFile" method="POST" enctype="multipart/form-data" onsubmit="return uploadFile()">
 				    		{{csrf_field()}}
-				    		<input type="hidden" class='selectValue' name='currentDir'>
-				    		<input type="hidden" name='rootDir' value="<?php echo $typeDir; ?>">
+				    		<input type="hidden" class='selectValue currentDirUploadFile' name='currentDir'>
+				    		<input type="hidden" name='rootDir' class="rootDirUploadFile" value="<?php echo $typeDir; ?>">
 				    		<div class="input-group type-input mt-3">
-								<input type="file" class="form-control" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx">
+								<input type="file" class="form-control file-upload-input" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx">
 							</div>
 
 							<div class="form-check mt-2">
-								<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+								<input type="checkbox" class="form-check-input allcanviewUploadFile" value='true' name='allcanview'>
 								<label class="form-check-label">Cho phép chia sẻ</label>
+							</div>
+
+							<div class="progress progressUploadFile d-none">
+							  	<div class="progress-bar progressBarUploadFile" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 							</div>
 
 							<div class="form-submit d-flex mt-2">
 								<div class="col col-md-6 pe-2">
-									<input type="submit" class="btn btn-outline-primary form-control" value="Tạo mới">
+									<input type="submit" class="btn btn-outline-primary form-control" value="Tải lên">
 								</div>
 								<div class="col col-md-6 ps-2">
 									<input type="button" class="btn btn-outline-danger form-control cancel-add-btn" value="Hủy bỏ">
@@ -296,6 +301,7 @@
 			</div>
 
 			{{-- Thông báo lỗi --}}
+
 			<div class="d-flex error-modal card p-3" style="
 			<?php
 				if (count($errors) > 0 || session('thongbao')) {
@@ -375,8 +381,55 @@
 					</form>
 				</div>
 			</div>
+
+			{{-- Share Panel --}}
+			<div class="d-flex rename-modal card p-3 d-none">
+				<div class="d-flex justify-content-between">
+					<h4>Chia sẻ</h4>
+				</div>
+				<hr class="bar" style="color: black"/>
+				<div class="create-form">
+					<form action="renameItem" method="POST" class="d-flex confirm-modal__form">
+						@csrf
+						<input type="hidden" class='itemDir-selected' name="itemDirSelected">
+						<input type="hidden" class='itemName-selected' name="itemNameSelected">
+						<label for="" class="form-label">Chia sẻ với mọi người</label>
+						<div class="yes-no-section d-flex mt-3">
+							<div class="col col-md-6 d-flex">
+								<button class="btn btn-outline-primary w-100 me-1" type="submit">Đổi</button>
+							</div>
+							<div class="col col-md-6 d-flex">
+								<button class="btn btn-danger cancel-rename w-100 ms-1" type="button">Hủy bỏ</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
 		</div>
 
-	<script type="text/javascript" src="js/user-function/library.js"></script>
+	{{-- Toast --}}
+	<div class="toast-container position-absolute p-3 end-0" id="toastPlacement">
+		{{-- File type Upload Error--}}
+		<div class="toast errorUploadFileType" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-danger text-white">
+				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi">Định dạng tệp tin không hợp lệ</p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+
+		{{-- Upload Success--}}
+		<div class="toast uploadSuccess" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-uploadSucess text-white">
+				<i class="bi bi-check-circle-fill me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi">Tải lên tệp tin thành công</p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js/user-function/library.js"></script>
 @endsection

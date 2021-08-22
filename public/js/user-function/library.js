@@ -298,3 +298,54 @@ cancelRenameBtn.onclick = function() {
 	modalLibrary.setAttribute('style', 'display:none !important');
 	renameModal.classList.replace('d-flex', 'd-none');
 }
+
+
+
+// Các hàm thao tác với axios
+
+function openToast(toast) { //Hàm  mở toast
+	var myAlert = document.querySelector(toast);//select id of toast
+	var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+	bsAlert.show();//show it
+};
+
+var progressUploadFile = document.querySelector('.progressUploadFile');
+var progressBarUploadFile = document.querySelector('.progressBarUploadFile');
+
+function uploadFile() {
+	const config = {
+	    onUploadProgress: function(progressEvent) {
+	    	var progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+	    	console.log(progress);
+	    	progressUploadFile.classList.replace('d-none', 'd-flex');
+	    	progressBarUploadFile.style.width = progress + '%';
+	    	progressBarUploadFile.innerText = progress + '%';
+	    	if (progress === 100) {
+	    		setTimeout(function() {
+	    			progressUploadFile.classList.replace('d-flex', 'd-none');
+	    		}, 1000);
+	    	}
+	    }
+	}
+	var formData = new FormData();
+	var docsFile = document.querySelector('.file-upload-input');
+	formData.append('fileUpload', docsFile.files[0]);
+	formData.append('currentDir', document.querySelector('.currentDirUploadFile').value);
+	formData.append('rootDir', document.querySelector('.rootDirUploadFile').value);
+	formData.append('allcanview', document.querySelector('.allcanviewUploadFile').value);
+	// console.log(formData);
+	axios.post('uploadFile', formData, config)
+	.then(function(response) {
+		if (response.status === 200) {
+			openToast('.uploadSuccess');
+		}
+	})
+	.catch(function(error) {
+		if (error.response.status === 422) {
+			openToast('.errorUploadFileType');
+		}
+	});
+
+	// e.preventDefault();
+	return false;
+}

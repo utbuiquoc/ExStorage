@@ -44,7 +44,7 @@
 
 					<?php 
 						$folder = new App\Dir;
-						$item = $folder->where('owner', $owner)->where('parent', $folderParent)->get();
+						$item = $folder->where('owner', $owner)->where('parent', $folderParent)->where('allcanview', true)->get();
 						foreach ($item as $key => $value) {
 							$arrayP = explode('/', $value->dir);
 							$folderName = end($arrayP);
@@ -72,7 +72,7 @@
 					<?php 
 						$file = new App\Files;
 
-						$item = $file->where('parent', $folderParent)->where('owner', $owner)->get();
+						$item = $file->where('parent', $folderParent)->where('owner', $owner)->where('allcanview', true)->get();
 						if (count($item) > 0) foreach ($item as $key => $value) {
 					?>
 

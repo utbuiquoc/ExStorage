@@ -52,4 +52,5 @@ Route::post('sign-in', 'UserController@postSignin');
 
 Route::get('logout', 'UserController@logout');
 
-Route::get('test', 'UserController@test');
+Route::get('testGet', 'UserController@testGet');
+Route::post('testPost', 'UserController@testPost');
