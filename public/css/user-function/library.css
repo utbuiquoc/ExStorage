@@ -125,7 +125,7 @@
 	display: block;
 }
 
-.list-file {
+.list-file-column {
 	overflow-y: auto;
 	height: calc(100vh - 133px);
 }

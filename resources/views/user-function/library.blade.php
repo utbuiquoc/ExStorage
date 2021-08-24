@@ -47,83 +47,84 @@
 			<input type="hidden" value="<?php echo $typeDir; ?>" id="currentDir">
 			
 			<div class="selection d-flex flex-column">
-				<div class="col col-md-12 card-library p-1 list-file">
-
+				<div class="col col-md-12 card-library p-1 list-file-column">
 					<div class="card back-btn d-none mt-1 flex-row justify-content-center">
 						<i class="bi bi-file-arrow-up me-2"></i>Trở lại
 					</div>
 
-					<?php 
-						$folder = new App\Dir;
-						$item = $folder->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
-						foreach ($item as $key => $value) {
-							$arrayP = explode('/', $value->dir);
-							$folderName = end($arrayP);
-							if (count($arrayP) >= 2) { ?>
-								<div class="dirItem folder-item d-none card mt-1">
-									<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
+					<span class="list-file">
+						<?php 
+							$folder = new App\Dir;
+							$item = $folder->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
+							foreach ($item as $key => $value) {
+								$arrayP = explode('/', $value->dir);
+								$folderName = end($arrayP);
+								if (count($arrayP) >= 2) { ?>
+									<div class="dirItem folder-item d-none card mt-1">
+										<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
+										<div class="file-type">
+											<img src="img/docs-icon/folder-icon.png" alt="">
+										</div>
+
+										<div class="file-info">
+											<h6 class="file-info__name"><?php echo $folderName; ?></h6>
+											<div class="file-info__extends d-flex">
+												<p class="file-info__time"><?php echo $value->created_at; ?></p>
+												<p class="file-info__type">Folder</p>
+											</div>
+										</div>
+
+										<div class="file-share">
+											<i class="option-btn bi bi-three-dots-vertical"></i>
+										</div>
+									</div>
+									<?php
+								}
+							}
+						?>
+
+						{{-- Get data file --}}
+						<?php 
+							$file = new App\Files;
+							$item = $file->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
+							if (count($item) > 0) foreach ($item as $key => $value) {
+						?>
+
+							<div class="dirItem file-item d-none card mt-1">
+								<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
+								<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
+								<div class="selector">
 									<div class="file-type">
-										<img src="img/docs-icon/folder-icon.png" alt="">
+										<img src="img/docs-icon/<?php 
+										if ($value->type == 'docx') { echo 'docx-icon.png'; }
+										else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
+										else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+										 ?>" alt="">
 									</div>
 
 									<div class="file-info">
-										<h6 class="file-info__name"><?php echo $folderName; ?></h6>
+										<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
 										<div class="file-info__extends d-flex">
 											<p class="file-info__time"><?php echo $value->created_at; ?></p>
-											<p class="file-info__type">Folder</p>
+											<p class="file-info__type">.<?php echo $value->type ?> file</p>
 										</div>
 									</div>
-
-									<div class="file-share">
-										<i class="option-btn bi bi-three-dots-vertical"></i>
-									</div>
-								</div>
-								<?php
-							}
-						}
-					?>
-
-					{{-- Get data file --}}
-					<?php 
-						$file = new App\Files;
-						$item = $file->where('owner', Auth::user()->name)->where('parent', $typeDir)->get();
-						if (count($item) > 0) foreach ($item as $key => $value) {
-					?>
-
-						<div class="dirItem file-item d-none card mt-1">
-							<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
-							<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
-							<div class="selector">
-								<div class="file-type">
-									<img src="img/docs-icon/<?php 
-									if ($value->type == 'docx') { echo 'docx-icon.png'; }
-									else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-									else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
-									 ?>" alt="">
 								</div>
 
-								<div class="file-info">
-									<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
-									<div class="file-info__extends d-flex">
-										<p class="file-info__time"><?php echo $value->created_at; ?></p>
-										<p class="file-info__type">.<?php echo $value->type ?> file</p>
-									</div>
+								<div class="file-share">
+									<i class="option-btn bi bi-three-dots-vertical"></i>
+									<div class="option-dialog d-none">
+										<ul class="option-list">
+											<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
+											<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
+											<li class="option-list__item remove-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
+										</ul>
+									</div>							
 								</div>
 							</div>
 
-							<div class="file-share">
-								<i class="option-btn bi bi-three-dots-vertical"></i>
-								<div class="option-dialog d-none">
-									<ul class="option-list">
-										<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
-										<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
-										<li class="option-list__item remove-option"><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
-									</ul>
-								</div>							
-							</div>
-						</div>
-
-					<?php } ?>
+						<?php } ?>
+					</span>
 				</div>
 
 				<div class="card-library d-flex option">
@@ -272,16 +273,16 @@
 
 				    <div class="tab-pane fade" id="createFolder" role="tabpanel" aria-labelledby="profile-tab">
 					    {{-- Tạo thư mục mới --}}
-					    <form action="createFolder" method="POST">
+					    <form action="createFolder" method="POST" onsubmit="return createFolder()">
 					    	{{csrf_field()}}
-				    		<input type="hidden" class='selectValue' name='currentDir'>
-				    		<input type="hidden" name='rootDir' value="<?php echo $typeDir; ?>">
+				    		<input type="hidden" class='selectValue currentDirCreateFolder' name='currentDir'>
+				    		<input type="hidden" class='rootDirCreateFolder' name='rootDir' value="<?php echo $typeDir; ?>">
 					    	<div class="input-group type-input mt-3">
-								<input type="text" class="form-control" name="newFolder" placeholder="Nhập tên thư mục">
+								<input type="text" class="form-control newFolderName" name="newFolder" placeholder="Nhập tên thư mục">
 							</div>
 
 							<div class="form-check mt-2">
-								<input type="checkbox" class="form-check-input" value='true' name='allcanview'>
+								<input type="checkbox" class="form-check-input allcanviewCreateFolder" value='true' name='allcanview'>
 								<label class="form-check-label">Cho phép chia sẻ</label>
 							</div>
 
@@ -300,39 +301,6 @@
 				</div>
 			</div>
 
-			{{-- Thông báo lỗi --}}
-
-			<div class="d-flex error-modal card p-3" style="
-			<?php
-				if (count($errors) > 0 || session('thongbao')) {
-					echo 'display: flex !important;';
-				} else {
-					echo 'display: none !important;';
-				}
-			?>
-			">
-				<div class="d-flex justify-content-between">
-					<h4>Thông báo</h4>
-					<i class="bi bi-x-lg cancel-icon"></i>
-				</div>
-				<hr class="bar" style="color: black"/>
-				<div class="create-form">
-					@if (count($errors) > 0)
-	                    <div class="alert alert-danger mt-2">
-	                        @foreach ($errors->all() as $err)
-	                            {{$err}}<br/>
-	                        @endforeach
-	                    </div>
-	                @endif
-
-	                @if (session('thongbao'))
-	                    <div class="alert alert-success mt-2">
-	                        {{session('thongbao')}}
-	                    </div>
-	                @endif
-				</div>
-			</div>
-
 			{{-- Thông báo xác nhận (xóa) --}}
 			<div class="d-flex confirm-modal card p-3 d-none">
 				<div class="d-flex justify-content-between">
@@ -340,17 +308,17 @@
 				</div>
 				<hr class="bar" style="color: black"/>
 				<div class="create-form">
-					<form action="removeItem" method="POST" class="d-flex confirm-modal__form">
+					<form action="removeItem" method="POST" class="d-flex confirm-modal__form" onsubmit="return removeItem()">
 						@csrf
-						<input type="hidden" class='itemDir-selected' name="itemDirSelected">
-						<input type="hidden" class='itemName-selected' name="itemNameSelected">
+						<input type="hidden" class='itemDir-selected itemDirSelectedRemoveItem' name="itemDirSelected">
+						<input type="hidden" class='itemName-selected itemNameSelectedRemoveItem' name="itemNameSelected">
 						<label for="" class="form-label">Bạn có chắc chắn?</label>
 						<div class="yes-no-section d-flex">
 							<div class="col col-md-6 d-flex">
-								<button class="btn btn-outline-primary w-100 me-1" type="submit">Có</button>
+								<button class="btn btn-outline-primary w-100 me-1" type="submit">Xóa</button>
 							</div>
 							<div class="col col-md-6 d-flex">
-								<button class="btn btn-danger cancel-confirm w-100 ms-1" type="button">Không</button>
+								<button class="btn btn-danger cancel-confirm w-100 ms-1" type="button">Hủy bỏ</button>
 							</div>
 						</div>
 					</form>
@@ -364,12 +332,12 @@
 				</div>
 				<hr class="bar" style="color: black"/>
 				<div class="create-form">
-					<form action="renameItem" method="POST" class="d-flex confirm-modal__form">
+					<form action="renameItem" method="POST" class="d-flex confirm-modal__form" onsubmit="return renameItem()">
 						@csrf
-						<input type="hidden" class='itemDir-selected' name="itemDirSelected">
-						<input type="hidden" class='itemName-selected' name="itemNameSelected">
+						<input type="hidden" class='itemDir-selected itemDirSelectedRenameItem' name="itemDirSelected">
+						<input type="hidden" class='itemName-selected itemNameSelectedRenameItem' name="itemNameSelected">
 						<label for="" class="form-label">Nhập tên muốn đổi</label>
-						<input type="text" class="form-control" name="name">
+						<input type="text" class="form-control newItemName" name="name">
 						<div class="yes-no-section d-flex mt-3">
 							<div class="col col-md-6 d-flex">
 								<button class="btn btn-outline-primary w-100 me-1" type="submit">Đổi</button>
@@ -410,20 +378,29 @@
 
 	{{-- Toast --}}
 	<div class="toast-container position-absolute p-3 end-0" id="toastPlacement">
-		{{-- File type Upload Error--}}
-		<div class="toast errorUploadFileType" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="toast-header bg-danger text-white">
-				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
-				<p class="me-auto toast-notifi">Định dạng tệp tin không hợp lệ</p>
+		{{-- Success Toast --}}
+		<div class="toast sucessToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-uploadSucess text-white">
+				<i class="bi bi-check-circle-fill me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
 				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 
-		{{-- Upload Success--}}
-		<div class="toast uploadSuccess" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="toast-header bg-uploadSucess text-white">
-				<i class="bi bi-check-circle-fill me-2 toast-icon"></i>
-				<p class="me-auto toast-notifi">Tải lên tệp tin thành công</p>
+		{{-- Error Toast --}}
+		<div class="toast errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-danger text-white">
+				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+
+		{{-- Warning Toast --}}
+		<div class="toast warningToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-warning text-white">
+				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
 				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>

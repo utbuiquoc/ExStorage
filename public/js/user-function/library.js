@@ -29,15 +29,19 @@ var file = document.querySelectorAll('.file-address');
 var preview = document.querySelector('#pdf-js-viewer');
 
 
-file.forEach(function(item) {
-	itemElement = item.parentElement;
-	itemSelector = itemElement.querySelector('.selector');
+function previewDocsAction() {
+	var file = document.querySelectorAll('.file-address');
+	file.forEach(function(item) {
+		itemElement = item.parentElement;
+		itemSelector = itemElement.querySelector('.selector');
 
-	itemSelector.addEventListener('click', () => {
-	// change src attribute of iframe
-	preview.src = 'http://docsstorage.dev/viewer?file=fileUploaded/' + item.value;
-	})
-});
+		itemSelector.addEventListener('click', () => {
+		// change src attribute of iframe
+		preview.src = 'http://docsstorage.dev/viewer?file=fileUploaded/' + item.value;
+		})
+	});
+}
+previewDocsAction();
 
 // Ẩn hiện phần thêm type
 var addTypeBtn = document.querySelector('.file-type-icon');
@@ -45,7 +49,6 @@ var modalLibrary = document.querySelector('.modal-library');
 var createNewType = document.querySelector('.create-new-type');
 var cancelBtn = document.querySelectorAll('.cancel-btn');
 
-var cancelIcon = document.querySelector('.cancel-icon');
 var modalError = document.querySelector('.error-modal');
 
 addTypeBtn.onclick = function() {
@@ -60,10 +63,6 @@ cancelBtn.forEach(function(cancelBtnItem) {
 	}
 });
 
-cancelIcon.onclick = function() {
-	modalLibrary.setAttribute('style', 'display:none !important');
-	modalError.setAttribute('style', 'display:none !important');
-}
 
 // Ẩn hiện phần thêm file/folder
 var addOption = document.querySelector('.add-option');
@@ -94,7 +93,6 @@ function genderChanged(obj) {
 
 // Xuất ra file của folder, nút back
 var indexLevel = 0;
-var folderAddress = document.querySelectorAll(".folder-address");
 var folder = document.querySelectorAll('.folder-item');
 var currentRootDir = document.querySelector('#currentDir').value;
 var backBtn = document.querySelector('.back-btn');
@@ -116,6 +114,7 @@ function getItemDir(item) { //Chuyển dir của item thành current dir
 
 function showFile(dir) {
 	var currentDir = document.querySelector('#currentDir').value;
+	var file = document.querySelectorAll('.file-address');
 	file.forEach(function(fileItem) {
 		var fileElement = fileItem.parentElement;
 		var fileDir = fileElement.childNodes[3].value;
@@ -132,6 +131,7 @@ function showFile(dir) {
 }
 
 function showFolder() {
+	var folder = document.querySelectorAll('.folder-item');
 	folder.forEach(function(folderItem) {
 		var currentDir = document.querySelector('#currentDir').value;
 		var folderDir = folderItem.querySelector('.folder-address').value;
@@ -143,7 +143,8 @@ function showFolder() {
 	});
 }
 
-function hideFile () {
+function hideFile() {
+	var dirItem = document.querySelectorAll('.dirItem');
 	dirItem.forEach(function(item) {
 		item.classList.replace('d-flex', 'd-none');
 	});
@@ -161,19 +162,23 @@ function currentDir() { //Hàm để get dữ liệu cho các thẻ input select
 currentDir() //Chạy hàm currentDir để lấy giá trị cho các thẻ input selectValue
 
 
-folderAddress.forEach(function(folderItemAddress) { //Onclick cho folder
-    var folderElement = folderItemAddress.parentElement;
-    folderElement.onclick = function() {
-        hideFile();
-        addCache();
-        backBtn.classList.replace('d-none', 'd-flex'); //Hiện lên nút back khi nhấp vào folder
-        folderDir = folderElement.childNodes[1].value;
-        document.querySelector('#currentDir').value = folderDir;
-        currentDir();
-        showFile();
-        showFolder()
-    }
-});
+function folderOnlickAction() {
+	var folderAddress = document.querySelectorAll(".folder-address");
+	folderAddress.forEach(function(folderItemAddress) { //Onclick cho folder
+	    var folderElement = folderItemAddress.parentElement;
+	    folderElement.onclick = function() {
+	        hideFile();
+	        addCache();
+	        backBtn.classList.replace('d-none', 'd-flex'); //Hiện lên nút back khi nhấp vào folder
+	        folderDir = folderElement.childNodes[1].value;
+	        document.querySelector('#currentDir').value = folderDir;
+	        currentDir();
+	        showFile();
+	        showFolder()
+	    }
+	});
+}
+folderOnlickAction();
 
 backBtn.onclick = function() {
 	// Gán dir trước cho currentDir
@@ -197,97 +202,106 @@ var fileItemElement = document.querySelectorAll('.file-item');
 var coverPage = document.querySelector('.cover-page');
 var optionDialogs = document.querySelectorAll('.option-dialog');
 var optionBtns = document.querySelectorAll('.option-btn');
-var itemSelected = document.querySelector('#item-selected');
+var itemSelected;
 // modal variable
 var confirmModal = document.querySelector('.confirm-modal');
 var cancelConfirmBtn = document.querySelector('.cancel-confirm');
 var renameModal = document.querySelector('.rename-modal');
 var cancelRenameBtn = document.querySelector('.cancel-rename');
 
-fileItemElement.forEach(function(item) {
-	var optionBtn = item.querySelector('.option-btn');
-	var optionDialog = item.querySelector('.option-dialog');
-	var isOpen = false;
+function fileOptionAction() {
+	var fileItemElement = document.querySelectorAll('.file-item');
+	var optionDialogs = document.querySelectorAll('.option-dialog');
+	var optionBtns = document.querySelectorAll('.option-btn');
 
-	// Ẩn hiện option
-	function Open() {
-		isOpen = true;
-		optionDialog.classList.replace('d-none', 'd-flex');
-		coverPage.classList.remove('d-none');
-		optionBtn.classList.add('d-flex');
-	}
+	fileItemElement.forEach(function(item) {
+		var optionBtn = item.querySelector('.option-btn');
+		var optionDialog = item.querySelector('.option-dialog');
+		var isOpen = false;
 
-	function Close() {
-		isOpen = false;
-		optionDialog.classList.replace('d-flex', 'd-none');
-		coverPage.classList.add('d-none');
-		optionBtn.classList.remove('d-flex');
-	}
-
-	function moveDialog() {
-		console.log(document.body.clientHeight - 135);
-		if (optionDialog.getBoundingClientRect().top < 92) {
-			optionDialog.classList.remove('mb-5');
-			optionDialog.classList.add('mt-5');
-		}
-		if (optionDialog.getBoundingClientRect().top > (document.body.clientHeight - 135)) {
-			optionDialog.classList.add('mb-5');
-			optionDialog.classList.remove('mt-5');
-		}
-	}
-
-	optionBtn.onclick = function() {
-		// Tạo value (dir item) cho form
-		var itemDir = item.querySelector('.file-dir').value;
-		document.querySelectorAll('.itemDir-selected').forEach(function(item) {
-			item.value = itemDir;
-		});
-		
-		var itemName = item.querySelector('.file-address').value;
-		document.querySelectorAll('.itemName-selected').forEach(function(item) {
-			item.value = itemName;
-		});
-
-
-		if (isOpen) {			
-			Close();
-		} else {
-			Open();
+		// Ẩn hiện option
+		function Open() {
+			isOpen = true;
+			optionDialog.classList.replace('d-none', 'd-flex');
+			coverPage.classList.remove('d-none');
+			optionBtn.classList.add('d-flex');
 		}
 
-		coverPage.onclick = function() {
+		function Close() {
 			isOpen = false;
+			optionDialog.classList.replace('d-flex', 'd-none');
 			coverPage.classList.add('d-none');
-			optionDialogs.forEach(function(item) {
-				item.classList.replace('d-flex', 'd-none');
-			});
-			optionBtns.forEach(function(item) {
-				item.classList.remove('d-flex');
-			});
+			optionBtn.classList.remove('d-flex');
 		}
 
-		moveDialog();
-	}
+		function moveDialog() {
+			if (optionDialog.getBoundingClientRect().top < 92) {
+				optionDialog.classList.remove('mb-5');
+				optionDialog.classList.add('mt-5');
+			}
+			if (optionDialog.getBoundingClientRect().top > (document.body.clientHeight - 135)) {
+				optionDialog.classList.add('mb-5');
+				optionDialog.classList.remove('mt-5');
+			}
+		}
+
+		optionBtn.onclick = function() {
+			itemSelected = optionBtn.parentElement.parentElement;
+
+			// Tạo value (dir item) cho form
+			var itemDir = item.querySelector('.file-dir').value;
+			document.querySelectorAll('.itemDir-selected').forEach(function(item) {
+				item.value = itemDir;
+			});
+			
+			var itemName = item.querySelector('.file-address').value;
+			document.querySelectorAll('.itemName-selected').forEach(function(item) {
+				item.value = itemName;
+			});
 
 
-	var shareOption = item.querySelector('.share-option');
-	var renameOption = item.querySelector('.rename-option');
-	var removeOption = item.querySelector('.remove-option');
+			if (isOpen) {			
+				Close();
+			} else {
+				Open();
+			}
 
-	// Mở remove Modal
-	removeOption.onclick = function() {
-		Close();
-		modalLibrary.setAttribute('style', 'display:flex !important');
-		confirmModal.classList.replace('d-none', 'd-flex');
-	}
+			coverPage.onclick = function() {
+				isOpen = false;
+				coverPage.classList.add('d-none');
+				optionDialogs.forEach(function(item) {
+					item.classList.replace('d-flex', 'd-none');
+				});
+				optionBtns.forEach(function(item) {
+					item.classList.remove('d-flex');
+				});
+			}
 
-	// Mở rename Modal
-	renameOption.onclick = function() {
-		Close();
-		modalLibrary.setAttribute('style', 'display:flex !important');
-		renameModal.classList.replace('d-none', 'd-flex');
-	}
-});
+			moveDialog();
+		}
+
+
+		var shareOption = item.querySelector('.share-option');
+		var renameOption = item.querySelector('.rename-option');
+		var removeOption = item.querySelector('.remove-option');
+
+		// Mở remove Modal
+		removeOption.onclick = function() {
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			confirmModal.classList.replace('d-none', 'd-flex');
+		}
+
+		// Mở rename Modal
+		renameOption.onclick = function() {
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			renameModal.classList.replace('d-none', 'd-flex');
+		}
+	});
+}
+
+fileOptionAction();
 
 cancelConfirmBtn.onclick = function() {
 	modalLibrary.setAttribute('style', 'display:none !important');
@@ -303,20 +317,22 @@ cancelRenameBtn.onclick = function() {
 
 // Các hàm thao tác với axios
 
-function openToast(toast) { //Hàm  mở toast
+function openToast(toast, notification) { //Hàm  mở toast
 	var myAlert = document.querySelector(toast);//select id of toast
 	var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+	myAlert.querySelector('.toast-notifi').innerHTML = notification;
 	bsAlert.show();//show it
 };
 
 var progressUploadFile = document.querySelector('.progressUploadFile');
 var progressBarUploadFile = document.querySelector('.progressBarUploadFile');
+var fileList = document.querySelector('.list-file');
 
+// Tải lên file
 function uploadFile() {
 	const config = {
 	    onUploadProgress: function(progressEvent) {
 	    	var progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-	    	console.log(progress);
 	    	progressUploadFile.classList.replace('d-none', 'd-flex');
 	    	progressBarUploadFile.style.width = progress + '%';
 	    	progressBarUploadFile.innerText = progress + '%';
@@ -329,23 +345,219 @@ function uploadFile() {
 	}
 	var formData = new FormData();
 	var docsFile = document.querySelector('.file-upload-input');
+
+	if (docsFile.value == '') {
+		openToast('.warningToast', 'Vui lòng chọn tệp tin cần tải lên!');
+		return false;
+	}
+
 	formData.append('fileUpload', docsFile.files[0]);
 	formData.append('currentDir', document.querySelector('.currentDirUploadFile').value);
 	formData.append('rootDir', document.querySelector('.rootDirUploadFile').value);
 	formData.append('allcanview', document.querySelector('.allcanviewUploadFile').value);
-	// console.log(formData);
+
 	axios.post('uploadFile', formData, config)
 	.then(function(response) {
+		console.log(response);
 		if (response.status === 200) {
-			openToast('.uploadSuccess');
+			openToast('.sucessToast', 'Tải lên tệp tin thành công!');
 		}
+
+		//Thêm file vừa mới upload vào list file
+		var currentRootDir = document.querySelector('#currentDir').value;
+
+		var dataReturned = response.data;
+		var dataReturned = dataReturned.split('|');
+
+		var fileNameToSave = dataReturned[0];
+		var extension = dataReturned[1];
+		var fileIcon;
+		if (extension === 'docx') { fileIcon = 'docx-icon.png'; }
+		else if (extension === 'pdf') { fileIcon = 'pdf-icon.png'; }
+		else if (extension === 'xlsx') { fileIcon = 'xlsx-icon.png'; }
+
+		var filename = dataReturned[2];
+		var currentTime = dataReturned[3];
+		
+
+		fileList.insertAdjacentHTML('beforeend',
+		`
+			<div class="dirItem file-item d-none card mt-1">
+				<input type="hidden" class="file-address" value="${fileNameToSave}">
+				<input type="hidden" class="file-dir" value="${currentRootDir}">
+				<div class="selector">
+					<div class="file-type">
+						<img src="img/docs-icon/${fileIcon}" alt="${fileIcon}">
+					</div>
+
+					<div class="file-info">
+						<h6 class="file-info__name">${filename}</h6>
+						<div class="file-info__extends d-flex">
+							<p class="file-info__time">${currentTime}</p>
+							<p class="file-info__type">.${extension} file</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="file-share">
+					<i class="option-btn bi bi-three-dots-vertical"></i>
+					<div class="option-dialog d-none">
+						<ul class="option-list">
+							<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
+							<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
+							<li class="option-list__item remove-option"><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
+						</ul>
+					</div>							
+				</div>
+			</div>
+		`);
+
+		hideFile();
+		showFile();
+		showFolder();
+		fileOptionAction();
+		previewDocsAction();
 	})
 	.catch(function(error) {
+		console.log(error);
 		if (error.response.status === 422) {
-			openToast('.errorUploadFileType');
+			openToast('.errorToast', 'Định dạng tệp tin không hợp lệ!');
 		}
 	});
 
+
 	// e.preventDefault();
+	return false;
+}
+
+function createFolder() {
+	var formData = new FormData();
+	var allcanview = document.querySelector('.allcanviewCreateFolder').value;
+	var newFolderName = document.querySelector('.newFolderName').value;
+
+	if (newFolderName.trim() == '') {
+		openToast('.warningToast', 'Vui lòng điền tên thư mục!');
+		return false;
+	}
+
+	formData.append('allcanview', allcanview);
+	formData.append('newFolder', newFolderName);
+	formData.append('currentDir', document.querySelector('.currentDirCreateFolder').value);
+	formData.append('rootDir', document.querySelector('.rootDirCreateFolder').value);
+
+	axios.post('createFolder', formData)
+	.then(function(response) {
+		console.log(response);
+		if (response.status === 200) {
+			// openToast('.sucessToast');
+			if (response.data !== "") {
+				var dataContent = response.data.split(':');
+				if (dataContent[0] === 'Warning') {
+					openToast('.warningToast', dataContent[1]);
+				}
+			}
+
+			if (response.data == "") {
+				openToast('.sucessToast', 'Tạo thư mục thành công!');
+			}
+
+			var dataReturned = response.data;
+			var dataReturned = dataReturned.split('|');
+			var dirFolder = dataReturned[0];
+			var currentTime = dataReturned[1];
+
+			fileList.insertAdjacentHTML('afterbegin',
+			`
+				<div class="dirItem folder-item d-flex card mt-1">
+					<input type="hidden" class="folder-address" value="${dirFolder}>">
+					<div class="file-type">
+						<img src="img/docs-icon/folder-icon.png" alt="folder-icon.png">
+					</div>
+
+					<div class="file-info">
+						<h6 class="file-info__name">${newFolderName}</h6>
+						<div class="file-info__extends d-flex">
+							<p class="file-info__time">${currentTime}</p>
+							<p class="file-info__type">Folder</p>
+						</div>
+					</div>
+
+					<div class="file-share">
+						<i class="option-btn bi bi-three-dots-vertical"></i>
+					</div>
+				</div>
+			`);
+			folderOnlickAction();
+		}
+	})
+	.catch(function(error) {
+		console.log(error);
+		if (error.response.status === 422) {
+			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+		}
+	});
+
+	return false;
+}
+
+// Xóa file
+
+function removeItem() {
+	var itemDir = document.querySelector('.itemDirSelectedRemoveItem').value;
+	var itemName = document.querySelector('.itemNameSelectedRemoveItem').value;
+
+	var formData = new FormData();
+	formData.append('itemDirSelected', itemDir);
+	formData.append('itemNameSelected', itemName);
+
+	axios.post('removeItem', formData)
+	.then(function(response) {
+
+		itemSelected.remove();
+
+		openToast('.sucessToast', 'Đã xóa tệp tin!');
+
+		document.querySelector('.cancel-confirm').click();
+	})
+	.catch(function(error) {
+		openToast('.errorToast', 'Đã có lỗi xảy ra!');
+	})
+
+	return false;
+}
+
+function renameItem() {
+	var newName = document.querySelector('.newItemName').value;
+
+	if(newName.trim() === "") {
+		openToast('.warningToast', 'Vui lòng nhập tên muốn đổi!');
+		return false;
+	}
+
+	var itemDir = document.querySelector('.itemDirSelectedRenameItem').value;
+	var itemName = document.querySelector('.itemNameSelectedRenameItem').value;
+
+	var formData = new FormData();
+	formData.append('itemDirSelected', itemDir);
+	formData.append('itemNameSelected', itemName);
+	formData.append('name', newName);
+
+	axios.post('renameItem', formData)
+	.then(function(response) {
+		console.log(response);
+
+		itemRenamed = itemSelected.querySelector('.file-info__name');
+		extension = itemRenamed.innerText.split('.');
+		extension = extension[extension.length - 1];
+		itemRenamed.innerText = newName + '.' + extension;
+
+		openToast('.sucessToast', 'Đổi tên thành công!');
+	})
+	.catch(function(error) {
+		console.log(error);
+
+		openToast('.errorToast', 'Đã có lỗi xảy ra!');
+	});
+
 	return false;
 }

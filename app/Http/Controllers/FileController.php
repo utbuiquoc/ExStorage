@@ -96,12 +96,14 @@ class FileController extends Controller
     public function uploadFile(Request $request) {
         if ($request->hasFile('fileUpload')) {
             $this->validate($request, [
-                'fileUpload' => 'mimes:docx,xls,xlsx,pdf'
+                'fileUpload' => 'required|mimes:docx,xls,xlsx,pdf'
             ], [
-                'mimes' => 'Tệp tải lên phải là tệp: docx, xls, xlsx, pdf.'
+                'fileUpload.mimes'     => 'Tệp tải lên phải là tệp: docx, xls, xlsx, pdf.',
+                'fileUpload.required'  => 'Không nhận được tệp tin'
             ]);
 
             $file = $request->file('fileUpload');
+            $currentDir = $request->currentDir;
 
             $fileName = $file->getClientOriginalName();
             $fileExtension = $file->getClientOriginalExtension();
@@ -131,7 +133,10 @@ class FileController extends Controller
             }
             $fileDb->save();
 
-            return redirect()->back();
+            $fileUploaded = $fileDb->where('name', $fileNameToSave)->where('owner', Auth::user()->name)->get();
+            $currentTime = $fileUploaded[0]->created_at;
+
+            return "$fileNameToSave|$fileExtension|$fileName|$currentTime";
         }
     }
 
@@ -157,7 +162,10 @@ class FileController extends Controller
         }
         $dirDb->save();
 
-        return redirect()->back();
+        $folderCreated = $dirDb->where('dir', $currentDir)->where('owner', Auth::user()->name)->get();
+        $currentTime = $folderCreated[0]->created_at;
+
+        return "$currentDir|$currentTime";
     }
 
     public function removeType(Request $request) {
