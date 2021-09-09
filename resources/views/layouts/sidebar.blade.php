@@ -21,8 +21,8 @@
 		</ul>
 		<hr class="bar"/>
 		<ul class="sidebar-items app__social">
-			<li id="firend-btn" class="item">
-				<a class="item-link" href=""><i class="item__icon bi bi-person"></i>
+			<li id="friend-btn" class="item">
+				<a class="item-link" href="friend"><i class="item__icon bi bi-people"></i>
 				<div class="file-btn--description">
 					<span>Bạn bè</span>
 				</div></a>

@@ -51,21 +51,12 @@ extendsBtn.onclick = function() {
 
 // Phần chọn selected cho thanh sidebar
 
-var itemSelection = document.querySelector('#itemSidebar-Selected');
+var itemSelection = document.querySelector('#itemSidebar-Selected').value;
 
-var fileSelection = document.querySelector('#file-btn');
-var folderSelection = document.querySelector('#folder-btn');
-var firendSelection = document.querySelector('#firend-btn');
-var groupSelection = document.querySelector('#group-btn');
-var homeSelection = document.querySelector('#home-btn');
-var loginSelection = document.querySelector('#login-btn');
-var userSelection = document.querySelector('#user-btn');
-var logoutSelection = document.querySelector('#logout-btn');
-
-var sidebarSelection = [fileSelection, folderSelection, firendSelection, groupSelection, homeSelection, loginSelection, userSelection, logoutSelection];
+var sidebarSelection = document.querySelectorAll('.item');
 
 sidebarSelection.forEach(function(sidebarItem) {
-	if (itemSelection.value == sidebarItem.id) {
+	if (itemSelection === sidebarItem.id) {
 		sidebarItem.classList.add('selected');
 	}
 });

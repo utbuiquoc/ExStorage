@@ -13,19 +13,6 @@
 		<div class="col col-md-4 d-flex flex-column sidebar-menu">
 			<div class="type-selection flex-row">
 				{{-- Get list of type (category) --}}
-				<?php 
-					$type = new App\Dir();
-					//Set dữ liệu cho $typeDir = type đầu tiên
-					if (!isset($typeDir)) {
-						$typeDir = $type->where('owner', Auth::user()->name)->take(1)->get();
-						$typeDir = $typeDir[0]->dir;			
-					}
-
-					//Xử lí dữ liệu của item đang được share
-					$itemName = array_pop($itemInfo);
-					$itemDir = implode('/', $itemInfo);
-					echo $itemDir;
-				?>
 
 				<div class="minisize card-library w-100 text-center">
 					<i class="bi bi-arrow-left type-selection__icon"></i>
@@ -33,7 +20,6 @@
 			</div>
 
 			{{-- Current Dir --}}
-			<input type="hidden" value="<?php echo $itemDir; ?>" id="currentDir">
 			
 			<div class="selection d-flex flex-column">
 				<div class="col col-md-12 card-library p-1 list-file h-100">
@@ -46,11 +32,11 @@
 					<?php 
 						$file = new App\Files;
 
-						$item = $file->where('dir', $itemDir)->where('name', $itemName)->where('allcanview', true)->get();
+						$item = $file->where('owner', $owner)->where('name', $itemName)->where('allcanview', true)->get();
 						if (count($item) > 0) foreach ($item as $key => $value) {
 					?>
 
-						<div class="dirItem file-item d-none card mt-1">
+						<div class="dirItem file-item d-flex card mt-1">
 							<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
 							<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
 							<div class="selector">

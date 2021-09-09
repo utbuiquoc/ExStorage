@@ -223,9 +223,7 @@ class FileController extends Controller
 
         echo $newFileName . "<br/>";
         echo $newFileRealName . "<br/>";
-        // dd($fileToRename);
 
-        // $fileToRename->update(['fileName' => $newFileName, 'name' => $newFileRealName]);
         $fileToRename->fileName = $newFileName;
         $fileToRename->name = $newFileRealName;
         $fileToRename->save();
@@ -238,5 +236,26 @@ class FileController extends Controller
         rename(public_path("fileUploaded/$oldFileRealName"), public_path("fileUploaded/$newFileRealName"));
         
         return redirect()->back();   
+    }
+
+    public function allcanview(Request $request) {
+        $fileName = $request->itemNameSelected;
+        $isAllCanView = $request->isallcanview;
+        // $fileName = '1630404228115_Nyan cat.pdf';
+        // $isAllCanView = '0';
+
+        $fileDB = new Files;
+
+        $file = $fileDB->where('owner', Auth::user()->name)->where('name', $fileName)->get();
+
+        $file = Files::find($file[0]->id);
+
+        if ($isAllCanView === '0') {
+            $file->allcanview = true;
+            $file->save();
+        } else if ($isAllCanView === '1') {
+            $file->allcanview = false;
+            $file->save();
+        }
     }
 }

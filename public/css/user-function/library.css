@@ -49,6 +49,9 @@
 .file-item, .folder-item {
 	flex-direction: row;
 }
+.file-item:hover, .folder-item:hover {
+	background-color: rgba(0, 0, 0, 0.07);
+}
 
 .selector {
 	display: flex;
@@ -209,10 +212,14 @@
 .add-modal,
 .error-modal,
 .confirm-modal,
-.rename-modal {
+.rename-modal,
+.share-modal {
 	width: 400px;
 	margin: auto;
 	transform: translate(-50px,-55px);
+}
+.share-modal {
+	width: 600px;
 }
 
 .cancel-icon {
@@ -304,4 +311,18 @@
 
 .bg-uploadSucess {
 	background-color: #28a745;
+}
+
+/*Share part*/
+.share-option-description {
+	opacity: 0.8;
+}
+
+.public-link {
+	background-color: #e6f4ea !important;
+	color: #1e8e3e !important;
+}
+
+.linkShare {
+	text-overflow: ellipsis;
 }

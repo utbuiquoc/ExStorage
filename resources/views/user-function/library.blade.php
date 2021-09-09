@@ -9,6 +9,7 @@
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/library.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 	<div class="wrapper-on">
 		<div class="col col-md-4 d-flex flex-column sidebar-menu">
@@ -45,6 +46,9 @@
 
 			{{-- Current Dir --}}
 			<input type="hidden" value="<?php echo $typeDir; ?>" id="currentDir">
+
+			{{-- Current User --}}
+			<input type="hidden" value="<?php echo Auth::user()->name; ?>" id="currentUser">
 			
 			<div class="selection d-flex flex-column">
 				<div class="col col-md-12 card-library p-1 list-file-column">
@@ -62,6 +66,8 @@
 								if (count($arrayP) >= 2) { ?>
 									<div class="dirItem folder-item d-none card mt-1">
 										<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
+										<input type="hidden" class="allcanview-file" value="<?php echo $value->allcanview; ?>">
+										
 										<div class="file-type">
 											<img src="img/docs-icon/folder-icon.png" alt="">
 										</div>
@@ -93,6 +99,7 @@
 							<div class="dirItem file-item d-none card mt-1">
 								<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
 								<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
+								<input type="hidden" class="allcanview-file" value="<?php echo $value->allcanview; ?>">
 								<div class="selector">
 									<div class="file-type">
 										<img src="img/docs-icon/<?php 
@@ -351,7 +358,7 @@
 			</div>
 
 			{{-- Share Panel --}}
-			<div class="d-flex rename-modal card p-3 d-none">
+			<div class="d-flex share-modal card p-3 d-none">
 				<div class="d-flex justify-content-between">
 					<h4>Chia sẻ</h4>
 				</div>
@@ -361,13 +368,44 @@
 						@csrf
 						<input type="hidden" class='itemDir-selected' name="itemDirSelected">
 						<input type="hidden" class='itemName-selected' name="itemNameSelected">
-						<label for="" class="form-label">Chia sẻ với mọi người</label>
+						<input type="hidden" class="isallcanview" name="allcanview">
+						<div class="select-share-people mb-2 d-none">
+							<p><i class="bi bi-person-plus-fill me-1"></i>Những ai có thể xem: </p>
+							<input type="text" class="form-control">
+						
+						<hr class="m-0 mt-2" />
+						</div>
+
+						<div class="share-option-section mt-2">
+							<select class="form-select optionSelect" autocomplete="off">
+								<option class="private-option">Riêng tư</option>
+								<option class="limited-option">Bị hạn chế</option>
+								<option class="public-option">Với bất kỳ ai</option>
+							</select>
+
+							<div class="share-option-description p-1">
+								<p class="private-option-description m-0 mt-1 d-none"><i class="bi bi-person-circle me-1"></i>Chỉ mình tôi được xem.</p>
+								<p class="limited-option-description m-0 mt-1 d-none"><i class="bi bi-people-fill me-1"></i>Chỉ có những người được cho phép mới được xem.</p>
+								<p class="public-option-description m-0 mt-1 d-none"><i class="bi bi-person-lines-fill me-1"></i>Tất cả ai có liên kết có thể xem.</p>
+							</div>
+						</div>
+
+						<hr class="m-0 mb-2" />						
+
+						<div class="link-share-section d-flex flex-column">
+							<label for="" class="form-label">Liên kết</label>
+							<div class="d-flex">
+								<input type="text" id="linkShare" class="form-control linkShare d-flex" readonly>
+								<button type="button" class="btn btn-outline-success w-25 ms-1 copy-btn" data-clipboard-target="#linkShare">Sao chép</button>
+							</div>
+						</div>
+
 						<div class="yes-no-section d-flex mt-3">
 							<div class="col col-md-6 d-flex">
 								<button class="btn btn-outline-primary w-100 me-1" type="submit">Đổi</button>
 							</div>
 							<div class="col col-md-6 d-flex">
-								<button class="btn btn-danger cancel-rename w-100 ms-1" type="button">Hủy bỏ</button>
+								<button class="btn btn-danger cancel-share w-100 ms-1" type="button">Hủy bỏ</button>
 							</div>
 						</div>
 					</form>

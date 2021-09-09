@@ -27,12 +27,16 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('removeType', 'FileController@removeType');
         Route::post('removeItem', 'FileController@removeItem');
         Route::post('renameItem', 'FileController@renameItem');
+        Route::post('allcanview', 'FileController@allcanview');
 
-    Route::get('share/file/{itemDir?}', 'UserController@shareFile')->where('itemDir', '.*');;
+    Route::get('share/file/{owner}/{itemName}', 'UserController@shareFile');
     Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
     Route::get('viewer', function() {
         return view('viewer');
     });
+
+    Route::get('friend', 'UserController@friend');
+        Route::post('find', 'UserController@friend');
 });
 
 

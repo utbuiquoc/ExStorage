@@ -198,6 +198,8 @@ showFolder();
 showFile();
 
 // Thao tác với option
+var currentUser = document.querySelector('#currentUser').value;
+
 var fileItemElement = document.querySelectorAll('.file-item');
 var coverPage = document.querySelector('.cover-page');
 var optionDialogs = document.querySelectorAll('.option-dialog');
@@ -208,6 +210,8 @@ var confirmModal = document.querySelector('.confirm-modal');
 var cancelConfirmBtn = document.querySelector('.cancel-confirm');
 var renameModal = document.querySelector('.rename-modal');
 var cancelRenameBtn = document.querySelector('.cancel-rename');
+var shareModal = document.querySelector('.share-modal');
+var cancelShareBtn = document.querySelector('.cancel-share');
 
 function fileOptionAction() {
 	var fileItemElement = document.querySelectorAll('.file-item');
@@ -298,6 +302,43 @@ function fileOptionAction() {
 			modalLibrary.setAttribute('style', 'display:flex !important');
 			renameModal.classList.replace('d-none', 'd-flex');
 		}
+
+		// Mở share
+		shareOption.onclick = function() {
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			shareModal.classList.replace('d-none', 'd-flex');
+
+			let shareStatus = item.querySelector('.allcanview-file').value;
+			document.querySelector('.isallcanview').value = shareStatus;
+			if (shareStatus ===  '1') {
+				shareStatus = true;
+			} else  {
+				shareStatus = false;
+			}
+
+
+			//Phần liên kết chia sẻ file
+			var linkShare = document.querySelector('.linkShare');
+
+			var fileLink = itemSelected.querySelector('.file-address').value;
+			linkShare.value = encodeURI(window.location.hostname + "/share/file/" + currentUser + '/' + fileLink);
+
+			// var optionSelect = document.querySelector('.optionSelect');
+			// if (optionSelect.value === 'Riêng tư') {
+			// 	privateOptionSeleted();
+			// } else if (optionSelect.value === 'Bị hạn chế') {
+			// 	limitedOptionSelected();
+			// } else if (optionSelect.value === 'Với bất kỳ ai') {
+			// 	publicOptionSelected();
+			// }
+
+			if (shareStatus) {
+				publicOptionSelected();
+			} else {
+				privateOptionSeleted();
+			}
+		}
 	});
 }
 
@@ -313,6 +354,15 @@ cancelRenameBtn.onclick = function() {
 	renameModal.classList.replace('d-flex', 'd-none');
 }
 
+cancelShareBtn.onclick = function() {
+	modalLibrary.setAttribute('style', 'display:none !important');
+	shareModal.classList.replace('d-flex', 'd-none');
+}
+
+// Nút sao chép link
+var copyBtn = document.querySelector('.copy-btn');
+
+new ClipboardJS('.copy-btn');
 
 
 // Các hàm thao tác với axios
@@ -345,6 +395,11 @@ function uploadFile() {
 	}
 	var formData = new FormData();
 	var docsFile = document.querySelector('.file-upload-input');
+	var allcanviewUploadFile = document.querySelector('.allcanviewUploadFile').checked;
+	var acv = 0;
+	if (allcanviewUploadFile) {
+		acv = 1;
+	}
 
 	if (docsFile.value == '') {
 		openToast('.warningToast', 'Vui lòng chọn tệp tin cần tải lên!');
@@ -354,7 +409,7 @@ function uploadFile() {
 	formData.append('fileUpload', docsFile.files[0]);
 	formData.append('currentDir', document.querySelector('.currentDirUploadFile').value);
 	formData.append('rootDir', document.querySelector('.rootDirUploadFile').value);
-	formData.append('allcanview', document.querySelector('.allcanviewUploadFile').value);
+	formData.append('allcanview', allcanviewUploadFile);
 
 	axios.post('uploadFile', formData, config)
 	.then(function(response) {
@@ -385,6 +440,8 @@ function uploadFile() {
 			<div class="dirItem file-item d-none card mt-1">
 				<input type="hidden" class="file-address" value="${fileNameToSave}">
 				<input type="hidden" class="file-dir" value="${currentRootDir}">
+				<input type="hidden" class="allcanview-file" value="${acv}">
+
 				<div class="selector">
 					<div class="file-type">
 						<img src="img/docs-icon/${fileIcon}" alt="${fileIcon}">
@@ -432,7 +489,14 @@ function uploadFile() {
 
 function createFolder() {
 	var formData = new FormData();
-	var allcanview = document.querySelector('.allcanviewCreateFolder').value;
+	var allcanview = document.querySelector('.allcanviewCreateFolder').checked;
+	var acv;
+	if (allcanview) {
+		acv = 1;
+	} else {
+		acv = 0;
+	}
+
 	var newFolderName = document.querySelector('.newFolderName').value;
 
 	if (newFolderName.trim() == '') {
@@ -449,17 +513,9 @@ function createFolder() {
 	.then(function(response) {
 		console.log(response);
 		if (response.status === 200) {
-			// openToast('.sucessToast');
-			if (response.data !== "") {
-				var dataContent = response.data.split(':');
-				if (dataContent[0] === 'Warning') {
-					openToast('.warningToast', dataContent[1]);
-				}
-			}
-
-			if (response.data == "") {
-				openToast('.sucessToast', 'Tạo thư mục thành công!');
-			}
+			console.log(response);
+			
+			openToast('.sucessToast', 'Tạo thư mục thành công!');
 
 			var dataReturned = response.data;
 			var dataReturned = dataReturned.split('|');
@@ -470,6 +526,8 @@ function createFolder() {
 			`
 				<div class="dirItem folder-item d-flex card mt-1">
 					<input type="hidden" class="folder-address" value="${dirFolder}>">
+					<input type="hidden" class="allcanview-folder" value="${acv}">
+
 					<div class="file-type">
 						<img src="img/docs-icon/folder-icon.png" alt="folder-icon.png">
 					</div>
@@ -493,7 +551,7 @@ function createFolder() {
 	.catch(function(error) {
 		console.log(error);
 		if (error.response.status === 422) {
-			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+			openToast('.warningToast', 'Tên thư mục phải lớn hơn 2 ký tự!');
 		}
 	});
 
@@ -560,4 +618,128 @@ function renameItem() {
 	});
 
 	return false;
+}
+
+// Thao tác với share
+var privateOption = document.querySelector('.private-option');
+var limitedOption = document.querySelector('.limited-option');
+var publicOption = document.querySelector('.public-option');
+
+var privateOptionDescription = document.querySelector('.private-option-description');
+var limitedOptionDescription = document.querySelector('.limited-option-description');
+var publicOptionDescription = document.querySelector('.public-option-description');
+
+var linkShareSection = document.querySelector('.link-share-section');
+var linkShare = document.querySelector('.linkShare');
+
+function privateOptionSeleted() {
+	removeSelected();
+	privateOption.selected = 'selected';
+
+	linkShareSection.classList.remove('d-flex');
+	linkShareSection.classList.add('d-none');
+	linkShare.classList.remove('public-link');
+
+	privateOptionDescription.classList.replace('d-none', 'd-flex');
+	limitedOptionDescription.classList.replace('d-flex', 'd-none');
+	publicOptionDescription.classList.replace('d-flex', 'd-none');
+} 
+
+function limitedOptionSelected() {
+	removeSelected();
+	limitedOption.selected = 'selected';
+
+	linkShareSection.classList.remove('d-none');
+	linkShareSection.classList.add('d-flex');
+	linkShare.classList.remove('public-link');
+
+	privateOptionDescription.classList.replace('d-flex', 'd-none');
+	limitedOptionDescription.classList.replace('d-none', 'd-flex');
+	publicOptionDescription.classList.replace('d-flex', 'd-none');
+}
+
+function publicOptionSelected() {
+	removeSelected();
+	publicOption.selected = 'selected';
+
+	linkShareSection.classList.remove('d-none');
+	linkShareSection.classList.add('d-flex');
+	linkShare.classList.remove('public-link');
+	linkShare.classList.add('public-link');
+
+	privateOptionDescription.classList.replace('d-flex', 'd-none');
+	limitedOptionDescription.classList.replace('d-flex', 'd-none');
+	publicOptionDescription.classList.replace('d-none', 'd-flex');
+}
+
+function removeSelected() {
+	var optionSelect = document.querySelectorAll('.optionSelect>option');
+
+	optionSelect.forEach(function(item) {
+		item.removeAttribute('selected');
+	});
+}
+
+privateOption.onclick = function() {
+	privateOptionSeleted();
+	let currentDirName = document.querySelector('.itemName-selected').value;
+	let isallcanview = document.querySelector('.isallcanview').value;
+
+	if (isallcanview === '1') {
+		// Sửa allcanview của file lại thành true (1)
+		var formData = new FormData();
+		formData.append('itemNameSelected', currentDirName);
+		formData.append('isallcanview', isallcanview);
+
+		axios.post('allcanview', formData)
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+
+		document.querySelector('.file-item').value = '0';
+		let dirItemCurrent = document.querySelectorAll('.dirItem');
+		dirItemCurrent.forEach(function(item) {
+			if (item.querySelector('.file-address').value === currentDirName) {
+				item.querySelector('.allcanview-file').value = '0';
+			}
+		});
+		openToast('.sucessToast', 'Đã đặt loại tệp tin thành riêng tư!');
+	}
+}
+
+limitedOption.onclick = function() {
+	limitedOptionSelected();
+}
+
+publicOption.onclick = function() {
+	publicOptionSelected();
+	let currentDirName = document.querySelector('.itemName-selected').value;
+	let isallcanview = document.querySelector('.isallcanview').value;
+
+	if (isallcanview === '0') {
+		// Sửa allcanview của file lại thành true (1)
+		var formData = new FormData();
+		formData.append('itemNameSelected', currentDirName);
+		formData.append('isallcanview', isallcanview);
+
+		axios.post('allcanview', formData)
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+
+		document.querySelector('.file-item').value = '1';
+		let dirItemCurrent = document.querySelectorAll('.dirItem');
+		dirItemCurrent.forEach(function(item) {
+			if (item.querySelector('.file-address').value === currentDirName) {
+				item.querySelector('.allcanview-file').value = '1';
+			}
+		});
+		openToast('.sucessToast', 'Đã tạo liên kết chia sẻ tệp!');
+	}
 }

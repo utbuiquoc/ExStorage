@@ -70,7 +70,7 @@ class UserController extends Controller
             'password' => $password
         );
         if (Auth::attempt($data)) {
-            return redirect('/');
+            return redirect()->back();
         } else {
             return redirect('sign-in')->with('thongbao', 'Đăng nhập thất bại');
         }
@@ -81,22 +81,12 @@ class UserController extends Controller
         return redirect('sign-in');
     }
 
-    public function shareFile($itemDir = null) {
-        if ($itemDir) {
-            $itemDir = explode('/', $itemDir);
-            
-            // echo "<pre>";
-            // print_r($itemDir);
-            // echo "</pre>";
+    public function shareFile($owner, $itemName) {
+        $title = explode('_', $itemName);
+        array_shift($title);
+        $title = implode('_', $title);
 
-            $fileName = explode('_', end($itemDir));
-            array_shift($fileName);
-            $fileName = implode('', $fileName);
-
-            return view('user-function.shareFile', ['title' => $fileName, 'itemInfo' => $itemDir]);
-        } else {
-            return view('user-function.shareFile', ['title' => 'Share']);
-        }
+        return view('user-function.shareFile', ['owner' => $owner, 'itemName' => $itemName, 'title' => $title]);
     }
 
     public function shareFolder($owner = null, $itemDir = null) {
@@ -155,5 +145,13 @@ class UserController extends Controller
         $file->move('fileUploaded', $fileNameToSave);
 
         echo "Thành công";
+    }
+
+    public function friend() {
+        return view('user-function.friend', ['title' => 'Bạn bè']);
+    }
+
+    public function find(Request $request) {
+        
     }
 }
