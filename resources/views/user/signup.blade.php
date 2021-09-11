@@ -9,23 +9,29 @@
 	
 	<link rel="stylesheet" type="text/css" href="css/form/login.css">
 
-	<div class="col col-md-7 d-flex">
-		<div class="description-text">
-			<h1 class="description-text__title">Docs Storage</h1>
-
-			<h3>Website giúp bạn lưu trữ, chia sẻ, xem tài liệu trực tuyến, hỗ trợ giáo viên và học sinh chuyển đổi số trong học tập, giảng dạy.</h3>
-		</div>
-	</div>
-
-	<div class="col col-md-5 d-flex login-place">
-		<form action="sign-up" method="POST" class="form-user d-flex card p-3">
+	<div class="col col-md-12 d-flex login-place">
+		<form action="sign-up" method="POST" class="form-user-signUp card p-3">
 		{{csrf_field()}}
 			<div class="p-2">
 				<h3 class="text-center">Đăng ký</h3>
 
 				<div class="login-form">
-					<input type="text" name="name" class="form-control mt-3" placeholder="Nhập tên đăng nhập">
-					<input type="text" name="email" class="form-control mt-3" placeholder="Nhập email">
+					<div class="login-form--info d-flex">
+						<div class="username w-50 me-2">
+							<input type="text" name="name" class="form-control mt-3 w-100" placeholder="Nhập tên đăng nhập">
+						</div>
+						<div class="email w-50 ms-2">
+							<input type="text" name="email" class="form-control mt-3 w-100" placeholder="Nhập email">
+						</div>
+					</div>
+
+					<select name="provinces" class="provinces form-select mt-3">
+						<option value="">--- Chọn Tỉnh/Thành Phố ---</option>
+					</select>
+
+					<select name="city" class="city form-select mt-3" disabled="">
+						<option value="">--- Chọn Thành Phố/Quận Huyện ---</option>
+					</select>
 
 					<input type="password" name="password" class="form-control mt-3" placeholder="Nhập mật khẩu">
 					<input type="password" name="passwordAgain" class="form-control mt-2" placeholder="Nhập lại mật khẩu">
@@ -57,4 +63,6 @@
 
 		</form>
 	</div>
+
+	<script type="text/javascript" src="js/form/sign-up.js"></script>
 @endsection

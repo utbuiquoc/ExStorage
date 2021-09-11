@@ -162,7 +162,7 @@
 
 @keyframes hideSidebar {
 	from {
-		width: 33.33333333%;
+		width: 25%;
 	} to {
 		width: 0%;
 	}
@@ -170,7 +170,7 @@
 
 @keyframes extendPreviewDocs {
 	from {
-		width: 66.66666667%;
+		width: 75%;
 	} to {
 		width: 100%;
 	}
@@ -180,7 +180,7 @@
 	from {
 		width: 100%;
 	} to {
-		width: 66.66666667%;
+		width: 75%;
 	}
 }
 
@@ -188,7 +188,7 @@
 	from {
 		width: 0%;
 	} to {
-		width: 33.33333333%;
+		width: 25%;
 	}
 }
 

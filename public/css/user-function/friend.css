@@ -28,10 +28,12 @@
 	border-radius: 50%;
 }
 
+/*Friend item (finded)*/
 .friend-item__info--name {
 	margin: 0;
 }
 
+.friend__info--id,
 .friend-item__info--id {
     padding: 0;
     margin: 0;
@@ -42,8 +44,47 @@
 	justify-content: center;
 }
 
+.friend-avt {
+	flex: 1;
+	justify-content: center;
+	display: flex;
+}
+
 .friend-item__avt {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+}
+
+.friend-info {
+	flex: 7;
+	display: flex;
+	justify-content: space-between;
+}
+
+.friend__info--name {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.add-friend {
+	display: flex;
+	flex: 1;
+}
+
+.add-friend__btn {
+	background-color: #eee;
+	border-radius: 50%;
+	width: 45px;
+	height: 45px;
+	display: flex;
+	justify-content: center;
+	margin: auto;
+	cursor: pointer;
+}
+
+.add-friend__btn--icon {
+	font-size: 30px;
+	margin-left: 5px;
 }

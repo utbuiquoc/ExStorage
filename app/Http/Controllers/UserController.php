@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\File;
 use App\Dir;
+use App\Friends;
 
 class UserController extends Controller
 {
@@ -22,7 +23,9 @@ class UserController extends Controller
             'name'          => 'required|min:3|',
             'email'         => 'required|email|unique:users,email',
             'password'      => 'required|min:6|max:32',
-            'passwordAgain' => 'required|same:password'
+            'passwordAgain' => 'required|same:password',
+            'provinces'     => 'required',
+            'city'          => 'required'
         ], [
             'name.required'          => 'Bạn chưa nhập tên người dùng',
             'name.min'               => 'Tên người dùng phải có ít nhất 3 ký tự',
@@ -33,13 +36,18 @@ class UserController extends Controller
             'password.min'           => 'Mật khẩu phải có ít nhất 6 ký tự',
             'password.max'           => 'Mật khẩu phải có tối đa nhất 32 ký tự',
             'passwordAgain.required' => 'Bạn chưa nhập lại mật khẩu',
-            'passwordAgain.same'     => 'Mật khẩu nhập lại chưa khớp'
+            'passwordAgain.same'     => 'Mật khẩu nhập lại chưa khớp',
+            'provinces.required'     => 'Vui lòng chọn Tỉnh/Thành phố',
+            'city.required'          => 'Vui lòng chọn thành phố/quận huyện'
         ]);
+
+        $location = $request->provinces . ',' . $request->city;
 
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
+        $user->location = $location;
         $user->save();
 
         $dir = new dir;
@@ -47,6 +55,10 @@ class UserController extends Controller
         $dir->owner = $request->name;
         $dir->viewer = $request->name;
         $dir->save();
+
+        $friendsDB = new Friends;
+        $friendsDB->user = $request->name;
+        $friendsDB->save();
 
         return redirect('sign-in')->with('thongbaodk', 'Đăng kí thành công');
     }
@@ -151,7 +163,14 @@ class UserController extends Controller
         return view('user-function.friend', ['title' => 'Bạn bè']);
     }
 
-    public function find(Request $request) {
-        
+    public function findFriend(Request $request) {
+        $this->validate($request, [
+            'friendInfo' => 'min:1'
+        ]);
+        $friendInfo = $request->friendInfo;
+        $userDB = new User;
+        $friend = $userDB->where('name', $friendInfo)->orWhere('email', $friendInfo)->orWhere('id', $friendInfo)->get();
+
+        return $friend;
     }
 }

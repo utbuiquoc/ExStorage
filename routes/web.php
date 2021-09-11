@@ -36,7 +36,7 @@ Route::group(['middleware' => 'login'], function() {
     });
 
     Route::get('friend', 'UserController@friend');
-        Route::post('find', 'UserController@friend');
+        Route::post('find-friend', 'UserController@findFriend');
 });
 
 

@@ -12,7 +12,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 	<div class="wrapper-on">
-		<div class="col col-md-4 d-flex flex-column sidebar-menu">
+		<div class="col col-md-3 d-flex flex-column sidebar-menu">
 			<div class="type-selection flex-row">
 				<div class="file-type-icon card-library">
 					<i class="bi bi-gear-wide-connected type-selection__icon"></i>
@@ -147,7 +147,7 @@
 			</div>
 		</div>
 
-		<div class="col col-md-8 card-library preview-docs">
+		<div class="col col-md-9 card-library preview-docs">
 			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 

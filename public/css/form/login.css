@@ -1,6 +1,19 @@
 .form-user {
 	width: 400px;
-	margin: auto 0;
+	margin-bottom: 60px;
+}
+
+.login-place {
+	margin-top: 55px;
+	height: calc(100vh - 55px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.form-user-signUp {
+	width: 700px;
+	margin: auto;
 }
 
 .description-text {

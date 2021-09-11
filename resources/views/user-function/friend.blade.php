@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-	@include('navbar.home-navbar')
+	@include('navbar.friend-navbar')
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/friend.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -69,8 +69,16 @@
 			</div>
 		</div>
 
-		<div class="col col-md-9 card-library">
-			
+		<div class="col col-md-9 d-flex justify-content-center flex-row p-3">
+			<div class="friend-finded w-75 card p-3">
+				<div class="friend__heading">
+					<h4>Mọi người</h4>
+					<hr/>
+				</div>
+
+				<div class="friend__list">
+				</div>
+			</div>
 		</div>
 	</div>
 
