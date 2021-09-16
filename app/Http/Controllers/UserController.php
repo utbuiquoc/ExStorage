@@ -41,7 +41,7 @@ class UserController extends Controller
             'city.required'          => 'Vui lòng chọn thành phố/quận huyện'
         ]);
 
-        $location = $request->provinces . ',' . $request->city;
+        $location = $request->provinces . ', ' . $request->city;
 
         $user = new User;
         $user->name = $request->name;
@@ -119,8 +119,22 @@ class UserController extends Controller
         }
     }
 
-    public function testGet(Request $request) {
-        return view('test');
+   protected function removeIdUser($str, $id) {
+        $strArr = explode('|', $str);
+
+        foreach ($strArr as $key => $value) {
+            if ($value == $id) {
+                unset($strArr[$key]);
+
+                return implode('|', $strArr);
+            }
+        }
+
+        return '';
+    }
+
+    public function testGet() {
+        return view("test");
     }
 
     public function testPost(Request $request) {
@@ -157,20 +171,5 @@ class UserController extends Controller
         $file->move('fileUploaded', $fileNameToSave);
 
         echo "Thành công";
-    }
-
-    public function friend() {
-        return view('user-function.friend', ['title' => 'Bạn bè']);
-    }
-
-    public function findFriend(Request $request) {
-        $this->validate($request, [
-            'friendInfo' => 'min:1'
-        ]);
-        $friendInfo = $request->friendInfo;
-        $userDB = new User;
-        $friend = $userDB->where('name', $friendInfo)->orWhere('email', $friendInfo)->orWhere('id', $friendInfo)->get();
-
-        return $friend;
     }
 }

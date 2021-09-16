@@ -10,8 +10,65 @@
 }
 
 /*Friend list*/
+.friend-request__heading,
+.friend-accepted__heading {
+	opacity: 0.8;
+}
+
+.back-btn {
+	cursor: pointer;	
+}
+
+.back-btn__icon {
+	font-size: 30px;
+}
+
+.option-item:hover,
 .friend-item:hover {
 	background-color: rgba(0, 0, 0, 0.07);
+}
+
+.option-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.item-text {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.item-text__heading {
+	margin: 0px 0px 3px 10px;
+	font-size: 17px;
+}
+
+.item-icon--border {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background-color: #eee;
+	display: flex;
+	justify-content: center;
+}
+
+.item-icon__i {
+	font-size: 25px;
+	margin-left: 5px;
+}
+
+.item-chevron {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.item-chevron-icon {
+	font-size: 20px;
 }
 
 .friend-header {
@@ -34,7 +91,8 @@
 }
 
 .friend__info--id,
-.friend-item__info--id {
+.friend-item__info--id,
+.friend-accept-item__info--id {
     padding: 0;
     margin: 0;
     font-size: 11.4px;
@@ -62,6 +120,12 @@
 	justify-content: space-between;
 }
 
+.friend-info--detail {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
 .friend__info--name {
 	display: flex;
 	flex-direction: column;
@@ -71,6 +135,17 @@
 .add-friend {
 	display: flex;
 	flex: 1;
+}
+
+.accepted,
+.sended {
+	background-color: #e7f3ff !important;
+}
+
+.sendedRequest,
+.accepted i,
+.sended i {
+	color: #0570e7 !important;
 }
 
 .add-friend__btn {
@@ -87,4 +162,11 @@
 .add-friend__btn--icon {
 	font-size: 30px;
 	margin-left: 5px;
+}
+
+.friend-accept-item__setting--icon {
+	margin-bottom: 5px;
+	font-size: 25px;
+	color: red;
+	cursor: pointer;
 }

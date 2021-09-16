@@ -35,8 +35,13 @@ Route::group(['middleware' => 'login'], function() {
         return view('viewer');
     });
 
-    Route::get('friend', 'UserController@friend');
-        Route::post('find-friend', 'UserController@findFriend');
+    Route::get('friend', 'FriendsController@friend');
+        Route::post('find-friend', 'FriendsController@findFriend');
+        Route::post('send-friend-request', 'FriendsController@sendFriendRequest');
+        Route::post('cancel-friend-request', 'FriendsController@cancelFriendRequest');
+        // Route::post('accept-friend-request', 'FriendsController@acceptFriendRequest');
+        Route::post('cancel-friend-requested', 'FriendsController@cancelFriendRequested');
+        Route::post('unfriend-accepted', 'FriendsController@unfriendAccepted');
 });
 
 
