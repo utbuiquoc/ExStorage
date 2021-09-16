@@ -141,44 +141,6 @@ class FriendsController extends Controller
         $userSended->save();
     }
 
-    // public function acceptFriendRequest(Request $request) {
-    //     $this->validate($request, [
-    //         'friendId'  => 'required'
-    //     ]);
-
-    //     $friendId = $request->friendId;
-    //     $userId = Auth::user()->id;
-
-    //     $user = Friends::find($userId);
-    //     $userRequest = $user->request;
-    //     $userFriends = $user->friends;
-
-
-    //     $userRequestArr = explode('|', $userRequest);
-    //     foreach($userRequestArr as $key => $value) {
-    //         if ($value == $friendId) {
-    //             unset($userRequestArr[$key]);
-
-    //             $userRequest = implode('|', $userRequestArr);
-    //             break;
-    //         }
-    //     }
-
-
-    //     if ($userFriends != "") {
-    //         $userFriends .= '|' . $friendId;
-    //     } else {
-    //         $userFriends = $friendId;
-    //     }
-
-
-    //     $user->request = $userRequest;
-    //     $user->friends = $userFriends;
-    //     $user->save();
-
-    //     return 'Đã chấp nhận lời mời kết bạn!';
-    // }
-
     public function cancelFriendRequested(Request $request) {
         $this->validate($request, [
             'friendId'  =>'required'

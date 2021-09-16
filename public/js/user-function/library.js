@@ -699,7 +699,7 @@ privateOption.onclick = function() {
 			console.log(error);
 		});
 
-		document.querySelector('.file-item').value = '0';
+		document.querySelector('.isallcanview').value = '0';
 		let dirItemCurrent = document.querySelectorAll('.dirItem');
 		dirItemCurrent.forEach(function(item) {
 			if (item.querySelector('.file-address').value === currentDirName) {
@@ -733,7 +733,7 @@ publicOption.onclick = function() {
 			console.log(error);
 		});
 
-		document.querySelector('.file-item').value = '1';
+		document.querySelector('.isallcanview').value = '1';
 		let dirItemCurrent = document.querySelectorAll('.dirItem');
 		dirItemCurrent.forEach(function(item) {
 			if (item.querySelector('.file-address').value === currentDirName) {
