@@ -390,10 +390,30 @@
 							</div>
 						</div>
 
-						<hr class="m-0 mb-2" />						
+						<hr class="m-0 mb-2" />
+
+						<div class="share-limited-section d-none flex-column">
+							<label for="" class="form-label">Chia sẻ với mọi người</label>
+
+							<input type="text" class="form-control friend-select" placeholder="Thêm người muốn cho phép xem">
+
+							<div class="list-friend-selecton-limited">
+								<div class="list-group list-select-friend d-none">
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">The current button</button>
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">A second item</button>
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">A third button item</button>
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">A third button item</button>
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">A fourth button item</button>
+									<button type="button" class="list-group-item list-group-item-action" onclick="console.log('a');">A disabled button item</button>
+								</div>
+							</div>
+
+							<hr class="m-0 mt-2 mb-2" />
+						</div>		
 
 						<div class="link-share-section d-flex flex-column">
 							<label for="" class="form-label">Liên kết</label>
+
 							<div class="d-flex">
 								<input type="text" id="linkShare" class="form-control linkShare d-flex" readonly>
 								<button type="button" class="btn btn-outline-success w-25 ms-1 copy-btn" data-clipboard-target="#linkShare">Sao chép</button>

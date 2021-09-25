@@ -13,6 +13,10 @@ use App\Dir;
 class FileController extends Controller
 {
     //
+    public function library() {
+        return view('user-function.library', ['title' => 'Thư viện']);
+    }
+
     public function upload(Request $request) {
         if ($request->hasFile('fileUpload')) {
             $this->validate($request, [

@@ -172,4 +172,16 @@ class UserController extends Controller
 
         echo "Thành công";
     }
+
+    public function findItem(Request $request) {
+        $this->validate($request, [
+            'text' => 'min:2'
+        ]);
+
+        $word = $request->text;
+
+        $valueFinded = Friends::where('user', 'like', "%$word%")->get();
+
+        return $valueFinded;
+    }
 }

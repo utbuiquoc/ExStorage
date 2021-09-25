@@ -630,6 +630,8 @@ var limitedOptionDescription = document.querySelector('.limited-option-descripti
 var publicOptionDescription = document.querySelector('.public-option-description');
 
 var linkShareSection = document.querySelector('.link-share-section');
+var limitedShareSection = document.querySelector('.share-limited-section');
+
 var linkShare = document.querySelector('.linkShare');
 
 function privateOptionSeleted() {
@@ -639,6 +641,8 @@ function privateOptionSeleted() {
 	linkShareSection.classList.remove('d-flex');
 	linkShareSection.classList.add('d-none');
 	linkShare.classList.remove('public-link');
+
+	limitedShareSection.classList.replace('d-flex', 'd-none');
 
 	privateOptionDescription.classList.replace('d-none', 'd-flex');
 	limitedOptionDescription.classList.replace('d-flex', 'd-none');
@@ -653,6 +657,8 @@ function limitedOptionSelected() {
 	linkShareSection.classList.add('d-flex');
 	linkShare.classList.remove('public-link');
 
+	limitedShareSection.classList.replace('d-none', 'd-flex');
+
 	privateOptionDescription.classList.replace('d-flex', 'd-none');
 	limitedOptionDescription.classList.replace('d-none', 'd-flex');
 	publicOptionDescription.classList.replace('d-flex', 'd-none');
@@ -666,6 +672,8 @@ function publicOptionSelected() {
 	linkShareSection.classList.add('d-flex');
 	linkShare.classList.remove('public-link');
 	linkShare.classList.add('public-link');
+
+	limitedShareSection.classList.replace('d-flex', 'd-none');
 
 	privateOptionDescription.classList.replace('d-flex', 'd-none');
 	limitedOptionDescription.classList.replace('d-flex', 'd-none');
@@ -700,7 +708,7 @@ privateOption.onclick = function() {
 		});
 
 		document.querySelector('.isallcanview').value = '0';
-		let dirItemCurrent = document.querySelectorAll('.dirItem');
+		let dirItemCurrent = document.querySelectorAll('.file-item');
 		dirItemCurrent.forEach(function(item) {
 			if (item.querySelector('.file-address').value === currentDirName) {
 				item.querySelector('.allcanview-file').value = '0';
@@ -734,7 +742,8 @@ publicOption.onclick = function() {
 		});
 
 		document.querySelector('.isallcanview').value = '1';
-		let dirItemCurrent = document.querySelectorAll('.dirItem');
+		let dirItemCurrent = document.querySelectorAll('.file-item');
+		console.log(dirItemCurrent);
 		dirItemCurrent.forEach(function(item) {
 			if (item.querySelector('.file-address').value === currentDirName) {
 				item.querySelector('.allcanview-file').value = '1';
@@ -742,4 +751,14 @@ publicOption.onclick = function() {
 		});
 		openToast('.sucessToast', 'Đã tạo liên kết chia sẻ tệp!');
 	}
+}
+
+// Đổ dữ liệu vào friend-select-input
+var friendsSelectSection = document.querySelector('.list-select-friend');
+
+// Onfocus cho friend-select-input
+var friendsSelectInput = document.querySelector('.friend-select');
+
+friendsSelectInput.onfocus = () => {
+	friendsSelectSection.classList.replace('d-none', 'd-flex');
 }

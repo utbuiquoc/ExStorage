@@ -25,7 +25,7 @@ class FriendsController extends Controller
         $friendInfo = $request->friendInfo;
 
         $userDB = new User;
-        $friend = $userDB->where('name', $friendInfo)->orWhere('email', $friendInfo)->orWhere('id', $friendInfo)->get();
+        $friend = $userDB->where('name', 'like', "%$friendInfo%")->orWhere('email', $friendInfo)->orWhere('id', $friendInfo)->get();
 
 
         foreach ($friend as $key => $value) {

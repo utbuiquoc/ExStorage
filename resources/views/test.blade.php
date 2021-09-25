@@ -5,32 +5,48 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- CSS only -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js" integrity="sha512-lTLt+W7MrmDfKam+r3D2LURu0F47a3QaW5nF0c6Hl0JDZ57ruei+ovbg7BrZ+0bjVJ5YgzsAWE+RreERbpPE1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-	<div id='unfriend-modal' class="modal fade" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header p-3">
-					<h5 class="modal-title">Hủy kết bạn</h5>
-				</div>
-				<div class="modal-body">
-					<p>Khi đã thực hiện, điều này không thể hoàn tác.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-					<button type="button" class="btn btn-primary">Tiếp tục</button>
-				</div>
+	<div class="container">
+		<input type="text" class="form-control findInput mt-3">
+
+		<div class="row">
+			<div class="col col-md-3 result">
+				
 			</div>
 		</div>
 	</div>
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unfriend-modal">
-		Launch demo modal
-	</button>
 
-	<!-- JavaScript Bundle with Popper -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		var fileInput = document.querySelector('.findInput');
+		var result = document.querySelector('.result');
 
+		fileInput.onkeypress = function(e) {
+
+			let formData = new FormData();
+			let text = fileInput.value;
+			console.log(text);
+
+			if (text.length > 1) {
+				formData.append('text', text);
+
+				axios.post('findItem', formData)
+				.then((response) => {
+					console.log(response);
+					let valueReturned = response.data;
+
+					result.innerHTML = '';
+					
+					valueReturned.forEach((item) => {
+						result.insertAdjacentHTML('beforeend', `<p>${item.user}</p>`)
+					})
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+			}
+		}
+	</script>
 </body>
 </html>

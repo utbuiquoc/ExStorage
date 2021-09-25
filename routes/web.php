@@ -17,9 +17,7 @@ Route::group(['middleware' => 'login'], function() {
     })->middleware('login');
     Route::post('/', 'FileController@upload');
 
-    Route::get('library', function() {
-        return view('user-function.library', ['title' => 'Thư viện']);
-    });
+    Route::get('library', 'FileController@library');
     Route::get('library/{type?}', 'FileController@typeData');
         Route::post('createType', 'FileController@createType');
         Route::post('uploadFile', 'FileController@uploadFile');
@@ -63,3 +61,5 @@ Route::get('logout', 'UserController@logout');
 
 Route::get('testGet', 'UserController@testGet');
 Route::post('testPost', 'UserController@testPost');
+
+Route::post('findItem', 'UserController@findItem');

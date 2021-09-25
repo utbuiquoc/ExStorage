@@ -22,6 +22,7 @@
 	margin-top: 55px;
 	display: flex;
 	position: relative;
+	z-index: 200;
 }
 ::-webkit-scrollbar-thumb {
 	background-color: grey;

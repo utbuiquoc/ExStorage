@@ -206,7 +206,7 @@
 .create-new-type {
 	width: 500px;
 	margin: auto;
-	transform: translate(-50px,-55px);
+	transform: translate(-25px,-27.5px);
 }
 
 .add-modal,
@@ -216,7 +216,7 @@
 .share-modal {
 	width: 400px;
 	margin: auto;
-	transform: translate(-50px,-55px);
+	transform: translate(-25px,-27.5px);
 }
 .share-modal {
 	width: 600px;
@@ -325,4 +325,14 @@
 
 .linkShare {
 	text-overflow: ellipsis;
+}
+
+/*Phần chọn người để chia sẻ*/
+.list-select-friend {
+	box-shadow: 4px 3px 9px 2px #ccc;
+	position: fixed;
+	width: 94.7%;
+	z-index: 300;
+	max-height: 206px;
+	overflow: auto;
 }
