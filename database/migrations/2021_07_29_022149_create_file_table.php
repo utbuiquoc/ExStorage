@@ -21,7 +21,7 @@ class CreateFileTable extends Migration
             $table->string('parent')->default('root');
             $table->string('type');
             $table->string('owner');
-            $table->string('viewer');
+            $table->text('viewer');
             $table->boolean('allowshare')->default(false);
             $table->boolean('allcanview')->default(false);
             $table->timestamps();

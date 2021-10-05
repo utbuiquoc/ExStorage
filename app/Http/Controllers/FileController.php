@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 use App\Files;
 use App\Dir;
+use App\User;
+use App\Friends;
 
 class FileController extends Controller
 {
@@ -261,5 +263,130 @@ class FileController extends Controller
             $file->allcanview = false;
             $file->save();
         }
+    }
+
+
+    // Phần thêm xóa friend trong share file bị hạn chế
+    protected function removeIdUser($str, $id) {
+        $strArr = explode('|', $str);
+
+        foreach ($strArr as $key => $value) {
+            if ($value == $id) {
+                unset($strArr[$key]);
+
+                return implode('|', $strArr);
+            }
+        }
+
+        return implode('|', $strArr);
+    }
+
+    public function getListFriends() {
+        $userId = Auth::user()->id;
+
+        $friendsId = Friends::find($userId)->friends;
+        
+        $friendsIdArr = explode('|', $friendsId);
+        $friendInfoArr = array();
+        foreach ($friendsIdArr as $key => $value) {
+            $friendInfo = array(
+                'name'  => User::find($value)->name, 
+                'id'    => $value
+            );
+            $friendInfoArr[] = $friendInfo;
+        }
+
+        return $friendInfoArr;
+    }
+
+    public function getListFriendsNotAllow(Request $request) {
+        $friendsName = '';
+
+        $userId = Auth::user()->id;
+
+        // Lấy tên của những người đã kết bạn.
+        $friendsId = Friends::find($userId)->friends;
+        $friendsIdArr = explode('|', $friendsId);
+        foreach ($friendsIdArr as $key => $value) {
+            $friendItemName = User::find($value)->name;
+            $friendsName .= '|' . $friendItemName;
+        }
+        $friendsName = substr($friendsName, 1);
+
+        // Xóa những friend đã có thể xem file
+        if (isset($request->friendAllowed)) {
+            $friendAllowed = $request->friendAllowed;
+
+            $friendsArr = explode('|', $friendAllowed);
+
+            foreach ($friendsArr as $key => $value) {
+                $friendsName = $this->removeIdUser($friendsName, $value);
+            }
+            
+            $friendsIdArr = explode('|', $friendsName);
+            $friendInfoArr = array();
+            foreach ($friendsIdArr as $key => $value) {
+                $friendInfo = array(
+                    'name'  => $value, 
+                    'id'    => User::where('name', $value)->get()[0]->id
+                );
+
+                $friendInfoArr[] = $friendInfo;
+            }
+
+            return $friendInfoArr;
+        }
+
+        return explode('|', $friendName);
+    }
+
+    public function addFriendCanViewFile(Request $request) {
+        $this->validate($request, [
+            'friendName'    => 'required',
+            'fileDir'       => 'required'
+        ]);
+
+        $friendName = $request->friendName;
+        $fileDir = $request->fileDir;
+
+        $fileTarget = Files::where('name', $fileDir)->get();
+
+        $dataToSave = $fileTarget[0]->viewer . '|' . $friendName;
+
+        $fileTarget[0]->viewer = $dataToSave;
+        $fileTarget[0]->save();
+
+        return $friendName;
+    }
+
+    public function getFriendsAllowedView(Request $request) {
+        $this->validate($request, [
+            'fileDir'   => 'required'
+        ]);
+
+        $fileDir = $request->fileDir;
+
+        $friendAllowed = Files::where('name', $fileDir)->select('viewer')->get()[0];
+
+        return $friendAllowed->viewer;
+    }
+
+    public function removeFriendAdded(Request $request) {
+        $this->validate($request, [
+            'friendName'    => 'required',
+            'fileDir'       => 'required'
+        ]);
+
+        $friendName = $request->friendName;
+        $fileDir = $request->fileDir;
+
+        $fileTarget = Files::where('name', $fileDir)->get()[0];
+
+        $viewer = $this->removeIdUser($fileTarget->viewer, $friendName);
+
+        $fileTarget->viewer = $viewer;
+        $fileTarget->save();
+
+        return 'Thành công';
     }
 }

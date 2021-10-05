@@ -26,12 +26,14 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('removeItem', 'FileController@removeItem');
         Route::post('renameItem', 'FileController@renameItem');
         Route::post('allcanview', 'FileController@allcanview');
+        // Route phần share file bị hạn chế
+        Route::get('get-list-friends', 'FileController@getListFriends');
+        Route::post('get-list-friends-not-allowed', 'FileController@getListFriendsNotAllow');
+        Route::post('add-friend-can-view-file', 'FileController@addFriendCanViewFile');
+        Route::post('get-friends-allowed-view', 'FileController@getFriendsAllowedView');
+        Route::post('remove-friend-added', 'FileController@removeFriendAdded');
 
-    Route::get('share/file/{owner}/{itemName}', 'UserController@shareFile');
-    Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
-    Route::get('viewer', function() {
-        return view('viewer');
-    });
+    
 
     Route::get('friend', 'FriendsController@friend');
         Route::post('find-friend', 'FriendsController@findFriend');
@@ -40,6 +42,12 @@ Route::group(['middleware' => 'login'], function() {
         // Route::post('accept-friend-request', 'FriendsController@acceptFriendRequest');
         Route::post('cancel-friend-requested', 'FriendsController@cancelFriendRequested');
         Route::post('unfriend-accepted', 'FriendsController@unfriendAccepted');
+
+    Route::get('share/file/{owner}/{itemName}', 'UserController@shareFile');
+    Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
+    Route::get('viewer', function() {
+        return view('viewer');
+    });
 });
 
 

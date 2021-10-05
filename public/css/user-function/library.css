@@ -336,3 +336,31 @@
 	max-height: 206px;
 	overflow: auto;
 }
+
+.friend-select::-webkit-input-placeholder { text-align:right; }
+.friend-select:-moz-placeholder { text-align:right; }
+.friend-select::placeholder { text-align:right; }
+
+.select-section {
+	position: relative;
+}
+
+.friend-added {
+	position: absolute;
+    left: 6px;
+    top: 9px;
+	display: flex;
+	overflow: auto;
+	max-width: 86%;
+	border-radius: 6px;
+}
+
+.badge-friend-name {
+	margin-right: 3px;
+}
+
+.btn-remove-friend-added {
+	font-size: 8.4px;
+	margin-top: 1px;
+	margin-left: 3px;
+}

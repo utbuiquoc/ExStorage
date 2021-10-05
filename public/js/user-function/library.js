@@ -28,6 +28,7 @@ extendSidebar.onclick = function() {
 var file = document.querySelectorAll('.file-address');
 var preview = document.querySelector('#pdf-js-viewer');
 
+const currentDomain = document.location.host;
 
 function previewDocsAction() {
 	var file = document.querySelectorAll('.file-address');
@@ -37,7 +38,7 @@ function previewDocsAction() {
 
 		itemSelector.addEventListener('click', () => {
 		// change src attribute of iframe
-		preview.src = 'http://docsstorage.dev/viewer?file=fileUploaded/' + item.value;
+		preview.src = '/viewer?file=fileUploaded/' + item.value;
 		})
 	});
 }
@@ -719,7 +720,36 @@ privateOption.onclick = function() {
 }
 
 limitedOption.onclick = function() {
+	
 	limitedOptionSelected();
+	
+
+	// Đổ những người đã được cho phép xem file vào
+	friendChoosedSection.innerHTML = '';
+	
+	let formData = new FormData;
+	const fileDir = document.querySelector('.itemName-selected').value;
+
+	formData.append('fileDir', fileDir);
+	axios.post('get-friends-allowed-view', formData)
+	.then(response => {
+		console.log(response);
+		let friendAllowed = response.data;
+		friendAllowed = friendAllowed.split('|');
+
+		friendAllowed.innerHTML = '';
+		friendAllowed.forEach(item => {
+			friendChoosedSection.insertAdjacentHTML('afterbegin', `
+				<span class="badge bg-primary badge-friend-name d-flex">${item}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+			`);
+		});
+
+
+		removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+	})
+	.catch(error => {
+		console.log(error.response.data);
+	});
 }
 
 publicOption.onclick = function() {
@@ -753,12 +783,136 @@ publicOption.onclick = function() {
 	}
 }
 
-// Đổ dữ liệu vào friend-select-input
-var friendsSelectSection = document.querySelector('.list-select-friend');
+// hiện list cho friend-select-input
+function hideOnClickOutside(element, callback) { //hàm phát hiện click ra ngooài
+	const outsideClickListener = event => {
+		if (!element.contains(event.target) && isVisible(element)) { // or use: event.target.closest(selector) === null
+			callback();
+			removeClickListener();
+		}
+	}
 
-// Onfocus cho friend-select-input
+	const removeClickListener = () => {
+		document.removeEventListener('click', outsideClickListener);
+	}
+
+	document.addEventListener('click', outsideClickListener);
+}
+
+const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
+
+// Hàm đổ dữ liệu vào friend-input
+const insertValueToFriendInput = () => {
+	// Đổ dữ liệu vào friend-select-input
+	const friendsSelectionList = document.querySelectorAll('.badge-friend-name');
+	let formData = new FormData;
+	
+	if (friendsSelectionList.length > 0) {
+		let AllFriendsAllowed = '';
+		friendsSelectionList.forEach(item => {
+			AllFriendsAllowed += item.innerText + '|';
+		});
+		AllFriendsAllowed = AllFriendsAllowed.slice(0, -1); 
+
+		formData.append('friendAllowed', AllFriendsAllowed);
+	}
+
+	axios.post('get-list-friends-not-allowed', formData)
+	.then(response => {
+		console.log(response);
+		let friendNotAllow = response.data;
+
+		friendsSelectSection.innerHTML = '';
+
+		friendNotAllow.forEach(itemData => {
+			friendsSelectSection.insertAdjacentHTML('afterbegin', `
+				<button type="button" class="list-group-item list-group-item-action friend-item-selection" value="${itemData.name}">#${itemData.id}: ${itemData.name}</button>
+			`);
+		});
+
+		friendsSelectInput.placeholder = '';
+		addFriendsCanViewFile(); // Xử lí để có thể thêm friend có thể xem file
+	})
+	.catch(error => {
+		console.log(error.response.data);
+	});
+}
+
+
 var friendsSelectInput = document.querySelector('.friend-select');
 
-friendsSelectInput.onfocus = () => {
+var friendsSelectSection = document.querySelector('.list-select-friend');
+var friendChoosedSection = document.querySelector('.friend-added');
+
+var selectSection = document.querySelector('.select-section');
+
+friendsSelectInput.onclick = () => {
 	friendsSelectSection.classList.replace('d-none', 'd-flex');
+	
+	hideOnClickOutside(selectSection, () => {
+		friendsSelectSection.classList.replace('d-flex', 'd-none');
+	});
+
+	insertValueToFriendInput();	
+}
+
+const addFriendsCanViewFile = () => { // Hàm thêm friend vào input
+	const friendsItem = document.querySelectorAll('.friend-item-selection');
+	if (friendsItem.length > 0) { //Nếu số lượng friend được add bằng 0
+		friendsItem.forEach(item => {
+			item.onclick = () => {
+				let fileItemDir = document.querySelector('.itemName-selected').value;
+				console.log(fileItemDir);
+
+				let formData = new FormData;
+				formData.append('friendName', item.value);
+				formData.append('fileDir', fileItemDir);
+
+				axios.post('add-friend-can-view-file', formData)
+				.then(response => {
+					console.log(response);
+
+					const friendName = response.data;
+
+					friendChoosedSection.insertAdjacentHTML('afterbegin', `
+						<span class="badge bg-primary badge-friend-name d-flex">${friendName}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+					`);
+
+					item.remove();
+						
+					removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			}
+		});
+	}
+}
+
+// Hàm xóa những friend đã được cho phép xem file
+const removeFriendAdded = () => {
+	const friendsAddedList = document.querySelectorAll('.badge-friend-name');
+
+	friendsAddedList.forEach(friend => {
+		friend.querySelector('.btn-remove-friend-added').onclick = () => {
+			const friendName = friend.innerText;
+			const fileDir = document.querySelector('.itemName-selected').value;
+
+			let formData = new FormData;
+			formData.append('friendName', friendName);
+			formData.append('fileDir', fileDir);
+
+			axios.post('remove-friend-added', formData)
+			.then(response => {
+				console.log(response);
+
+				friend.remove();
+				insertValueToFriendInput();
+			})
+			.catch(error => {
+				console.log(error.response.data);
+			});
+		}
+	});
 }
