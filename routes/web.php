@@ -25,8 +25,10 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('removeType', 'FileController@removeType');
         Route::post('removeItem', 'FileController@removeItem');
         Route::post('renameItem', 'FileController@renameItem');
-        Route::post('allcanview', 'FileController@allcanview');
+        Route::post('set-private', 'FileController@setPrivate');
+        Route::post('set-public', 'FileController@setPublic');
         // Route phần share file bị hạn chế
+        Route::post('set-file-limited', 'FileController@setLimited');
         Route::get('get-list-friends', 'FileController@getListFriends');
         Route::post('get-list-friends-not-allowed', 'FileController@getListFriendsNotAllow');
         Route::post('add-friend-can-view-file', 'FileController@addFriendCanViewFile');

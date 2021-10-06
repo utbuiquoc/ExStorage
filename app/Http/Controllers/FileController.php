@@ -244,11 +244,8 @@ class FileController extends Controller
         return redirect()->back();   
     }
 
-    public function allcanview(Request $request) {
+    public function setPrivate(Request $request) {
         $fileName = $request->itemNameSelected;
-        $isAllCanView = $request->isallcanview;
-        // $fileName = '1630404228115_Nyan cat.pdf';
-        // $isAllCanView = '0';
 
         $fileDB = new Files;
 
@@ -256,13 +253,43 @@ class FileController extends Controller
 
         $file = Files::find($file[0]->id);
 
-        if ($isAllCanView === '0') {
-            $file->allcanview = true;
-            $file->save();
-        } else if ($isAllCanView === '1') {
-            $file->allcanview = false;
-            $file->save();
-        }
+        $file->allcanview = false;
+        $file->allowshare = false;
+        $file->save();
+
+        return 'Thành công!';
+    }
+
+    public function setPublic(Request $request) {
+        $fileName = $request->itemNameSelected;
+
+        $fileDB = new Files;
+
+        $file = $fileDB->where('owner', Auth::user()->name)->where('name', $fileName)->get();
+
+        $file = Files::find($file[0]->id);
+
+        $file->allcanview = false;
+        $file->allowshare = false;
+        $file->save();
+
+        return 'Thành công!';
+    }
+
+    public function setLimited(Request $request) {
+        $fileName = $request->fileDir;
+
+        $fileDB = new Files;
+
+        $file = $fileDB->where('owner', Auth::user()->name)->where('name', $fileName)->get();
+
+        $file = Files::find($file[0]->id);
+
+        $file->allcanview = false;
+        $file->allowshare = true;
+        $file->save();
+
+        return 'Thành công!';
     }
 
 

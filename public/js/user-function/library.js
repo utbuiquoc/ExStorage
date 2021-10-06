@@ -86,9 +86,6 @@ cancelAddBtn.forEach(function(cancelBtn) {
 
 function genderChanged(obj) {
     var value = obj.value;
-    // selectValue.forEach(function(selectInput) {
-    // 	selectInput.value = value;
-    // });
     window.location = '/library/' + value;
 }
 
@@ -216,6 +213,7 @@ var cancelShareBtn = document.querySelector('.cancel-share');
 
 function fileOptionAction() {
 	var fileItemElement = document.querySelectorAll('.file-item');
+	console.log(fileItemElement);
 	var optionDialogs = document.querySelectorAll('.option-dialog');
 	var optionBtns = document.querySelectorAll('.option-btn');
 
@@ -334,10 +332,43 @@ function fileOptionAction() {
 			// 	publicOptionSelected();
 			// }
 
-			if (shareStatus) {
-				publicOptionSelected();
+
+			if (item.querySelector('.is-limited').value === "1") {
+				limitedOptionSelected();
+				friendChoosedSection.innerHTML = '';
+	
+				let formData = new FormData;
+				const fileDir = document.querySelector('.itemName-selected').value;
+
+
+				formData.append('fileDir', fileDir);
+
+				// Đổ những người đã được cho phép xem file vào
+				axios.post('get-friends-allowed-view', formData)
+				.then(response => {
+					console.log(response);
+					let friendAllowed = response.data;
+					friendAllowed = friendAllowed.split('|');
+
+					friendAllowed.innerHTML = '';
+					friendAllowed.forEach(item => {
+						friendChoosedSection.insertAdjacentHTML('afterbegin', `
+							<span class="badge bg-primary badge-friend-name d-flex">${item}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+						`);
+					});
+
+
+					removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+				})
+				.catch(error => {
+					console.log(error.response.data);
+				});
 			} else {
-				privateOptionSeleted();
+				if (shareStatus) {
+					publicOptionSelected();
+				} else {
+					privateOptionSeleted();
+				}
 			}
 		}
 	});
@@ -442,6 +473,7 @@ function uploadFile() {
 				<input type="hidden" class="file-address" value="${fileNameToSave}">
 				<input type="hidden" class="file-dir" value="${currentRootDir}">
 				<input type="hidden" class="allcanview-file" value="${acv}">
+				<input type="hidden" class="isPrivate" value="0">
 
 				<div class="selector">
 					<div class="file-type">
@@ -692,45 +724,64 @@ function removeSelected() {
 privateOption.onclick = function() {
 	privateOptionSeleted();
 	let currentDirName = document.querySelector('.itemName-selected').value;
-	let isallcanview = document.querySelector('.isallcanview').value;
 
-	if (isallcanview === '1') {
-		// Sửa allcanview của file lại thành true (1)
-		var formData = new FormData();
-		formData.append('itemNameSelected', currentDirName);
-		formData.append('isallcanview', isallcanview);
+	// Sửa allcanview của file lại thành false (0) - set file thành private
+	var formData = new FormData();
+	formData.append('itemNameSelected', currentDirName);
 
-		axios.post('allcanview', formData)
-		.then(function(response) {
-			console.log(response);
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
+	axios.post('set-private', formData)
+	.then(function(response) {
+		console.log(response);
+	})
+	.catch(function(error) {
+		console.log(error);
+	});
+
+	document.querySelector('.isallcanview').value = '0';
+	let dirItemCurrent = document.querySelectorAll('.file-item');
+	dirItemCurrent.forEach(function(item) {
+		if (item.querySelector('.file-address').value === currentDirName) {
+			item.querySelector('.allcanview-file').value = '0';
+			item.querySelector('.is-limited').value = '0';
+		}
+	});
+
+	openToast('.sucessToast', 'Đã đặt loại tệp tin thành riêng tư!');
+}
+
+limitedOption.onclick = function() {
+	limitedOptionSelected();
+
+	friendChoosedSection.innerHTML = '';
+	
+	let formData = new FormData;
+	const fileDir = document.querySelector('.itemName-selected').value;
+
+
+	formData.append('fileDir', fileDir);
+
+	// Set file thành limited
+	let currentDirName = document.querySelector('.itemName-selected').value;
+	axios.post('set-file-limited', formData) 
+	.then(response => {
+		console.log(response);
 
 		document.querySelector('.isallcanview').value = '0';
 		let dirItemCurrent = document.querySelectorAll('.file-item');
 		dirItemCurrent.forEach(function(item) {
 			if (item.querySelector('.file-address').value === currentDirName) {
 				item.querySelector('.allcanview-file').value = '0';
+				item.querySelector('.is-limited').value = '1';
 			}
+		
+			openToast('.sucessToast', 'Tệp đã được giới hạn người xem!');
 		});
-		openToast('.sucessToast', 'Đã đặt loại tệp tin thành riêng tư!');
-	}
-}
-
-limitedOption.onclick = function() {
-	
-	limitedOptionSelected();
-	
+	})
+	.catch(error => {
+		console.log(error);
+	});
 
 	// Đổ những người đã được cho phép xem file vào
-	friendChoosedSection.innerHTML = '';
-	
-	let formData = new FormData;
-	const fileDir = document.querySelector('.itemName-selected').value;
-
-	formData.append('fileDir', fileDir);
 	axios.post('get-friends-allowed-view', formData)
 	.then(response => {
 		console.log(response);
@@ -755,32 +806,30 @@ limitedOption.onclick = function() {
 publicOption.onclick = function() {
 	publicOptionSelected();
 	let currentDirName = document.querySelector('.itemName-selected').value;
-	let isallcanview = document.querySelector('.isallcanview').value;
 
-	if (isallcanview === '0') {
-		// Sửa allcanview của file lại thành true (1)
-		var formData = new FormData();
-		formData.append('itemNameSelected', currentDirName);
-		formData.append('isallcanview', isallcanview);
+	// Sửa allcanview của file lại thành true (1)
+	var formData = new FormData();
+	formData.append('itemNameSelected', currentDirName);
 
-		axios.post('allcanview', formData)
-		.then(function(response) {
-			console.log(response);
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
+	axios.post('set-public', formData)
+	.then(function(response) {
+		console.log(response);
+	})
+	.catch(function(error) {
+		console.log(error);
+	});
 
-		document.querySelector('.isallcanview').value = '1';
-		let dirItemCurrent = document.querySelectorAll('.file-item');
-		console.log(dirItemCurrent);
-		dirItemCurrent.forEach(function(item) {
-			if (item.querySelector('.file-address').value === currentDirName) {
-				item.querySelector('.allcanview-file').value = '1';
-			}
-		});
-		openToast('.sucessToast', 'Đã tạo liên kết chia sẻ tệp!');
-	}
+	document.querySelector('.isallcanview').value = '1';
+	let dirItemCurrent = document.querySelectorAll('.file-item');
+	console.log(dirItemCurrent);
+	dirItemCurrent.forEach(function(item) {
+		if (item.querySelector('.file-address').value === currentDirName) {
+			item.querySelector('.allcanview-file').value = '1';
+			item.querySelector('.is-limited').value = '0';
+		}
+	});
+
+	openToast('.sucessToast', 'Đã tạo liên kết chia sẻ tệp!');
 }
 
 // hiện list cho friend-select-input

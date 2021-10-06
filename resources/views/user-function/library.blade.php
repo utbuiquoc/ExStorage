@@ -100,6 +100,7 @@
 								<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
 								<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
 								<input type="hidden" class="allcanview-file" value="<?php echo $value->allcanview; ?>">
+								<input type="hidden" class="is-limited" value="<?php echo $value->allowshare; ?>">
 								<div class="selector">
 									<div class="file-type">
 										<img src="img/docs-icon/<?php 
