@@ -44,14 +44,14 @@ Route::group(['middleware' => 'login'], function() {
         // Route::post('accept-friend-request', 'FriendsController@acceptFriendRequest');
         Route::post('cancel-friend-requested', 'FriendsController@cancelFriendRequested');
         Route::post('unfriend-accepted', 'FriendsController@unfriendAccepted');
-
-    Route::get('share/file/{owner}/{itemName}', 'UserController@shareFile');
-    Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
-    Route::get('viewer', function() {
-        return view('viewer');
-    });
 });
 
+
+Route::get('share/file/{owner}/{itemName}', 'UserController@shareFile');
+Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->where('itemDir', '.*');;
+Route::get('viewer', function() {
+    return view('viewer');
+});
 
 // Route Đăng nhập, đăng kí, đăng xuất
 Route::get('sign-in', function() {

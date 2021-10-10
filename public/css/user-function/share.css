@@ -1,4 +1,4 @@
-	body {
+body {
 	overflow: hidden;
 }
 
@@ -49,6 +49,9 @@
 .file-item, .folder-item {
 	flex-direction: row;
 }
+.file-item:hover, .folder-item:hover {
+	background-color: rgba(0, 0, 0, 0.07);
+}
 
 .selector {
 	display: flex;
@@ -64,8 +67,8 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	flex: 7;
-	padding: 0 12px;
+	flex: 5;
+	padding: 0 7px;
 	cursor: pointer;
 }
 
@@ -106,7 +109,26 @@
 	flex-direction: row;
 }
 
-.list-file {
+.file-share {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	position: relative;
+}
+
+.file-share .option-btn {
+	font-size: 18px;
+	display: none;
+	cursor: pointer;
+	z-index: 5;
+}
+
+.file-item:hover .option-btn {
+	display: block;
+}
+
+.list-file-column {
 	overflow-y: auto;
 	height: calc(100vh - 133px);
 }
@@ -126,7 +148,7 @@
 }
 
 .minisizePreviewDocs {
-	width: 66.66666667%;
+	width: 75%;
 	animation: minisizePreviewDocs 1s ease;
 }
 
@@ -140,7 +162,7 @@
 
 @keyframes hideSidebar {
 	from {
-		width: 33.33333333%;
+		width: 25%;
 	} to {
 		width: 0%;
 	}
@@ -148,7 +170,7 @@
 
 @keyframes extendPreviewDocs {
 	from {
-		width: 66.66666667%;
+		width: 75%;
 	} to {
 		width: 100%;
 	}
@@ -158,7 +180,7 @@
 	from {
 		width: 100%;
 	} to {
-		width: 66.66666667%;
+		width: 75%;
 	}
 }
 
@@ -166,7 +188,7 @@
 	from {
 		width: 0%;
 	} to {
-		width: 33.33333333%;
+		width: 25%;
 	}
 }
 
@@ -184,16 +206,20 @@
 .create-new-type {
 	width: 500px;
 	margin: auto;
-	transform: translate(-50px,-55px);
+	transform: translate(-25px,-27.5px);
 }
 
 .add-modal,
 .error-modal,
 .confirm-modal,
-.rename-modal {
+.rename-modal,
+.share-modal {
 	width: 400px;
 	margin: auto;
-	transform: translate(-50px,-55px);
+	transform: translate(-25px,-27.5px);
+}
+.share-modal {
+	width: 600px;
 }
 
 .cancel-icon {
@@ -267,4 +293,74 @@
 .confirm-modal__form {
 	display: flex;
 	flex-direction: column;
+}
+
+/*Toast*/
+.toast-header {
+	border-radius: 4px;
+}
+
+.toast-icon {
+	font-size: 24px;
+}
+
+.toast-notifi {
+	font-size: 16px;
+	margin-bottom: 3px;
+}
+
+.bg-uploadSucess {
+	background-color: #28a745;
+}
+
+/*Share part*/
+.share-option-description {
+	opacity: 0.8;
+}
+
+.public-link {
+	background-color: #e6f4ea !important;
+	color: #1e8e3e !important;
+}
+
+.linkShare {
+	text-overflow: ellipsis;
+}
+
+/*Phần chọn người để chia sẻ*/
+.list-select-friend {
+	box-shadow: 4px 3px 9px 2px #ccc;
+	position: fixed;
+	width: 94.7%;
+	z-index: 300;
+	max-height: 206px;
+	overflow: auto;
+}
+
+.friend-select::-webkit-input-placeholder { text-align:right; }
+.friend-select:-moz-placeholder { text-align:right; }
+.friend-select::placeholder { text-align:right; }
+
+.select-section {
+	position: relative;
+}
+
+.friend-added {
+	position: absolute;
+    left: 6px;
+    top: 9px;
+	display: flex;
+	overflow: auto;
+	max-width: 86%;
+	border-radius: 6px;
+}
+
+.badge-friend-name {
+	margin-right: 3px;
+}
+
+.btn-remove-friend-added {
+	font-size: 8.4px;
+	margin-top: 1px;
+	margin-left: 3px;
 }

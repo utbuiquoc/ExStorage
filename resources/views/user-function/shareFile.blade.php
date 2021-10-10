@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-	@include('navbar.home-navbar')
+	@include('navbar.share-navbar')
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/share.css">
 
 	<div class="wrapper-on">
-		<div class="col col-md-4 d-flex flex-column sidebar-menu">
+		<div class="col col-md-3 d-flex flex-column sidebar-menu">
 			<div class="type-selection flex-row">
 				{{-- Get list of type (category) --}}
 
@@ -31,39 +31,82 @@
 					{{-- Get data file --}}
 					<?php 
 						$file = new App\Files;
+						$item = $file->where('owner', $owner)->where('name', $itemName)->get()[0];
+						
+						$allcanview = $item->allcanview;
+						$allowshare = $item->allowshare;
 
-						$item = $file->where('owner', $owner)->where('name', $itemName)->where('allcanview', true)->get();
-						if (count($item) > 0) foreach ($item as $key => $value) {
-					?>
+						$limitedView = false;
 
-						<div class="dirItem file-item d-flex card mt-1">
-							<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
-							<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
-							<div class="selector">
-								<div class="file-type">
-									<img src="img/docs-icon/<?php 
-									if ($value->type == 'docx') { echo 'docx-icon.png'; }
-									else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-									else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
-									 ?>" alt="">
-								</div>
+						if ($allowshare) $limitedView = true;
+						
+						if ($limitedView) { // Nếu file bị giới hạn người xem
+							$viewer = $item->viewer;
+							
+							$viewer = explode('|', $viewer);
 
-								<div class="file-info">
-									<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
-									<div class="file-info__extends d-flex">
-										<p class="file-info__time"><?php echo $value->created_at; ?></p>
-										<p class="file-info__type">.<?php echo $value->type ?> file</p>
+							foreach ($viewer as $key => $value) {
+								if (Auth::user() !== null) {
+									if ($value == Auth::user()->name) {
+									?>
+										<div class="dirItem file-item d-flex card mt-1">
+											<input type="hidden" class="file-address" value="<?php echo $item->name; ?>">
+											<input type="hidden" class="file-dir" value="<?php echo $item->dir; ?>">
+											<div class="selector">
+												<div class="file-type">
+													<img src="img/docs-icon/<?php 
+													if ($item->type == 'docx') { echo 'docx-icon.png'; }
+													else if ($item->type == 'pdf') { echo 'pdf-icon.png'; }
+													else if ($item->type == 'xlsx') { echo 'xlsx-icon.png'; }
+													?>" alt="">
+												</div>
+
+												<div class="file-info">
+													<h6 class="file-info__name"><?php echo $item->fileName; ?></h6>
+													<div class="file-info__extends d-flex">
+														<p class="file-info__time"><?php echo $item->created_at; ?></p>
+														<p class="file-info__type">.<?php echo $item->type; ?> file</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									<?php
+									}
+								}
+							}
+						} else {
+							if ($allcanview) {
+								?>
+								<div class="dirItem file-item d-flex card mt-1">
+									<input type="hidden" class="file-address" value="<?php echo $item->name; ?>">
+									<input type="hidden" class="file-dir" value="<?php echo $item->dir; ?>">
+									<div class="selector">
+										<div class="file-type">
+											<img src="img/docs-icon/<?php 
+											if ($item->type == 'docx') { echo 'docx-icon.png'; }
+											else if ($item->type == 'pdf') { echo 'pdf-icon.png'; }
+											else if ($item->type == 'xlsx') { echo 'xlsx-icon.png'; }
+											?>" alt="">
+										</div>
+
+										<div class="file-info">
+											<h6 class="file-info__name"><?php echo $item->fileName; ?></h6>
+											<div class="file-info__extends d-flex">
+												<p class="file-info__time"><?php echo $item->created_at; ?></p>
+												<p class="file-info__type">.<?php echo $item->type; ?> file</p>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-
-					<?php } ?>
+								<?php
+							}
+						}
+					?>
 				</div>
 			</div>
 		</div>
 
-		<div class="col col-md-8 card-library preview-docs">
+		<div class="col col-md-9 card-library preview-docs">
 			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 	</div>

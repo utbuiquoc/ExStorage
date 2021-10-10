@@ -169,6 +169,7 @@ function folderOnlickAction() {
 	        addCache();
 	        backBtn.classList.replace('d-none', 'd-flex'); //Hiện lên nút back khi nhấp vào folder
 	        folderDir = folderElement.childNodes[1].value;
+			console.log(folderElement);
 	        document.querySelector('#currentDir').value = folderDir;
 	        currentDir();
 	        showFile();
@@ -213,7 +214,6 @@ var cancelShareBtn = document.querySelector('.cancel-share');
 
 function fileOptionAction() {
 	var fileItemElement = document.querySelectorAll('.file-item');
-	console.log(fileItemElement);
 	var optionDialogs = document.querySelectorAll('.option-dialog');
 	var optionBtns = document.querySelectorAll('.option-btn');
 
@@ -331,7 +331,6 @@ function fileOptionAction() {
 			// } else if (optionSelect.value === 'Với bất kỳ ai') {
 			// 	publicOptionSelected();
 			// }
-
 
 			if (item.querySelector('.is-limited').value === "1") {
 				limitedOptionSelected();
@@ -473,7 +472,7 @@ function uploadFile() {
 				<input type="hidden" class="file-address" value="${fileNameToSave}">
 				<input type="hidden" class="file-dir" value="${currentRootDir}">
 				<input type="hidden" class="allcanview-file" value="${acv}">
-				<input type="hidden" class="isPrivate" value="0">
+				<input type="hidden" class="is-limited" value="0">
 
 				<div class="selector">
 					<div class="file-type">
@@ -558,7 +557,7 @@ function createFolder() {
 			fileList.insertAdjacentHTML('afterbegin',
 			`
 				<div class="dirItem folder-item d-flex card mt-1">
-					<input type="hidden" class="folder-address" value="${dirFolder}>">
+					<input type="hidden" class="folder-address" value="${dirFolder}">
 					<input type="hidden" class="allcanview-folder" value="${acv}">
 
 					<div class="file-type">

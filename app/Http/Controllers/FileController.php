@@ -269,7 +269,7 @@ class FileController extends Controller
 
         $file = Files::find($file[0]->id);
 
-        $file->allcanview = false;
+        $file->allcanview = true;
         $file->allowshare = false;
         $file->save();
 
