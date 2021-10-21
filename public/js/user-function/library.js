@@ -214,9 +214,12 @@ var cancelShareBtn = document.querySelector('.cancel-share');
 
 function fileOptionAction() {
 	var fileItemElement = document.querySelectorAll('.file-item');
+	var folderItemElement = document.querySelectorAll('.folder-item');
+
 	var optionDialogs = document.querySelectorAll('.option-dialog');
 	var optionBtns = document.querySelectorAll('.option-btn');
 
+	// Ẩn hiện Option cho file
 	fileItemElement.forEach(function(item) {
 		var optionBtn = item.querySelector('.option-btn');
 		var optionDialog = item.querySelector('.option-dialog');
@@ -247,6 +250,7 @@ function fileOptionAction() {
 				optionDialog.classList.remove('mt-5');
 			}
 		}
+		
 
 		optionBtn.onclick = function() {
 			itemSelected = optionBtn.parentElement.parentElement;
@@ -304,6 +308,166 @@ function fileOptionAction() {
 
 		// Mở share
 		shareOption.onclick = function() {
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			shareModal.classList.replace('d-none', 'd-flex');
+
+			let shareStatus = item.querySelector('.allcanview-file').value;
+			document.querySelector('.isallcanview').value = shareStatus;
+			if (shareStatus ===  '1') {
+				shareStatus = true;
+			} else  {
+				shareStatus = false;
+			}
+
+
+			//Phần liên kết chia sẻ file
+			var linkShare = document.querySelector('.linkShare');
+
+			var fileLink = itemSelected.querySelector('.file-address').value;
+			linkShare.value = encodeURI(window.location.hostname + "/share/file/" + currentUser + '/' + fileLink);
+
+			// var optionSelect = document.querySelector('.optionSelect');
+			// if (optionSelect.value === 'Riêng tư') {
+			// 	privateOptionSeleted();
+			// } else if (optionSelect.value === 'Bị hạn chế') {
+			// 	limitedOptionSelected();
+			// } else if (optionSelect.value === 'Với bất kỳ ai') {
+			// 	publicOptionSelected();
+			// }
+
+			if (item.querySelector('.is-limited').value === "1") {
+				limitedOptionSelected();
+				friendChoosedSection.innerHTML = '';
+	
+				let formData = new FormData;
+				const fileDir = document.querySelector('.itemName-selected').value;
+
+
+				formData.append('fileDir', fileDir);
+
+				// Đổ những người đã được cho phép xem file vào
+				axios.post('get-friends-allowed-view', formData)
+				.then(response => {
+					console.log(response);
+					let friendAllowed = response.data;
+					friendAllowed = friendAllowed.split('|');
+
+					friendAllowed.innerHTML = '';
+					friendAllowed.forEach(item => {
+						friendChoosedSection.insertAdjacentHTML('afterbegin', `
+							<span class="badge bg-primary badge-friend-name d-flex">${item}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+						`);
+					});
+
+
+					removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+				})
+				.catch(error => {
+					console.log(error.response.data);
+				});
+			} else {
+				if (shareStatus) {
+					publicOptionSelected();
+				} else {
+					privateOptionSeleted();
+				}
+			}
+		}
+	});
+
+	// Ẩn hiện Option cho folder
+	folderItemElement.forEach(function(item) {
+		var optionBtn = item.querySelector('.option-btn');
+		var optionDialog = item.querySelector('.option-dialog');
+		var isOpen = false;
+
+		// Ẩn hiện option
+		function Open() {
+			isOpen = true;
+			optionDialog.classList.replace('d-none', 'd-flex');
+			coverPage.classList.remove('d-none');
+			optionBtn.classList.add('d-flex');
+		}
+
+		function Close() {
+			isOpen = false;
+			optionDialog.classList.replace('d-flex', 'd-none');
+			coverPage.classList.add('d-none');
+			optionBtn.classList.remove('d-flex');
+		}
+
+		function moveDialog() {
+			if (optionDialog.getBoundingClientRect().top < 92) {
+				optionDialog.classList.remove('mb-5');
+				optionDialog.classList.add('mt-5');
+			}
+			if (optionDialog.getBoundingClientRect().top > (document.body.clientHeight - 135)) {
+				optionDialog.classList.add('mb-5');
+				optionDialog.classList.remove('mt-5');
+			}
+		}
+		
+
+		optionBtn.onclick = function(e) {
+			e.stopPropagation();
+			itemSelected = optionBtn.parentElement.parentElement;
+
+			// Tạo value (dir item) cho form
+			var itemDir = item.querySelector('.folder-address').value;
+			document.querySelectorAll('.itemDir-selected').forEach(function(item) {
+				item.value = itemDir;
+			});
+			document.querySelector('.itemNameSelectedRemoveItem').value = '#folderToRemoveType#'; // Đánh dấu cho biết đây là folder
+
+
+			if (isOpen) {			
+				Close();
+			} else {
+				Open();
+			}
+
+
+			coverPage.onclick = function() {
+				isOpen = false;
+				coverPage.classList.add('d-none');
+				optionDialogs.forEach(function(item) {
+					item.classList.replace('d-flex', 'd-none');
+				});
+				optionBtns.forEach(function(item) {
+					item.classList.remove('d-flex');
+				});
+			}
+
+			moveDialog();
+		}
+
+		var shareOption = item.querySelector('.share-option');
+		var renameOption = item.querySelector('.rename-option');
+		var removeOption = item.querySelector('.remove-option');
+
+		// Mở remove Modal
+		removeOption.onclick = function(e) {
+			e.stopPropagation();
+
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			confirmModal.classList.replace('d-none', 'd-flex');
+		}
+
+		// Mở rename Modal
+		renameOption.onclick = function(e) {
+			e.stopPropagation();
+
+			Close();
+			modalLibrary.setAttribute('style', 'display:flex !important');
+			renameModal.classList.replace('d-none', 'd-flex');
+		}
+
+		// Mở share
+		shareOption.onclick = function(e) {
+			e.stopPropagation();
+
 			Close();
 			modalLibrary.setAttribute('style', 'display:flex !important');
 			shareModal.classList.replace('d-none', 'd-flex');
@@ -574,10 +738,18 @@ function createFolder() {
 
 					<div class="file-share">
 						<i class="option-btn bi bi-three-dots-vertical"></i>
+						<div class="option-dialog d-none">
+							<ul class="option-list">
+								<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
+								<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
+								<li class="option-list__item remove-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
+							</ul>
+						</div>							
 					</div>
 				</div>
 			`);
 			folderOnlickAction();
+			fileOptionAction();
 		}
 	})
 	.catch(function(error) {
@@ -596,24 +768,49 @@ function removeItem() {
 	var itemDir = document.querySelector('.itemDirSelectedRemoveItem').value;
 	var itemName = document.querySelector('.itemNameSelectedRemoveItem').value;
 
-	var formData = new FormData();
-	formData.append('itemDirSelected', itemDir);
-	formData.append('itemNameSelected', itemName);
+	console.log(itemDir);
+	console.log(itemName);
 
-	axios.post('removeItem', formData)
-	.then(function(response) {
+	// Nếu item cần xóa là thư mục
+	if (itemName === '#folderToRemoveType#') {
+		var formData = new FormData();
+		formData.append('itemDirSelected', itemDir);
+		formData.append('itemNameSelected', itemName);
 
-		itemSelected.remove();
+		axios.post('removeItem', formData)
+		.then(function(response) {
 
-		openToast('.sucessToast', 'Đã xóa tệp tin!');
+			itemSelected.remove();
 
-		document.querySelector('.cancel-confirm').click();
-	})
-	.catch(function(error) {
-		openToast('.errorToast', 'Đã có lỗi xảy ra!');
-	})
+			openToast('.sucessToast', 'Đã xóa tệp tin!');
 
-	return false;
+			document.querySelector('.cancel-confirm').click();
+		})
+		.catch(function(error) {
+			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+		})
+
+		return false;
+	} else { // Còn nếu là file thì
+		var formData = new FormData();
+		formData.append('itemDirSelected', itemDir);
+		formData.append('itemNameSelected', itemName);
+
+		axios.post('removeItem', formData)
+		.then(function(response) {
+
+			itemSelected.remove();
+
+			openToast('.sucessToast', 'Đã xóa tệp tin!');
+
+			document.querySelector('.cancel-confirm').click();
+		})
+		.catch(function(error) {
+			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+		})
+
+		return false;
+	}
 }
 
 function renameItem() {

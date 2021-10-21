@@ -124,7 +124,7 @@
 	z-index: 5;
 }
 
-.file-item:hover .option-btn {
+.file-item:hover .option-btn, .folder-item:hover .option-btn {
 	display: block;
 }
 

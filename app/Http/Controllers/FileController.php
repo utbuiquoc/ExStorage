@@ -198,6 +198,19 @@ class FileController extends Controller
         return redirect()->back();
     }
 
+    public function removeFolder(Request $request) {
+        $fileDb = new Files;
+
+        $fileDir = $request->itemDirSelected;
+        $fileName = $request->itemNameSelected;
+        
+        $fileToRemove = $fileDb->where('owner', Auth::user()->name)->where('name', $fileName)->where('dir', $fileDir)->delete();
+        
+        $fileDirToRemove = "/fileUpload/" . $fileName;
+        File::delete($fileDirToRemove);
+        return redirect()->back();
+    }
+
     public function renameItem(Request $request) {
         $this->validate($request, [
             'name' => 'required|min:3'

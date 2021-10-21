@@ -24,6 +24,7 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('createFolder', 'FileController@createFolder');
         Route::post('removeType', 'FileController@removeType');
         Route::post('removeItem', 'FileController@removeItem');
+        Route::post('removeFolder', 'FileController@removeFolder');
         Route::post('renameItem', 'FileController@renameItem');
         Route::post('set-private', 'FileController@setPrivate');
         Route::post('set-public', 'FileController@setPublic');

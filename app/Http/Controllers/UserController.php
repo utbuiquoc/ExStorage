@@ -134,7 +134,7 @@ class UserController extends Controller
     }
 
     public function testGet() {
-        return view("test");
+        return view("test",  ['title' => 'Test']);
     }
 
     public function testPost(Request $request) {
