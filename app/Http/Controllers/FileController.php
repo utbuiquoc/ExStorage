@@ -199,15 +199,20 @@ class FileController extends Controller
     }
 
     public function removeFolder(Request $request) {
-        $fileDb = new Files;
+        $DirDb = new Dir;
 
         $fileDir = $request->itemDirSelected;
-        $fileName = $request->itemNameSelected;
+
         
-        $fileToRemove = $fileDb->where('owner', Auth::user()->name)->where('name', $fileName)->where('dir', $fileDir)->delete();
+        $DirDb->where('owner', Auth::user()->name)->where('dir', $fileDir)->delete();
+
+        // Nếu mà có thư mục con thì xóa luôn các thư mục con
+        if (($DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->get()) != null) {
+            $DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->delete();
+        }
         
-        $fileDirToRemove = "/fileUpload/" . $fileName;
-        File::delete($fileDirToRemove);
+        // $fileDirToRemove = "/fileUpload/" . $fileName;
+        // File::delete($fileDirToRemove);
         return redirect()->back();
     }
 
@@ -255,6 +260,42 @@ class FileController extends Controller
         rename(public_path("fileUploaded/$oldFileRealName"), public_path("fileUploaded/$newFileRealName"));
         
         return redirect()->back();   
+    }
+
+    public function renameFolder(Request $request) {
+        $this->validate($request, [
+            'itemDirSelected'   => 'required|min:3',
+            'name'  => 'required|min:3'
+        ]);
+
+        // Xử lí dữ liệu
+        $fileDir = $request->itemDirSelected;
+        $newName = $request->name;
+
+        $DirDb = new Dir;
+
+        $DirsNeedRename = $DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->get();
+
+        //Tạo ra DirName mới
+        $newDirName = explode('/', $fileDir);
+        $newDirName[count($newDirName) - 1] = $newName;
+        $newDirName = implode('/', $newDirName);
+
+        //Đổi tên
+
+        foreach ($DirsNeedRename as $key => $value) {
+            $dirId = $value->id;
+
+            $dirFinded = Dir::find($dirId);
+
+            $nameDir = $dirFinded->dir;
+            $nameDir = str_replace($fileDir, $newDirName, $nameDir);
+
+            $dirFinded->dir = $nameDir;
+            $dirFinded->save();
+        }
+
+        return $newDirName; 
     }
 
     public function setPrivate(Request $request) {

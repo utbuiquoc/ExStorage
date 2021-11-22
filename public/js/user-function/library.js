@@ -418,7 +418,10 @@ function fileOptionAction() {
 			document.querySelectorAll('.itemDir-selected').forEach(function(item) {
 				item.value = itemDir;
 			});
-			document.querySelector('.itemNameSelectedRemoveItem').value = '#folderToRemoveType#'; // Đánh dấu cho biết đây là folder
+
+			// Đánh dấu cho biết đây là folder
+			document.querySelector('.itemNameSelectedRemoveItem').value = '#folderToRemoveType#'; 
+			document.querySelector('.itemNameSelectedRenameItem').value = '#folderToRenameType#';
 
 
 			if (isOpen) {			
@@ -442,9 +445,9 @@ function fileOptionAction() {
 			moveDialog();
 		}
 
-		var shareOption = item.querySelector('.share-option');
-		var renameOption = item.querySelector('.rename-option');
-		var removeOption = item.querySelector('.remove-option');
+		var shareOption = item.querySelector('.share-folder-option');
+		var renameOption = item.querySelector('.rename-folder-option');
+		var removeOption = item.querySelector('.remove-folder-option');
 
 		// Mở remove Modal
 		removeOption.onclick = function(e) {
@@ -484,7 +487,7 @@ function fileOptionAction() {
 			//Phần liên kết chia sẻ file
 			var linkShare = document.querySelector('.linkShare');
 
-			var fileLink = itemSelected.querySelector('.file-address').value;
+			var fileLink = itemSelected.querySelector('.folder-address').value;
 			linkShare.value = encodeURI(window.location.hostname + "/share/file/" + currentUser + '/' + fileLink);
 
 			// var optionSelect = document.querySelector('.optionSelect');
@@ -740,9 +743,9 @@ function createFolder() {
 						<i class="option-btn bi bi-three-dots-vertical"></i>
 						<div class="option-dialog d-none">
 							<ul class="option-list">
-								<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
-								<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
-								<li class="option-list__item remove-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
+								<li class="option-list__item share-folder-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
+								<li class="option-list__item rename-folder-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
+								<li class="option-list__item remove-folder-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
 							</ul>
 						</div>							
 					</div>
@@ -768,26 +771,31 @@ function removeItem() {
 	var itemDir = document.querySelector('.itemDirSelectedRemoveItem').value;
 	var itemName = document.querySelector('.itemNameSelectedRemoveItem').value;
 
-	console.log(itemDir);
-	console.log(itemName);
-
 	// Nếu item cần xóa là thư mục
 	if (itemName === '#folderToRemoveType#') {
 		var formData = new FormData();
 		formData.append('itemDirSelected', itemDir);
-		formData.append('itemNameSelected', itemName);
 
-		axios.post('removeItem', formData)
+		axios.post('removeFolder', formData)
 		.then(function(response) {
+			console.log(response);
 
-			itemSelected.remove();
+			// itemSelected.remove();
 
 			openToast('.sucessToast', 'Đã xóa tệp tin!');
 
 			document.querySelector('.cancel-confirm').click();
+
+			const folderElementToRemove = document.querySelectorAll('.folder-address');
+			folderElementToRemove.forEach(e => {
+				if (e.value === itemDir) {
+					e.parentElement.remove();
+				}
+			});
 		})
 		.catch(function(error) {
 			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+			console.log(error.response.data);
 		})
 
 		return false;
@@ -824,29 +832,56 @@ function renameItem() {
 	var itemDir = document.querySelector('.itemDirSelectedRenameItem').value;
 	var itemName = document.querySelector('.itemNameSelectedRenameItem').value;
 
-	var formData = new FormData();
-	formData.append('itemDirSelected', itemDir);
-	formData.append('itemNameSelected', itemName);
-	formData.append('name', newName);
+	if (itemName === '#folderToRenameType#') {
+		var formData = new FormData();
+		formData.append('itemDirSelected', itemDir);
+		formData.append('name', newName);
 
-	axios.post('renameItem', formData)
-	.then(function(response) {
-		console.log(response);
+		axios.post('renamFolder', formData)
+		.then(function(response) {
+			console.log(response);
 
-		itemRenamed = itemSelected.querySelector('.file-info__name');
-		extension = itemRenamed.innerText.split('.');
-		extension = extension[extension.length - 1];
-		itemRenamed.innerText = newName + '.' + extension;
+			itemSelected.querySelector('.folder-address').value = response.data;
 
-		openToast('.sucessToast', 'Đổi tên thành công!');
-	})
-	.catch(function(error) {
-		console.log(error);
+			let itemRenamed = itemSelected.querySelector('.file-info__name');
+			itemRenamed.innerText = newName;
 
-		openToast('.errorToast', 'Đã có lỗi xảy ra!');
-	});
+			openToast('.sucessToast', 'Đổi tên thành công!');
+		})
+		.catch(function(error) {
+			console.log(error);
 
-	return false;
+			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+		});
+
+		return false;
+	} else {
+		var formData = new FormData();
+		formData.append('itemDirSelected', itemDir);
+		formData.append('itemNameSelected', itemName);
+		formData.append('name', newName);
+
+		axios.post('renameItem', formData)
+		.then(function(response) {
+			console.log(response);
+
+			let itemRenamed = itemSelected.querySelector('.file-info__name');
+			let extension = itemRenamed.innerText.split('.');
+			extension = extension[extension.length - 1];
+			itemRenamed.innerText = newName + '.' + extension;
+
+			openToast('.sucessToast', 'Đổi tên thành công!');
+		})
+		.catch(function(error) {
+			console.log(error);
+
+			openToast('.errorToast', 'Đã có lỗi xảy ra!');
+		});
+
+		return false;
+	}
+
+	
 }
 
 // Thao tác với share

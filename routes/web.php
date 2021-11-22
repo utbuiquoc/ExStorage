@@ -26,6 +26,7 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('removeItem', 'FileController@removeItem');
         Route::post('removeFolder', 'FileController@removeFolder');
         Route::post('renameItem', 'FileController@renameItem');
+        Route::post('renamFolder', 'FileController@renameFolder');
         Route::post('set-private', 'FileController@setPrivate');
         Route::post('set-public', 'FileController@setPublic');
         // Route phần share file bị hạn chế

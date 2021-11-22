@@ -84,9 +84,9 @@
 											<i class="option-btn bi bi-three-dots-vertical"></i>
 											<div class="option-dialog d-none">
 												<ul class="option-list">
-													<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
-													<li class="option-list__item rename-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
-													<li class="option-list__item remove-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
+													<li class="option-list__item share-folder-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
+													<li class="option-list__item rename-folder-option"><i class="bi bi-pencil-square"></i><p class="option-text">Đổi tên</p></li>
+													<li class="option-list__item remove-folder-option" ><i class="bi bi-trash"></i><p class="option-text">Xóa</p></li>
 												</ul>
 											</div>							
 										</div>
