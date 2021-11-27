@@ -29,6 +29,7 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('renamFolder', 'FileController@renameFolder');
         Route::post('set-private', 'FileController@setPrivate');
         Route::post('set-public', 'FileController@setPublic');
+
         // Route phần share file bị hạn chế
         Route::post('set-file-limited', 'FileController@setLimited');
         Route::get('get-list-friends', 'FileController@getListFriends');
@@ -75,3 +76,10 @@ Route::get('testGet', 'UserController@testGet');
 Route::post('testPost', 'UserController@testPost');
 
 Route::post('findItem', 'UserController@findItem');
+
+// Test
+Route::post('test-function', 'FileController@renameChildFile');
+
+Route::get('/token', function () {
+    return csrf_token(); 
+});

@@ -262,6 +262,35 @@ class FileController extends Controller
         return redirect()->back();   
     }
 
+    //Phần đổi tên folder.
+    public function renameChildFile($fileId, $oldDir, $newDir) {
+        // $fileId = $request->fileId;
+        // $oldDir = $request->oldDir;
+        // $newDir = $request->newDir;
+        $fileToRename = Files::find($fileId);
+        
+        $fileDir = $fileToRename->dir;
+        $fileDir = str_replace($oldDir, $newDir, $fileDir);
+
+        $fileToRename->dir = $fileDir;
+        $fileToRename->save();
+
+        return $fileToRename;
+    }
+
+    private function renameAllChildFile($dir, $newDir) {
+        $fileDb = new Files;
+        $filesNeedChange = $fileDb->where('dir', 'regexp', "$dir(\/[a-zA-Z0-9\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->renameChildFile($fileId, $dir, $newDir);
+        }
+
+        // return $filesNeedChange;
+    }
+
     public function renameFolder(Request $request) {
         $this->validate($request, [
             'itemDirSelected'   => 'required|min:3',
@@ -274,7 +303,7 @@ class FileController extends Controller
 
         $DirDb = new Dir;
 
-        $DirsNeedRename = $DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->get();
+        $DirsNeedRename = $DirDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$fileDir(\/[a-zA-Z0-9\/_-]*|)$")->get();
 
         //Tạo ra DirName mới
         $newDirName = explode('/', $fileDir);
@@ -294,6 +323,8 @@ class FileController extends Controller
             $dirFinded->dir = $nameDir;
             $dirFinded->save();
         }
+
+        $this->renameAllChildFile($fileDir, $newDirName);
 
         return $newDirName; 
     }

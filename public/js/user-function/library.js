@@ -840,11 +840,41 @@ function renameItem() {
 		axios.post('renamFolder', formData)
 		.then(function(response) {
 			console.log(response);
+			const newDir = response.data;
 
-			itemSelected.querySelector('.folder-address').value = response.data;
+			itemSelected.querySelector('.folder-address').value = newDir;
 
 			let itemRenamed = itemSelected.querySelector('.file-info__name');
 			itemRenamed.innerText = newName;
+
+			// Đổi tên các dir bị ảnh hưởng
+			const folderDir = document.querySelectorAll('.folder-item');
+			const fileDir = document.querySelectorAll('.file-item');
+			console.log(fileDir);
+
+			folderDir.forEach(folderDirItem => {
+				const dir = folderDirItem.querySelector('.folder-address').value;
+				// console.log(dir);
+				
+				const regexTest = new RegExp(itemDir + '(\/[a-zA-Z0-9\/_-]*|)$');
+
+				if (regexTest.test(dir)) {
+					// console.log(folderDirItem);
+					folderDirItem.querySelector('.folder-address').value = dir.replace(itemDir, newDir);
+				}
+			});
+
+			fileDir.forEach(fileDirItem => {
+				const dir = fileDirItem.querySelector('.file-dir').value;
+				console.log(dir);
+				
+				const regexTest = new RegExp(itemDir + '(\/[a-zA-Z0-9\/_-]*|)$');
+
+				if (regexTest.test(dir)) {
+					// console.log(folderDirItem);
+					fileDirItem.querySelector('.file-dir').value = dir.replace(itemDir, newDir);
+				}
+			});
 
 			openToast('.sucessToast', 'Đổi tên thành công!');
 		})
