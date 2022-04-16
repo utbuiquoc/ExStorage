@@ -483,12 +483,14 @@ function fileOptionAction() {
 				shareStatus = false;
 			}
 
+			console.log(shareStatus);
+
 
 			//Phần liên kết chia sẻ file
 			var linkShare = document.querySelector('.linkShare');
 
 			var fileLink = itemSelected.querySelector('.folder-address').value;
-			linkShare.value = encodeURI(window.location.hostname + "/share/file/" + currentUser + '/' + fileLink);
+			linkShare.value = encodeURI(window.location.hostname + "/share/folder/" + currentUser + '/' + fileLink);
 
 			// var optionSelect = document.querySelector('.optionSelect');
 			// if (optionSelect.value === 'Riêng tư') {
@@ -504,10 +506,9 @@ function fileOptionAction() {
 				friendChoosedSection.innerHTML = '';
 	
 				let formData = new FormData;
-				const fileDir = document.querySelector('.itemName-selected').value;
+				const folderDir = document.querySelector('.itemDirSelectedRemoveItem').value;
 
-
-				formData.append('fileDir', fileDir);
+				formData.append('fileDir', folderDir + '/');
 
 				// Đổ những người đã được cho phép xem file vào
 				axios.post('get-friends-allowed-view', formData)

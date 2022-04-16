@@ -472,11 +472,14 @@ class FileController extends Controller
     }
 
     public function getFriendsAllowedView(Request $request) {
-        $this->validate($request, [
-            'fileDir'   => 'required'
-        ]);
-
         $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+            $friendAllowed = Dir::where('dir', $fileDir)->select('viewer')->get()[0];
+
+            return $friendAllowed->viewer;
+        }
 
         $friendAllowed = Files::where('name', $fileDir)->select('viewer')->get()[0];
 

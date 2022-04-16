@@ -67,6 +67,7 @@
 									<div class="dirItem folder-item d-none card mt-1">
 										<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
 										<input type="hidden" class="allcanview-file" value="<?php echo $value->allcanview; ?>">
+										<input type="hidden" class="is-limited" value="<?php echo $value->allowshare; ?>">
 										
 										<div class="file-type">
 											<img src="img/docs-icon/folder-icon.png" alt="">
