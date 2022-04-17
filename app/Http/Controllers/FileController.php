@@ -545,6 +545,38 @@ class FileController extends Controller
         return explode('|', $friendName);
     }
 
+    //Phần add friend cho thư mục
+    public function addItemViewer($fileId, $name, $type) {
+        if ($type === 'folder') {
+            $item = Dir::find($fileId);
+        } else if ($type == 'file') {
+            $item = Files::find($fileId);
+        }
+
+        $item->viewer = $item->viewer . '|' . $name;
+        $item->save();
+    }
+
+    private function addViewer($dir, $viewerName) {
+        $fileDb = new Files;
+        $dir = str_replace('/', '\/', $dir);
+        $filesNeedChange = $fileDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->addItemViewer($fileId, $viewerName, 'file');
+        }
+
+        $folderNeedChange = Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+
+        foreach ($folderNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->addItemViewer($fileId, $viewerName, 'folder');
+        }
+    }
+
     public function addFriendCanViewFile(Request $request) {
         $this->validate($request, [
             'friendName'    => 'required',
@@ -553,6 +585,14 @@ class FileController extends Controller
 
         $friendName = $request->friendName;
         $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+
+            $this->addViewer($fileDir, $friendName);
+
+            return $friendName;
+        }
 
         $fileTarget = Files::where('name', $fileDir)->get();
 
@@ -579,6 +619,38 @@ class FileController extends Controller
         return $friendAllowed->viewer;
     }
 
+    //Phần add friend cho thư mục
+    public function removeItemViewer($fileId, $name, $type) {
+        if ($type === 'folder') {
+            $item = Dir::find($fileId);
+        } else if ($type == 'file') {
+            $item = Files::find($fileId);
+        }
+
+        $item->viewer = str_replace('|'.$name, '', $item->viewer);
+        $item->save();
+    }
+
+    private function removeViewer($dir, $viewerName) {
+        $fileDb = new Files;
+        $dir = str_replace('/', '\/', $dir);
+        $filesNeedChange = $fileDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->removeItemViewer($fileId, $viewerName, 'file');
+        }
+
+        $folderNeedChange = Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+
+        foreach ($folderNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->removeItemViewer($fileId, $viewerName, 'folder');
+        }
+    }
+
     public function removeFriendAdded(Request $request) {
         $this->validate($request, [
             'friendName'    => 'required',
@@ -587,6 +659,14 @@ class FileController extends Controller
 
         $friendName = $request->friendName;
         $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+
+            $this->removeViewer($fileDir, $friendName);
+
+            return 'Thành công';
+        }
 
         $fileTarget = Files::where('name', $fileDir)->get()[0];
 

@@ -1362,6 +1362,36 @@ const addFriendsCanViewFile = () => { // Hàm thêm friend vào input
 				console.log(fileItemDir);
 
 				let formData = new FormData;
+
+				if (fileItemDir === '#folderToRemoveType#') {
+					let itemDir = document.querySelector('.itemDir-selected').value + '/';
+					
+					formData.append('friendName', item.value);
+					formData.append('fileDir', itemDir);
+
+					console.log(itemDir);
+					
+					axios.post('add-friend-can-view-file', formData)
+						.then(response => {
+							console.log(response);
+
+							const friendName = response.data;
+
+							friendChoosedSection.insertAdjacentHTML('afterbegin', `
+								<span class="badge bg-primary badge-friend-name d-flex">${friendName}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+							`);
+
+							item.remove();
+								
+							removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+						})
+						.catch(error => {
+							console.log(error);
+						});
+
+					return;
+				}
+
 				formData.append('friendName', item.value);
 				formData.append('fileDir', fileItemDir);
 
@@ -1397,6 +1427,29 @@ const removeFriendAdded = () => {
 			const fileDir = document.querySelector('.itemName-selected').value;
 
 			let formData = new FormData;
+
+			if (fileDir === '#folderToRemoveType#') {
+				let itemDir = document.querySelector('.itemDir-selected').value + '/';
+				
+				formData.append('friendName', friendName);
+				formData.append('fileDir', itemDir);
+
+				console.log(itemDir);
+				
+				axios.post('remove-friend-added', formData)
+					.then(response => {
+						console.log(response);
+
+						friend.remove();
+						insertValueToFriendInput();
+					})
+					.catch(error => {
+						console.log(error.response.data);
+					});
+
+				return;
+			}
+
 			formData.append('friendName', friendName);
 			formData.append('fileDir', fileDir);
 
