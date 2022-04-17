@@ -210,6 +210,8 @@ class FileController extends Controller
         if (($DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->get()) != null) {
             $DirDb->where('owner', Auth::user()->name)->where('dir', 'like', "%$fileDir%")->delete();
         }
+
+        $this->removeAllChildFile($fileDir);
         
         // $fileDirToRemove = "/fileUpload/" . $fileName;
         // File::delete($fileDirToRemove);
@@ -262,6 +264,20 @@ class FileController extends Controller
         return redirect()->back();   
     }
 
+    //Phần xóa file con của folder.
+    private function removeAllChildFile($dir) {
+        $fileDb = new Files;
+        $filesNeedChange = $fileDb->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            
+            $file = Files::find($fileId);
+            $file->delete();
+        }
+    }
+
     //Phần đổi tên folder.
     public function renameChildFile($fileId, $oldDir, $newDir) {
         // $fileId = $request->fileId;
@@ -280,7 +296,7 @@ class FileController extends Controller
 
     private function renameAllChildFile($dir, $newDir) {
         $fileDb = new Files;
-        $filesNeedChange = $fileDb->where('dir', 'regexp', "$dir(\/[a-zA-Z0-9\/_-]*|)$")->get();
+        $filesNeedChange = $fileDb->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
 
         // Đổi dir từng file
         foreach ($filesNeedChange as $key => $value) {
@@ -303,7 +319,7 @@ class FileController extends Controller
 
         $DirDb = new Dir;
 
-        $DirsNeedRename = $DirDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$fileDir(\/[a-zA-Z0-9\/_-]*|)$")->get();
+        $DirsNeedRename = $DirDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$fileDir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
 
         //Tạo ra DirName mới
         $newDirName = explode('/', $fileDir);
@@ -329,8 +345,56 @@ class FileController extends Controller
         return $newDirName; 
     }
 
+    //Phần thay đổi private/public.
+    public function changePermission($fileId, $allowShare, $allCanView, $type) {
+        if ($type === 'folder') {
+            $item = Dir::find($fileId);
+        } else if ($type == 'file') {
+            $item = Files::find($fileId);
+        }
+
+        $item->allowshare = $allowShare;
+        $item->allcanview = $allCanView;
+        $item->save();
+    }
+
+    private function changeAllFilePermission($dir, $allowShare, $allCanView) {
+        $fileDb = new Files;
+        $dir = str_replace('/', '\/', $dir);
+        $filesNeedChange = $fileDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->changePermission($fileId, $allowShare, $allCanView, 'file');
+        }
+
+        $folderNeedChange = Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+
+        foreach ($folderNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->changePermission($fileId, $allowShare, $allCanView, 'folder');
+        }
+    }
+
     public function setPrivate(Request $request) {
         $fileName = $request->itemNameSelected;
+
+        if ($fileName[strlen($fileName)-1] === '/') {
+            $fileDir = substr($fileName,0,-1);
+
+            $folder = Dir::where('owner', Auth::user()->name)->where('dir', $fileDir)->get();
+            $folder = Dir::find($folder[0]->id);
+
+            $folder->allcanview = false;
+            $folder->allowshare = false;
+            $folder->save();
+
+            $this->changeAllFilePermission($fileDir, 0, 0);
+
+            return 'Thành công!';
+        }
 
         $fileDB = new Files;
 
@@ -348,6 +412,20 @@ class FileController extends Controller
     public function setPublic(Request $request) {
         $fileName = $request->itemNameSelected;
 
+        if ($fileName[strlen($fileName)-1] === '/') {
+            $fileDir = substr($fileName,0,-1);
+
+            $folder = Dir::where('owner', Auth::user()->name)->where('dir', $fileDir)->get();
+            $folder = Dir::find($folder[0]->id);
+
+            $folder->allcanview = true;
+            $folder->allowshare = false;
+            $folder->save();
+
+            $this->changeAllFilePermission($fileDir, 0, 1);
+            return 'Thành công!';
+        }
+
         $fileDB = new Files;
 
         $file = $fileDB->where('owner', Auth::user()->name)->where('name', $fileName)->get();
@@ -363,6 +441,21 @@ class FileController extends Controller
 
     public function setLimited(Request $request) {
         $fileName = $request->fileDir;
+
+        if ($fileName[strlen($fileName)-1] === '/') {
+            $fileDir = substr($fileName,0,-1);
+
+            $folder = Dir::where('owner', Auth::user()->name)->where('dir', $fileDir)->get();
+            $folder = Dir::find($folder[0]->id);
+
+            $folder->allcanview = false;
+            $folder->allowshare = true;
+            $folder->save();
+
+            $this->changeAllFilePermission($fileDir, 1, 0);
+
+            return 'Thành công!';
+        }
 
         $fileDB = new Files;
 

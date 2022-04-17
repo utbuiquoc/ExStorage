@@ -325,7 +325,7 @@ function fileOptionAction() {
 			var linkShare = document.querySelector('.linkShare');
 
 			var fileLink = itemSelected.querySelector('.file-address').value;
-			linkShare.value = encodeURI(window.location.hostname + "/share/file/" + currentUser + '/' + fileLink);
+			linkShare.value = encodeURI(window.location.host + "/share/file/" + currentUser + '/' + fileLink);
 
 			// var optionSelect = document.querySelector('.optionSelect');
 			// if (optionSelect.value === 'Riêng tư') {
@@ -490,7 +490,7 @@ function fileOptionAction() {
 			var linkShare = document.querySelector('.linkShare');
 
 			var fileLink = itemSelected.querySelector('.folder-address').value;
-			linkShare.value = encodeURI(window.location.hostname + "/share/folder/" + currentUser + '/' + fileLink);
+			linkShare.value = encodeURI(window.location.host + "/share/folder/" + currentUser + '/' + fileLink);
 
 			// var optionSelect = document.querySelector('.optionSelect');
 			// if (optionSelect.value === 'Riêng tư') {
@@ -726,7 +726,8 @@ function createFolder() {
 			`
 				<div class="dirItem folder-item d-flex card mt-1">
 					<input type="hidden" class="folder-address" value="${dirFolder}">
-					<input type="hidden" class="allcanview-folder" value="${acv}">
+					<input type="hidden" class="allcanview-file" value="${acv}">
+					<input type="hidden" class="is-limited" value="0">
 
 					<div class="file-type">
 						<img src="img/docs-icon/folder-icon.png" alt="folder-icon.png">
@@ -987,6 +988,60 @@ privateOption.onclick = function() {
 	privateOptionSeleted();
 	let currentDirName = document.querySelector('.itemName-selected').value;
 
+	if (currentDirName === '#folderToRemoveType#') {
+		let currentDirFolder = document.querySelector('.itemDir-selected').value;
+
+		console.log(currentDirFolder);
+
+		// Sửa allcanview của file lại thành true (1)
+		var formData = new FormData();
+		formData.append('itemNameSelected', currentDirFolder+'/');
+
+		axios.post('set-private', formData)
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+
+		
+		addressItem = currentDirFolder.replace('/','\/');
+		let adrRegex = new RegExp(addressItem + '([a-zA-Z0-9!\\p{L}@#$%^&* \/_-]*|)$', 'mu');
+		console.log(adrRegex);
+		document.querySelector('.isallcanview').value = '0';
+
+		let dirItemCurrent = document.querySelectorAll('.folder-item');
+		let fileItemCurrent = document.querySelectorAll('.file-item');
+		console.log(dirItemCurrent);
+
+		//Thay child folder permission
+		dirItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.folder-address').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '0';
+				item.querySelector('.is-limited').value = '0';
+			}
+		});
+
+		//Thay child file permission
+		fileItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.file-dir').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '0';
+				item.querySelector('.is-limited').value = '0';
+			}
+		});
+
+		return openToast('.sucessToast', 'Đã đặt loại tệp tin thành riêng tư!');
+	}
+
 	// Sửa allcanview của file lại thành false (0) - set file thành private
 	var formData = new FormData();
 	formData.append('itemNameSelected', currentDirName);
@@ -1018,6 +1073,81 @@ limitedOption.onclick = function() {
 	
 	let formData = new FormData;
 	const fileDir = document.querySelector('.itemName-selected').value;
+
+	if (fileDir === '#folderToRemoveType#') {
+		let currentDirFolder = document.querySelector('.itemDir-selected').value;
+
+		console.log(currentDirFolder);
+
+		// Sửa allcanview của file lại thành true (1)
+		formData.append('fileDir', currentDirFolder+'/');
+
+		axios.post('set-file-limited', formData)
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+
+		document.querySelector('.isallcanview').value = '0';
+
+		addressItem = currentDirFolder.replace('/','\/');
+		let adrRegex = new RegExp(addressItem + '([a-zA-Z0-9!\\p{L}@#$%^&* \/_-]*|)$', 'mu');
+		console.log(adrRegex);
+		document.querySelector('.isallcanview').value = '0';
+
+		let dirItemCurrent = document.querySelectorAll('.folder-item');
+		let fileItemCurrent = document.querySelectorAll('.file-item');
+		console.log(dirItemCurrent);
+
+		//Thay child folder permission
+		dirItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.folder-address').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '0';
+				item.querySelector('.is-limited').value = '1';
+			}
+		});
+
+		//Thay child file permission
+		fileItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.file-dir').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '0';
+				item.querySelector('.is-limited').value = '1';
+			}
+		});
+
+		// Đổ những người đã được cho phép xem file vào
+		axios.post('get-friends-allowed-view', formData)
+		.then(response => {
+			console.log(response);
+			let friendAllowed = response.data;
+			friendAllowed = friendAllowed.split('|');
+
+			friendAllowed.innerHTML = '';
+			friendAllowed.forEach(item => {
+				friendChoosedSection.insertAdjacentHTML('afterbegin', `
+					<span class="badge bg-primary badge-friend-name d-flex">${item}<button type="button" class="btn-close btn-remove-friend-added" aria-label="Close"></button></span>
+				`);
+			});
+
+
+			removeFriendAdded(); // Xử lí để có thể xóa friend đã add
+		})
+		.catch(error => {
+			console.log(error.response.data);
+		});
+
+		return openToast('.sucessToast', 'Tệp đã được giới hạn người xem!');
+	}
 
 
 	formData.append('fileDir', fileDir);
@@ -1068,6 +1198,62 @@ limitedOption.onclick = function() {
 publicOption.onclick = function() {
 	publicOptionSelected();
 	let currentDirName = document.querySelector('.itemName-selected').value;
+	console.log(currentDirName);
+
+	if (currentDirName === '#folderToRemoveType#') {
+		let currentDirFolder = document.querySelector('.itemDir-selected').value;
+
+		console.log(currentDirFolder);
+
+		// Sửa allcanview của file lại thành true (1)
+		var formData = new FormData();
+		formData.append('itemNameSelected', currentDirFolder+'/');
+
+		axios.post('set-public', formData)
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+
+		document.querySelector('.isallcanview').value = '1';
+		
+		addressItem = currentDirFolder.replace('/','\/');
+		let adrRegex = new RegExp(addressItem + '([a-zA-Z0-9!\\p{L}@#$%^&* \/_-]*|)$', 'mu');
+		console.log(adrRegex);
+		document.querySelector('.isallcanview').value = '0';
+
+		let dirItemCurrent = document.querySelectorAll('.folder-item');
+		let fileItemCurrent = document.querySelectorAll('.file-item');
+		console.log(dirItemCurrent);
+
+		//Thay child folder permission
+		dirItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.folder-address').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '1';
+				item.querySelector('.is-limited').value = '0';
+			}
+		});
+
+		//Thay child file permission
+		fileItemCurrent.forEach(function(item) {
+			const addressCheck = item.querySelector('.file-dir').value;
+			const isChild = adrRegex.test(addressCheck);
+
+			if (adrRegex.test(addressCheck) === true) {
+				console.log(item)
+				item.querySelector('.allcanview-file').value = '1';
+				item.querySelector('.is-limited').value = '0';
+			}
+		});
+
+		return openToast('.sucessToast', 'Đã tạo liên kết chia sẻ tệp!');
+	}
 
 	// Sửa allcanview của file lại thành true (1)
 	var formData = new FormData();
