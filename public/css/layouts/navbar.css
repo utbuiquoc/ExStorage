@@ -1,7 +1,7 @@
 .navbar {
 	position: fixed;
 	width: calc(100% - 50px);
-	z-index: 100;
+	z-index: 99999;
 }
 
 .navbar-size {

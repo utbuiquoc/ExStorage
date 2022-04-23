@@ -29,7 +29,7 @@
 			</li>
 
 			<li id="group-btn" class="item">
-				<a class="item-link" href=""><svg class="item__icon" width="30px" height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100.353 100.353" style="enable-background:new 0 0 100.353 100.353;" xml:space="preserve">
+				<a class="item-link" href="group"><svg class="item__icon" width="30px" height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100.353 100.353" style="enable-background:new 0 0 100.353 100.353;" xml:space="preserve">
 				<g>
 					<path fill="white" d="M49.106,50.437c-12.167,0-22.066,9.898-22.066,22.065c0,0.828,0.671,1.5,1.5,1.5h41.131c0.828,0,1.5-0.672,1.5-1.5   C71.171,60.335,61.272,50.437,49.106,50.437z M30.099,71.002c0.768-9.814,9-17.565,19.007-17.565   c10.007,0,18.239,7.751,19.006,17.565H30.099z"/>
 					<path fill="white" d="M48.746,48.456c7.143,0,12.954-5.811,12.954-12.954c0-7.143-5.812-12.954-12.954-12.954   c-7.143,0-12.954,5.811-12.954,12.954C35.792,42.645,41.603,48.456,48.746,48.456z M48.746,25.548c5.488,0,9.954,4.465,9.954,9.954   c0,5.488-4.466,9.954-9.954,9.954c-5.489,0-9.954-4.465-9.954-9.954C38.792,30.013,43.257,25.548,48.746,25.548z"/>

@@ -47,6 +47,19 @@ Route::group(['middleware' => 'login'], function() {
         // Route::post('accept-friend-request', 'FriendsController@acceptFriendRequest');
         Route::post('cancel-friend-requested', 'FriendsController@cancelFriendRequested');
         Route::post('unfriend-accepted', 'FriendsController@unfriendAccepted');
+
+    
+    Route::get('group', 'GroupsController@group');
+        Route::get('get-list-group-joined', 'GroupsController@getListGroupJoined');
+        Route::get('get-list-ownership-group', 'GroupsController@getListOwnershipGroup');
+        Route::get('get-group-detail', 'GroupsController@getGroupDetail');
+        Route::post('create-new-group', 'GroupsController@createNewGroup');
+        Route::post('disable-open-link-share', 'GroupsController@diasbleOpenLinkShare');
+        Route::post('enable-open-link-share', 'GroupsController@enableOpenLinkShare');
+        Route::get('get-user-info', 'GroupsController@getUserInfo');
+        Route::post('remove-member', 'GroupsController@removeMember');
+        Route::post('exit-group', 'GroupsController@exitGroup');
+        Route::post('remove-group', 'GroupsController@removeGroup');
 });
 
 

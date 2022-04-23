@@ -1,0 +1,223 @@
+.card-library {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid rgba(0,0,0,.125);
+}
+
+/*Friend list*/
+.friend-request__heading,
+.friend-accepted__heading {
+	opacity: 0.8;
+}
+
+.back-btn {
+	cursor: pointer;	
+}
+
+.back-btn__icon {
+	font-size: 30px;
+}
+
+.option-item:hover,
+.friend-item:hover {
+	background-color: rgba(0, 0, 0, 0.07);
+}
+
+.option-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.item-text {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.item-text__heading {
+	margin: 0px 0px 3px 10px;
+	font-size: 17px;
+}
+
+.item-icon--border {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background-color: #eee;
+	display: flex;
+	justify-content: center;
+}
+
+.item-icon__i {
+	font-size: 25px;
+	margin-left: 5px;
+}
+
+.item-chevron {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.item-chevron-icon {
+	font-size: 20px;
+}
+
+.friend-header {
+	padding-bottom: 0 !important;
+}
+
+.friend-header__heading {
+	margin: 0px;
+}
+
+.avatar {
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+}
+
+/*Friend item (finded)*/
+.friend-item__info--name {
+	margin: 0;
+}
+
+.friend__info--id,
+.friend-item__info--id,
+.friend-accept-item__info--id {
+    padding: 0;
+    margin: 0;
+    font-size: 11.4px;
+    opacity: 0.5;
+    display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.friend-accept-item__info--id {
+	display: inline;
+}
+
+.friend-avt {
+	flex: 1;
+	justify-content: center;
+	display: flex;
+}
+
+.friend-item__avt {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.friend-info {
+	flex: 7;
+	display: flex;
+	justify-content: space-between;
+}
+
+.friend-info--detail {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.friend__info--name {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.add-friend {
+	display: flex;
+	flex: 1;
+}
+
+.accepted,
+.sended {
+	background-color: #e7f3ff !important;
+}
+
+.sendedRequest,
+.accepted i,
+.sended i {
+	color: #0570e7 !important;
+}
+
+.add-friend__btn {
+	background-color: #eee;
+	border-radius: 50%;
+	width: 45px;
+	height: 45px;
+	display: flex;
+	justify-content: center;
+	margin: auto;
+	cursor: pointer;
+}
+
+.add-friend__btn--icon {
+	font-size: 30px;
+}
+
+.friend-accept-item__setting--icon {
+	margin-bottom: 5px;
+	font-size: 25px;
+	color: red;
+	cursor: pointer;
+}
+
+.friend__heading {
+    flex: 1;
+}
+
+.friend__list {
+    flex: 9;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.list-friend {
+    flex: 1;
+    overflow: auto;
+}
+
+.ownership-group,
+.joined-group {
+    flex-direction: column;
+}
+
+.modal-dialog {
+    z-index: 999999;
+}
+
+/*Toast*/
+.toast-header {
+	border-radius: 4px;
+}
+
+.toast-icon {
+	font-size: 24px;
+}
+
+.toast-notifi {
+	font-size: 16px;
+	margin-bottom: 3px;
+}
+
+.bg-uploadSucess {
+	background-color: #28a745;
+}
+
+#group-name__members,
+#group-name__join-link {
+    flex: 1;
+}

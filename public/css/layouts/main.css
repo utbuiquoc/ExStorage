@@ -18,11 +18,12 @@
 
 .wrapper-on {
 	width: 100%;
-	min-height: calc(100vh - 55px);
+	max-height: calc(100vh - 55px);
 	margin-top: 55px;
 	display: flex;
 	position: relative;
 	z-index: 200;
+	overflow: hidden;
 }
 ::-webkit-scrollbar-thumb {
 	background-color: grey;
