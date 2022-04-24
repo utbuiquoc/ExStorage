@@ -1,0 +1,26 @@
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #eee;
+}
+
+.invite {
+    background-color: #fff;
+    border-radius: 20px;
+    border: 5px solid #ccc;
+}
+
+.invite-content {
+    color: #827f7f;
+}
+
+.invite__icon--tag {
+    width: 40%;
+}
+
+.group--id,
+.number--members {
+    border-radius: 25px;
+}

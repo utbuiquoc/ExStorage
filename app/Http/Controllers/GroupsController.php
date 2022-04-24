@@ -208,4 +208,40 @@ class GroupsController extends Controller
 
         return 'Thành công!';
     }
+
+    public function joinGroupViaLink($inviteLink) {
+        $group = Groups::where('invite_link', $inviteLink)->get()[0];
+        if ($group->is_open && array_search(Auth::user()->name, explode(',', $group->members)) == false) {
+            return view('user-function.inviteLink', ['title' => 'Lời mời']);
+        } else {
+            return redirect('group');
+        }
+    }
+
+    public function getGroupDetailViaLink(Request $request) {
+        $inviteLink = $request->inviteLink;
+
+        return Groups::where('invite_link', $inviteLink)->get()[0];
+    }
+
+    public function accpetInvitation(Request $request) {
+        $groupId = $request->groupId;
+
+        $user = User::find(Auth::user()->id);
+
+        $groupJoinedArr = explode(' ', $user->group_joined);
+        $groupJoinedArr[] = $groupId;
+         
+        $user->group_joined = implode(' ', $groupJoinedArr);
+        $user->save();
+
+        $group = Groups::find($groupId);
+        $groupMembersArr = explode(',', $group->members);
+        $groupMembersArr[] = Auth::user()->name;
+        $group->members = implode(',', $groupMembersArr); 
+        $group->number_mem = $group->number_mem + 1;
+        $group->save();
+
+        return "Thành công!";
+    }
 }

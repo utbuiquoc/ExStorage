@@ -39,7 +39,6 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('remove-friend-added', 'FileController@removeFriendAdded');
 
     
-
     Route::get('friend', 'FriendsController@friend');
         Route::post('find-friend', 'FriendsController@findFriend');
         Route::post('send-friend-request', 'FriendsController@sendFriendRequest');
@@ -60,6 +59,9 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('remove-member', 'GroupsController@removeMember');
         Route::post('exit-group', 'GroupsController@exitGroup');
         Route::post('remove-group', 'GroupsController@removeGroup');
+    Route::get('invite/{inviteLink}', 'GroupsController@joinGroupViaLink');
+        Route::get('get-group-detail-via-link', 'GroupsController@getGroupDetailViaLink');
+        Route::post('accept-invition', 'GroupsController@accpetInvitation');
 });
 
 

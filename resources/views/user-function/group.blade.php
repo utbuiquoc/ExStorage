@@ -30,7 +30,7 @@
 
 			</div>
 
-			<div class="ownership-group ps-2 pe-2 overflow-auto d-none">
+			<div class="ownership-group-div flex-column ps-2 pe-2 overflow-auto d-none">
 						
 			</div>
 		</div>

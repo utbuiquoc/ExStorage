@@ -22,7 +22,7 @@ function openToast(toast, notification) { //Hàm  mở toast
 
 // Chuyển nhóm đã tham gia
 const joinedGroup = document.querySelector('.joined-group');
-const ownershipGroup = document.querySelector('.ownership-group');
+const ownershipGroup = document.querySelector('.ownership-group-div');
 const joinedGroupBtn = document.querySelector('.joined-group-btn');
 const ownershipGroupBtn = document.querySelector('.ownership-group-btn');
 
@@ -200,10 +200,10 @@ function createNewGroup() {
         console.log(response);
         nameGroupNew.value = '';
         listUser = [];
-        getListGroupJoined();
-        getListOwnershipGroup();
+        getListOwnershipGroup(true);
         showUser();
         viewOwnershipGroup();
+
         openToast('.sucessToast', 'Đã tạo nhóm mới!');
     })
     .catch(error => {
@@ -256,7 +256,7 @@ function getListGroupJoined() {
 
 
 // Đổ danh sách các nhóm đã tạo
-function getListOwnershipGroup() {
+function getListOwnershipGroup(create = false) {
     axios.get('get-list-ownership-group')
     .then(response => {
         console.log(response);
@@ -285,6 +285,9 @@ function getListOwnershipGroup() {
             `);
         }); 
         viewOwnershipGroup();
+        if (create) {
+            document.querySelector('.ownership-group:last-child').querySelector('.friend-accept-item__setting--icon').click();
+        }
     })
     .catch(error => {
         console.log(error);
