@@ -677,4 +677,95 @@ class FileController extends Controller
 
         return 'Thành công';
     }
+
+    public function getExerciseStatus(Request $request) {
+        $fileSelected = $request->fileSelected;
+
+        $fileExerciseStatus = Files::where('owner', Auth::user()->name)->where('name', $fileSelected)->get()[0]->is_exercise;
+
+        return $fileExerciseStatus;
+    }
+
+    // Mark as exercise đối với file
+    public function getExerciseStatusFolder(Request $request) {
+        $folderSelected = $request->folderSelected;
+        
+        $folderExerciseStatus = Dir::where('owner', Auth::user()->name)->where('dir', $folderSelected)->get()[0]->is_exercise;
+
+        return $folderExerciseStatus;
+    }
+
+    private function findIdFile($fileName) {
+        return Files::where('owner', Auth::user()->name)->where('name', $fileName)->get()[0]->id;
+    }
+
+    private function changeExStatusFile($fileName, $exValue) {
+        $exValue = filter_var($exValue, FILTER_VALIDATE_BOOLEAN);
+        $file = Files::find($this->findIdFile($fileName));
+        $file->is_exercise = $exValue;
+        $file->save();
+
+        return 'Thành công!';
+    }
+
+    public function changeExFileStatus(Request $request) {
+        $exStatus = $request->exStatus;
+        $fileSelected = $request->fileSelected;
+
+        return $this->changeExStatusFile($fileSelected, $exStatus);
+
+        return 'Thành công!';
+    }
+
+    // Mark as exercise đối với folder
+    private function getAllChildFile($dir) {
+        return Files::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+    }
+
+    private function getAllChildFolder($dir) {
+        return Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+    }
+
+    private function changeExFile($idFile, $exValue) {
+        $exValue = filter_var($exValue, FILTER_VALIDATE_BOOLEAN);
+
+        $file = Files::find($idFile);
+        $file->is_exercise = $exValue;
+        $file->save();
+
+        return 'Thành công!';
+    }
+
+    private function changeExFolder($idFolder, $exValue) {
+        $exValue = filter_var($exValue, FILTER_VALIDATE_BOOLEAN);
+
+        $folder = Dir::find($idFolder);
+        $folder->is_exercise = $exValue;
+        $folder->save();
+
+        return 'Thành công!';
+    }
+
+    private function changeExStatusChild($dirSelected, $exValue) {
+        $allChildFile = $this->getAllChildFile($dirSelected);
+        foreach ($allChildFile as $key => $childFile) {
+            $this->changeExFile($childFile->id, $exValue);
+        }
+
+        $allChildFolder = $this->getAllChildFolder($dirSelected);
+        foreach ($allChildFolder as $key => $childFolder) {
+            $this->changeExFolder($childFolder->id, $exValue);
+        }
+
+        return 'Thành công!';
+    }
+
+    public function changeExFolderStatus(Request $request) {
+        $exStatus = $request->exStatus;
+        $dirSelected = $request->folderSelected;
+
+        $this->changeExStatusChild($dirSelected, $exStatus);
+
+        return 'Thành công!';
+    }
 }

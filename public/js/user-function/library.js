@@ -212,6 +212,9 @@ var cancelRenameBtn = document.querySelector('.cancel-rename');
 var shareModal = document.querySelector('.share-modal');
 var cancelShareBtn = document.querySelector('.cancel-share');
 
+// Nút thay đổi excercise status
+const changeExStatus = document.querySelector('#mark-as-exercise');
+
 function fileOptionAction() {
 	var fileItemElement = document.querySelectorAll('.file-item');
 	var folderItemElement = document.querySelectorAll('.folder-item');
@@ -285,6 +288,44 @@ function fileOptionAction() {
 			}
 
 			moveDialog();
+
+			// Đánh dấu file là bài tập
+			let fileFormData = new FormData;
+			fileSelected = document.querySelector('.itemName-selected').value;
+			axios.get('get-exercise-status', {
+				params: {
+					'fileSelected': fileSelected,
+				}
+			})
+			.then(response => {
+				console.log(response);
+				if (response.data == true) {
+					changeExStatus.checked = true;
+				} else {
+					changeExStatus.checked = false;
+				}
+
+				// Onclick thay đổi exercise status
+				changeExStatus.onchange = function() {
+					console.log(changeExStatus.checked);
+					let fileExStatus = new FormData;
+					fileExStatus.append('exStatus', changeExStatus.checked);
+					fileExStatus.append('fileSelected', fileSelected);
+
+					axios.post('change-ex-file-status',fileExStatus)
+					.then(response => {
+						console.log(response);
+						openToast('.sucessToast', 'Đã thay đổi trạng thái!');
+					})
+					.catch(error => {
+						console.log(error);
+						openToast('.errorToast', 'Đã có lỗi xảy ra!');
+					})
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			})
 		}
 
 
@@ -443,6 +484,44 @@ function fileOptionAction() {
 			}
 
 			moveDialog();
+
+			// Đánh dấu folder là bài tập
+			let folderFormData = new FormData;
+			folderSelected = document.querySelector('.itemDir-selected').value;
+			axios.get('get-exercise-status-folder', {
+				params: {
+					'folderSelected': folderSelected,
+				}
+			})
+			.then(response => {
+				console.log(response);
+				if (response.data == true) {
+					changeExStatus.checked = true;
+				} else {
+					changeExStatus.checked = false;
+				}
+
+				// Onclick thay đổi exercise status
+				changeExStatus.onchange = function() {
+					console.log(changeExStatus.checked);
+					let folderExStatus = new FormData;
+					folderExStatus.append('exStatus', changeExStatus.checked);
+					folderExStatus.append('folderSelected', folderSelected);
+
+					axios.post('change-ex-folder-status', folderExStatus)
+					.then(response => {
+						console.log(response);
+						openToast('.sucessToast', 'Đã thay đổi trạng thái!');
+					})
+					.catch(error => {
+						console.log(error);
+						openToast('.errorToast', 'Đã có lỗi xảy ra!');
+					})
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			})
 		}
 
 		var shareOption = item.querySelector('.share-folder-option');

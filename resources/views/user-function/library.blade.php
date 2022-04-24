@@ -400,7 +400,7 @@
 						</div>
 
 						<hr class="m-0 mb-2" />
-
+						
 						<div class="share-limited-section d-none flex-column">
 
 							<label for="" class="form-label">Chia sẻ với mọi người</label>
@@ -428,14 +428,16 @@
 								<input type="text" id="linkShare" class="form-control linkShare d-flex" readonly>
 								<button type="button" class="btn btn-outline-success w-25 ms-1 copy-btn" data-clipboard-target="#linkShare">Sao chép</button>
 							</div>
+
+							<div class="mark-type form-switch mt-2">
+								<input class="form-check-input" type="checkbox" role="switch" id="mark-as-exercise" checked>
+								<label class="form-check-label" for="mark-as-exercise">Đánh dấu là bài tập</label>
+							</div>
 						</div>
 
 						<div class="yes-no-section d-flex mt-3">
-							<div class="col col-md-6 d-flex">
-								<button class="btn btn-outline-primary w-100 me-1" type="submit">Đổi</button>
-							</div>
-							<div class="col col-md-6 d-flex">
-								<button class="btn btn-danger cancel-share w-100 ms-1" type="button">Hủy bỏ</button>
+							<div class="col col-md-12 d-flex">
+								<button class="btn btn-danger cancel-share w-100 ms-1" type="button">Thoát</button>
 							</div>
 						</div>
 					</form>

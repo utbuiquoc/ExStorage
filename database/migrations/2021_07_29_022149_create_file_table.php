@@ -24,6 +24,7 @@ class CreateFileTable extends Migration
             $table->text('viewer');
             $table->boolean('allowshare')->default(false);
             $table->boolean('allcanview')->default(false);
+            $table->boolean('is_exercise')->default(true);
             $table->timestamps();
         });
     }

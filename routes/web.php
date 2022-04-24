@@ -29,6 +29,10 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('renamFolder', 'FileController@renameFolder');
         Route::post('set-private', 'FileController@setPrivate');
         Route::post('set-public', 'FileController@setPublic');
+        Route::get('get-exercise-status', 'FileController@getExerciseStatus');
+        Route::get('get-exercise-status-folder', 'FileController@getExerciseStatusFolder');
+        Route::post('change-ex-file-status', 'FileController@changeExFileStatus');
+        Route::post('change-ex-folder-status', 'FileController@changeExFolderStatus');
 
         // Route phần share file bị hạn chế
         Route::post('set-file-limited', 'FileController@setLimited');
