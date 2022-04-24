@@ -40,8 +40,9 @@
 					<?php 
 						$folder = new App\Dir;
 						$item = $folder->where('owner', $owner)->where('parent', $folderParent)->get();
+						
 						foreach ($item as $key => $value) {
-							$arrayP = explode('/', $value->dir);
+						$arrayP = explode('/', $value->dir);
 							$folderName = end($arrayP);
 							if (count($arrayP) >= 2 && $value->allcanview == true) { ?>
 								<div class="dirItem folder-item d-none card mt-1">
@@ -60,7 +61,7 @@
 								</div>
 								<?php
 							} else if (count($arrayP) >= 2  && $value->allowshare == true && Auth::user() !== null) {
-								if (strpos($value->viewer, Auth::user()->name)) { ?>
+								if (strpos($value->viewer, Auth::user()->name) !== false) { ?>
 									<div class="dirItem folder-item d-none card mt-1">
 										<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
 										<div class="file-type">
@@ -111,7 +112,7 @@
 								</div>
 							<?php }
 						} else if (count($item) > 0 && $value->allowshare == true && Auth::user() !== null) {
-							if (strpos($value->viewer, Auth::user()->name)) {
+							if (strpos($value->viewer, Auth::user()->name) !== false) {
 								foreach ($item as $key => $value) { ?>
 									<div class="dirItem file-item d-none card mt-1">
 										<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
