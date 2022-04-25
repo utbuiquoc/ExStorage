@@ -144,3 +144,135 @@ backBtn.onclick = function() {
 
 showFolder();
 showFile();
+
+// Upload file
+// Kiểm tra có phải là bài tập không
+const owner = window.location.pathname.split('/')[3];
+const rootDir = document.querySelector('#currentDir').value;
+axios.get('confirm-ex-folder', {
+	params: {
+		'owner': owner,
+		'rootDir': rootDir
+	}
+})
+.then(response => {
+	console.log(response);
+	if (response.data == true) {
+		document.querySelector('.exercise').classList.replace('d-none', 'd-block');
+	}
+})
+.catch(error => {
+	console.log(error);
+});
+
+// ************************ Drag and drop ***************** //
+let dropArea = document.getElementById("drop-area");
+
+// Prevent default drag behaviors
+;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+	dropArea.addEventListener(eventName, preventDefaults, false);
+	document.body.addEventListener(eventName, preventDefaults, false);
+})
+
+// Highlight drop area when item is dragged over it
+;['dragenter', 'dragover'].forEach(eventName => {
+ 	 dropArea.addEventListener(eventName, highlight, false);
+})
+
+;['dragleave', 'drop'].forEach(eventName => {
+ 	 dropArea.addEventListener(eventName, unhighlight, false);
+})
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false);
+
+function preventDefaults (e) {
+	e.preventDefault();
+	e.stopPropagation();
+}
+
+function highlight(e) {
+	dropArea.classList.add('highlight');
+}
+
+function unhighlight(e) {
+	dropArea.classList.remove('active');
+}
+
+function handleDrop(e) {
+	var dt = e.dataTransfer;
+	var files = dt.files;
+
+	handleFiles(files);
+}
+
+function handleFiles(files) {
+	files = [...files];
+	files.forEach(uploadFile);
+	files.forEach(previewFile);
+}
+
+function previewFile(file) {
+	let fileType = file.name.split('.').slice(-1)[0];
+	console.log(fileType);
+	if (fileType === 'docx' || fileType == 'doc') {
+		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+			<div class="doc-file">
+				<img src="./docx-icon-large.png" alt="doc-icon">
+
+				<div class="file-info-upload">
+					<h3 class="file-name-upload">${file.name}</h3>
+				</div>
+			</div>
+		`);
+	} else if (fileType == 'pdf') {
+		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+			<div class="doc-file">
+				<img src="./pdf-icon.png" alt="doc-icon">
+
+				<div class="file-info-upload">
+					<h3 class="file-name-upload">${file.name}</h3>
+				</div>
+			</div>
+		`);
+	} else {
+		let reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onloadend = function() {
+			img = reader.result;
+			document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+				<div class="doc-file">
+					<img src="${img}" alt="img">
+
+					<div class="file-info-upload">
+						<h3 class="file-name-upload">${file.name}</h3>
+					</div>
+				</div>
+			`);
+		}
+	}
+}
+
+function uploadFile(file, i) {
+	var formData = new FormData();
+
+	// Update progress (can be used to show progress indicator)
+	// xhr.upload.addEventListener("progress", function(e) {;
+	// 	updateProgress(i, (e.loaded * 100.0 / e.total) || 100);
+	// });
+
+	// xhr.addEventListener('readystatechange', function(e) {
+	// 	if (xhr.readyState == 4 && xhr.status == 200) {
+	// 		updateProgress(i, 100); // <- Add this
+	// 	}
+	// 	else if (xhr.readyState == 4 && xhr.status != 200) {
+	// 	// Error. Inform the user
+	// 	}
+	// })
+
+	formData.append('upload_preset', 'ujpu6gyk');
+	formData.append('file', file);
+
+	console.log(file);
+	// xhr.send(formData);
+}

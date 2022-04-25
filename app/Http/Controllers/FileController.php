@@ -768,4 +768,18 @@ class FileController extends Controller
 
         return 'Thành công!';
     }
+
+    public function confirmExFolder(Request $request) {
+        $owner = $request->owner;
+        $rootDir = $request->rootDir;
+
+        return Dir::where('owner', $owner)->where('dir', $rootDir)->get()[0]->is_exercise;
+    }
+
+    public function confirmExFile (Request $request) {
+        $owner = $request->owner;
+        $fileName = $request->fileName;
+
+        return Files::where('owner', $owner)->where('name', $fileName)->get()[0]->is_exercise;
+    }
 }

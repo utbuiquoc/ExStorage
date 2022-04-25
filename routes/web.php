@@ -33,6 +33,8 @@ Route::group(['middleware' => 'login'], function() {
         Route::get('get-exercise-status-folder', 'FileController@getExerciseStatusFolder');
         Route::post('change-ex-file-status', 'FileController@changeExFileStatus');
         Route::post('change-ex-folder-status', 'FileController@changeExFolderStatus');
+        Route::get('confirm-ex-file', 'FileController@confirmExFile');
+        Route::get('confirm-ex-folder', 'FileController@confirmExFolder');
 
         // Route phần share file bị hạn chế
         Route::post('set-file-limited', 'FileController@setLimited');
