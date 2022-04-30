@@ -22,6 +22,7 @@ class CreateDirTable extends Migration
             $table->boolean('allowshare')->default(false);
             $table->boolean('allcanview')->default(false);
             $table->boolean('is_exercise')->default(true);
+            $table->longText('exFile')->nullable();
             $table->timestamps();
         });
     }

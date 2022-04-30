@@ -8,7 +8,7 @@
 	@include('navbar.friend-navbar')
 
 	<link rel="stylesheet" type="text/css" href="css/user-function/friend.css">
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<div class="wrapper-on">
 		<div class="col col-md-3 card-library">

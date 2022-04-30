@@ -1,3 +1,14 @@
+const user__name = document.querySelector('.user__name').innerText;
+function randomStr(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+	    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 // Phần thu ra thu vào cho thanh sidebar
 var minisizeBtn = document.querySelector('.minisize');
 var sidebarMenu = document.querySelector('.sidebar-menu');
@@ -177,11 +188,11 @@ let dropArea = document.getElementById("drop-area");
 // Highlight drop area when item is dragged over it
 ;['dragenter', 'dragover'].forEach(eventName => {
  	 dropArea.addEventListener(eventName, highlight, false);
-})
+});
 
 ;['dragleave', 'drop'].forEach(eventName => {
  	 dropArea.addEventListener(eventName, unhighlight, false);
-})
+});
 
 // Handle dropped files
 dropArea.addEventListener('drop', handleDrop, false);
@@ -218,7 +229,7 @@ function previewFile(file) {
 	if (fileType === 'docx' || fileType == 'doc') {
 		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
 			<div class="doc-file">
-				<img src="./docx-icon-large.png" alt="doc-icon">
+				<img src="img/docs-icon/docx-icon-large.png" alt="doc-icon">
 
 				<div class="file-info-upload">
 					<h3 class="file-name-upload">${file.name}</h3>
@@ -228,7 +239,7 @@ function previewFile(file) {
 	} else if (fileType == 'pdf') {
 		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
 			<div class="doc-file">
-				<img src="./pdf-icon.png" alt="doc-icon">
+				<img src="img/docs-icon/pdf-icon.png" alt="doc-icon">
 
 				<div class="file-info-upload">
 					<h3 class="file-name-upload">${file.name}</h3>
@@ -255,24 +266,63 @@ function previewFile(file) {
 
 function uploadFile(file, i) {
 	var formData = new FormData();
+	let fileType = file.name.split('.').slice(-1)[0];
 
-	// Update progress (can be used to show progress indicator)
-	// xhr.upload.addEventListener("progress", function(e) {;
-	// 	updateProgress(i, (e.loaded * 100.0 / e.total) || 100);
-	// });
+	console.log(file,i);
 
-	// xhr.addEventListener('readystatechange', function(e) {
-	// 	if (xhr.readyState == 4 && xhr.status == 200) {
-	// 		updateProgress(i, 100); // <- Add this
-	// 	}
-	// 	else if (xhr.readyState == 4 && xhr.status != 200) {
-	// 	// Error. Inform the user
-	// 	}
-	// })
+	let fileName = randomStr(40) + '.' + fileType;
+	pushObject(document.querySelector('.user__name').innerText, file.name, fileName);
 
-	formData.append('upload_preset', 'ujpu6gyk');
+	formData.append('fileDir', document.querySelector('.file-address').value);
 	formData.append('file', file);
+	formData.append('fileName', fileName);
+	formData.append('answerUploadedJson', JSON.stringify(sendedAnswerObj));
 
-	console.log(file);
+	axios.post('upload-answer', formData, {
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		}
+	})
+	.then(response => {
+		console.log(response);
+	})
+	.catch(error => {
+		console.log(error);
+	})
 	// xhr.send(formData);
 }
+
+var sendedAnswerObj = {}
+function pushObject(username, nameFile, data) {
+	let newObj = {
+		[nameFile] : data
+	};
+
+	if (sendedAnswerObj[username] != null) {
+		sendedAnswerObj[username].push(newObj);
+	} else {
+		sendedAnswerObj[username] = [newObj];
+	}
+
+	return sendedAnswerObj;
+}
+
+// Lấy danh sách file đã tải lên.
+axios.get('get-list-file-uploaded', {
+	params: {
+		fileName: document.querySelector('.file-address').value
+	}
+})
+.then(response => {
+	console.log(response);
+	if (response.data != '') {
+		sendedAnswerObj = response.data;
+	}
+})
+.catch(error => {
+	console.log(error);
+});
+
+// function showFileUploaded(obj) {
+// 	obj
+// }

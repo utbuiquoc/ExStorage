@@ -109,6 +109,7 @@ class FileController extends Controller
             ]);
 
             $file = $request->file('fileUpload');
+
             $currentDir = $request->currentDir;
 
             $fileName = $file->getClientOriginalName();

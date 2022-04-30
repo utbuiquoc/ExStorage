@@ -52,7 +52,7 @@ var friendFindedList = document.querySelector('.friend__list');
 
 function searchFriend() {
 	var friendInfo = searchBar.value;
-	var formData = new FormData();
+	var formData = new FormData;
 
 	if (friendInfo[0] === '#') {
 		friendInfo = friendInfo.replace('#', '');
@@ -129,7 +129,7 @@ function searchFriend() {
 		});
 	})
 	.catch(function(error) {
-		console.log(error);
+		console.log(error.response);
 		friendFindedList.innerHTML = '';
 	});
 

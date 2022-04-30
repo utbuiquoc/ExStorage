@@ -44,6 +44,10 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('get-friends-allowed-view', 'FileController@getFriendsAllowedView');
         Route::post('remove-friend-added', 'FileController@removeFriendAdded');
 
+    Route::get('exercise', 'ExerciseController@exercise');
+        Route::post('upload-answer', 'ExerciseController@uploadAnswer');
+        Route::get('get-list-file-uploaded', 'ExerciseController@getListFileUploaded');
+
     
     Route::get('friend', 'FriendsController@friend');
         Route::post('find-friend', 'FriendsController@findFriend');

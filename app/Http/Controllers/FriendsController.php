@@ -17,12 +17,13 @@ class FriendsController extends Controller
         return view('user-function.friend', ['title' => 'Bạn bè']);
     }
 
-    public function findFriend(Request $request) {
+    public function findFriend(Request $request) {;
         $this->validate($request, [
-            'friendInfo' => 'min:1'
+            'friendInfo' => 'min:1|required'
         ]);
 
         $friendInfo = $request->friendInfo;
+
 
         $userDB = new User;
         $friend = $userDB->where('name', 'like', "%$friendInfo%")->orWhere('email', $friendInfo)->orWhere('id', $friendInfo)->get();
