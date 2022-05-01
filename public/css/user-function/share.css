@@ -309,7 +309,7 @@ body {
 	margin-bottom: 3px;
 }
 
-.bg-uploadSucess {
+.bg-uploadSuccess {
 	background-color: #28a745;
 }
 
@@ -413,8 +413,9 @@ body {
 #fileElem {
 	display: none;
 }
-  
-.doc-file {
+
+.doc-file,
+.doc-file-uploading {
 	position: relative;
 	width: 150px;
 	height: 150px;
@@ -423,6 +424,10 @@ body {
 	border: 2px solid #ccc;
 	border-radius: 10px;
 	margin: 5px;
+}
+
+.doc-file-uploading {
+	opacity: 0.5;
 }
 
 .doc-file>img,
@@ -451,4 +456,30 @@ body {
 	height: 20px;
 	margin: 18.72px 0;
 	font-size: 20px;
+}
+
+.remove-file-uploaded-btn {
+	position: absolute;
+	top: -18px;
+	right: -11px;
+	font-size: 24px;
+	line-height: 24px;
+	text-align: center;
+	z-index: 1;
+	cursor: pointer;
+}
+
+.bi-x {
+	width: 30px;
+	height: 30px;
+	display: block;
+	text-align: center;
+	background: white;
+	border: 2px solid #6a6a6a;
+	border-radius: 50%;
+}
+
+.bi-x::before {
+	height: 30px;
+	width: 27.5px;
 }

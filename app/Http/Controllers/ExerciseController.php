@@ -30,11 +30,22 @@ class ExerciseController extends FileController
     }
 
     public function uploadAnswer(Request $request) {
-        $ansJSON = $request->answerUploadedJson;
+        $ansJSON  = $request->answerUploadedJson;
         $fileName = $request->fileName;
-        $fileDir = $request->fileDir;
+        $fileDir  = $request->fileDir;
         $request->file('file')->move('fileUploaded', $fileName);
 
         return $this->addFile($ansJSON, $fileDir);
+    }
+
+    public function removeAnsFile(Request $request) {
+        $fileExJSON = $request->fileExJSON;
+        $fileDir  = $request->fileDir;
+
+        $file = Files::find(Files::where('name', $fileDir)->get()[0]->id);
+        $file->exFile = $fileExJSON;
+        $file->save();
+        
+        return 'Thành công!';
     }
 }

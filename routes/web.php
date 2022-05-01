@@ -47,6 +47,7 @@ Route::group(['middleware' => 'login'], function() {
     Route::get('exercise', 'ExerciseController@exercise');
         Route::post('upload-answer', 'ExerciseController@uploadAnswer');
         Route::get('get-list-file-uploaded', 'ExerciseController@getListFileUploaded');
+        Route::post('remove-ans-file', 'ExerciseController@removeAnsFile');
 
     
     Route::get('friend', 'FriendsController@friend');
