@@ -531,6 +531,7 @@ class FileController extends Controller
             
             $friendsIdArr = explode('|', $friendsName);
             $friendInfoArr = array();
+            if ($friendsIdArr[0] == '') { return null; }
             foreach ($friendsIdArr as $key => $value) {
                 $friendInfo = array(
                     'name'  => $value, 

@@ -39,8 +39,11 @@ Route::group(['middleware' => 'login'], function() {
         Route::get('get-list-friends', 'FileController@getListFriends');
         Route::post('get-list-friends-not-allowed', 'FileController@getListFriendsNotAllow');
         Route::post('add-friend-can-view-file', 'FileController@addFriendCanViewFile');
+        Route::post('add-group-can-view-file', 'GroupsController@addGroupCanViewFile');
         Route::post('get-friends-allowed-view', 'FileController@getFriendsAllowedView');
+        Route::post('get-groups-allowed-view', 'GroupsController@getGroupsAllowedView');
         Route::post('remove-friend-added', 'FileController@removeFriendAdded');
+        Route::post('remove-group-added', 'GroupsController@removeGroupAdded');
 
     Route::get('exercise', 'ExerciseController@exercise');
 
@@ -65,6 +68,7 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('remove-member', 'GroupsController@removeMember');
         Route::post('exit-group', 'GroupsController@exitGroup');
         Route::post('remove-group', 'GroupsController@removeGroup');
+        Route::post('get-list-groups-not-allowed', 'GroupsController@getListGroupsNotAllowed');
     Route::get('invite/{inviteLink}', 'GroupsController@joinGroupViaLink');
         Route::get('get-group-detail-via-link', 'GroupsController@getGroupDetailViaLink');
         Route::post('accept-invition', 'GroupsController@accpetInvitation');

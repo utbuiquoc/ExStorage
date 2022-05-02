@@ -156,8 +156,15 @@
 			</div>
 		</div>
 
-		<div class="col col-md-9 card-library preview-docs">
-			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
+		<div class="col col-md-9 card-library preview-docs flex-row">
+			<!-- <iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe> -->
+			<div class="col col-md-3 list-ans">
+				a
+			</div>
+
+			<div class="col col-md-9 user-ans-info card-library">
+				b
+			</div>
 		</div>
 
 		<div class="cover-page d-none"></div>

@@ -22,6 +22,7 @@ class CreateFileTable extends Migration
             $table->string('type');
             $table->string('owner');
             $table->text('viewer');
+            $table->string('group_viewer')->nullable();
             $table->boolean('allowshare')->default(false);
             $table->boolean('allcanview')->default(false);
             $table->boolean('is_exercise')->default(true);

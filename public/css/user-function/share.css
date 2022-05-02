@@ -394,7 +394,9 @@ body {
 }
 #gallery {
 	margin-top: 10px;
-	display: flex;
+	display: block ruby;
+	overflow-y: auto;
+	padding-top: 15px;
 }
 #gallery img {
 	vertical-align: middle;

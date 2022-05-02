@@ -123,7 +123,7 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Modal title</h5>
+					<h5 class="modal-title">Nộp bài</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
@@ -136,7 +136,7 @@
 								<span class="input-group-text" id="basic-addon1">Tên</span>
 								<input type="text" class="form-control" placeholder="VD: Nguyễn Văn A" aria-label="Username" aria-describedby="basic-addon1">
 							</div>
-							
+
 							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.pdf" onchange="handleFiles(this.files)">
 							<label class="button" for="fileElem">Nhấp để chọn tệp tin</label>
 						</form>
@@ -149,7 +149,6 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Nộp bài</button>
 				</div>
 			</div>
 		</div>

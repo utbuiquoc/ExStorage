@@ -355,7 +355,8 @@
 	border-radius: 6px;
 }
 
-.badge-friend-name {
+.badge-friend-name,
+.badge-group-name {
 	margin-right: 3px;
 }
 
@@ -363,4 +364,13 @@
 	font-size: 8.4px;
 	margin-top: 1px;
 	margin-left: 3px;
+}
+
+.placeholder-input {
+	position: absolute;
+	pointer-events: none;
+	top: 20% !important;
+	right: 10px !important;
+	font-size: 16px !important;
+	opacity: 0.5;
 }

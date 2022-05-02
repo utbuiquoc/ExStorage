@@ -406,7 +406,7 @@
 							<label for="" class="form-label">Chia sẻ với mọi người</label>
 
 							<div class="select-section">
-								<input type="text" class="form-control friend-select" placeholder="Thêm">
+								<input type="text" class="form-control friend-select"><span class="placeholder-input">Thêm</span>
 								<div class="friend-added">
 									
 								</div>

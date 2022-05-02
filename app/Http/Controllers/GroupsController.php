@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\User;
-use App\File;
+use App\Files;
 use App\Dir;
 use App\Friends;
 use App\Groups;
@@ -89,6 +89,184 @@ class GroupsController extends Controller
         }
 
         return "Thành công!";
+    }
+
+    public function getListGroupsNotAllowed(Request $request) {
+        $friendsName;
+
+        $userName = Auth::user()->name;
+
+        // Lấy tên của những người đã kết bạn.
+        $groups = Groups::where('owner', $userName)->get();
+
+        // Xóa những friend đã có thể xem file
+        if (isset($request->friendAllowed)) {
+            $friendAllowed = $request->friendAllowed;
+            $friendAllowed = explode('|', $friendAllowed);
+            foreach ($friendAllowed as $key => $value) {
+                $friendsName = $this->removeGroupSelected($groups, $value);
+            }
+        }
+
+        return $groups;
+    }
+
+    protected function removeGroupSelected($groups, $groupSelected) {
+        foreach ($groups as $key => $group) {
+            if ($group->name == $groupSelected) {
+                unset($groups[$key]);
+            }
+        }
+        return $groups;
+    }
+
+    public function addItemViewer($fileId, $name, $type) {
+        if ($type === 'folder') {
+            $item = Dir::find($fileId);
+        } else if ($type == 'file') {
+            $item = Files::find($fileId);
+        }
+
+        $dataToSave = $item->group_viewer . '|' . $name;
+        if ($dataToSave[0] === '|') { $dataToSave = str_replace('|', '', $dataToSave); }
+
+        $item->group_viewer = $dataToSave;
+        $item->save();
+    }
+
+    private function addGroup($dir, $viewerName) {
+        $fileDb = new Files;
+        $dir = str_replace('/', '\/', $dir);
+        $filesNeedChange = $fileDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->addItemViewer($fileId, $viewerName, 'file');
+        }
+
+        $folderNeedChange = Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+
+        foreach ($folderNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->addItemViewer($fileId, $viewerName, 'folder');
+        }
+    }
+
+    public function addGroupCanViewFile(Request $request) {
+        $this->validate($request, [
+            'groupName'    => 'required',
+            'fileDir'       => 'required'
+        ]);
+
+        $groupName = $request->groupName;
+        $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+
+            $this->addGroup($fileDir, $groupName);
+
+            return $groupName;
+        }
+
+        $fileTarget = Files::where('name', $fileDir)->get();
+
+        $dataToSave = $fileTarget[0]->group_viewer . '|' . $groupName;
+        if ($dataToSave[0] === '|') { $dataToSave = str_replace('|', '', $dataToSave); }
+        $fileTarget[0]->group_viewer = $dataToSave;
+        $fileTarget[0]->save();
+
+        return $groupName;
+    }
+
+    public function getGroupsAllowedView(Request $request) {
+        $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+            $friendAllowed = Dir::where('dir', $fileDir)->select('group_viewer')->get()[0];
+
+            return $friendAllowed->group_viewer;
+        }
+
+        $friendAllowed = Files::where('name', $fileDir)->select('group_viewer')->get()[0];
+
+        return $friendAllowed->group_viewer;
+    }
+
+    protected function removeIdUser($str, $id) {
+        $strArr = explode('|', $str);
+
+        foreach ($strArr as $key => $value) {
+            if ($value == $id) {
+                unset($strArr[$key]);
+
+                return implode('|', $strArr);
+            }
+        }
+
+        return implode('|', $strArr);
+    }
+
+    private function removeItemGroupViewer($fileId, $name, $type) {
+        if ($type === 'folder') {
+            $item = Dir::find($fileId);
+        } else if ($type == 'file') {
+            $item = Files::find($fileId);
+        }
+
+        $groupViewer = $this->removeIdUser($item->group_viewer, $name);
+
+        $item->group_viewer = $groupViewer;
+        $item->save();
+    }
+
+    private function removeGroupViewer($dir, $viewerName) {
+        $fileDb = new Files;
+        $dir = str_replace('/', '\/', $dir);
+        $filesNeedChange = $fileDb->where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        // Đổi dir từng file
+        foreach ($filesNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->removeItemGroupViewer($fileId, $viewerName, 'file');
+        }
+
+        $folderNeedChange = Dir::where('owner', Auth::user()->name)->where('dir', 'regexp', "$dir([a-zA-Z0-9!\p{L}@#$%^&*\s\/_-]*|)$")->get();
+
+        foreach ($folderNeedChange as $key => $value) {
+            $fileId = $value->id;
+            $this->removeItemGroupViewer($fileId, $viewerName, 'folder');
+        }
+    }
+
+    public function removeGroupAdded(Request $request) {
+        $this->validate($request, [
+            'friendName'    => 'required',
+            'fileDir'       => 'required'
+        ]);
+
+        $friendName = $request->friendName;
+        $fileDir = $request->fileDir;
+
+        if ($fileDir[strlen($fileDir)-1] === '/') {
+            $fileDir = substr($fileDir,0,-1);
+
+            $this->removeGroupViewer($fileDir, $friendName);
+
+            return 'Thành công';
+        }
+
+        $fileTarget = Files::where('name', $fileDir)->get()[0];
+
+        $viewer = $this->removeIdUser($fileTarget->group_viewer, $friendName);
+
+        $fileTarget->group_viewer = $viewer;
+        $fileTarget->save();
+
+        return 'Thành công';
     }
 
     private function getGroupJoined($groupId) {
