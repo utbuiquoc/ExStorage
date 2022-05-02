@@ -131,6 +131,12 @@
 					<div id="drop-area">
 						<form class="my-form">
 							<p>Tải lên bài làm</p>
+
+							<div class="input-group mb-3 d-none" id="ans-user">
+								<span class="input-group-text" id="basic-addon1">Tên</span>
+								<input type="text" class="form-control" placeholder="VD: Nguyễn Văn A" aria-label="Username" aria-describedby="basic-addon1">
+							</div>
+							
 							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.pdf" onchange="handleFiles(this.files)">
 							<label class="button" for="fileElem">Nhấp để chọn tệp tin</label>
 						</form>

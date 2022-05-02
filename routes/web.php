@@ -33,8 +33,6 @@ Route::group(['middleware' => 'login'], function() {
         Route::get('get-exercise-status-folder', 'FileController@getExerciseStatusFolder');
         Route::post('change-ex-file-status', 'FileController@changeExFileStatus');
         Route::post('change-ex-folder-status', 'FileController@changeExFolderStatus');
-        Route::get('confirm-ex-file', 'FileController@confirmExFile');
-        Route::get('confirm-ex-folder', 'FileController@confirmExFolder');
 
         // Route phần share file bị hạn chế
         Route::post('set-file-limited', 'FileController@setLimited');
@@ -45,9 +43,6 @@ Route::group(['middleware' => 'login'], function() {
         Route::post('remove-friend-added', 'FileController@removeFriendAdded');
 
     Route::get('exercise', 'ExerciseController@exercise');
-        Route::post('upload-answer', 'ExerciseController@uploadAnswer');
-        Route::get('get-list-file-uploaded', 'ExerciseController@getListFileUploaded');
-        Route::post('remove-ans-file', 'ExerciseController@removeAnsFile');
 
     
     Route::get('friend', 'FriendsController@friend');
@@ -81,6 +76,16 @@ Route::get('share/folder/{owner?}/{itemDir?}', 'UserController@shareFolder')->wh
 Route::get('viewer', function() {
     return view('viewer');
 });
+
+// Upload Ans
+Route::get('confirm-ex-file', 'FileController@confirmExFile');
+Route::get('confirm-ex-folder', 'FileController@confirmExFolder');
+Route::post('upload-answer', 'ExerciseController@uploadAnswer');
+Route::post('upload-answer-folder', 'ExerciseController@uploadAnswerFolder');
+Route::get('get-list-file-uploaded', 'ExerciseController@getListFileUploaded');
+Route::get('get-list-folder-uploaded', 'ExerciseController@getListFolderUploaded');
+Route::post('remove-ans-file', 'ExerciseController@removeAnsFile');
+Route::post('remove-ans-folder', 'ExerciseController@removeAnsFolder');
 
 // Route Đăng nhập, đăng kí, đăng xuất
 Route::get('sign-in', function() {

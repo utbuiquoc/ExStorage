@@ -167,6 +167,12 @@
 						<form class="my-form">
 							<p>Tải lên bài làm</p>
 							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.pdf" onchange="handleFiles(this.files)">
+							
+							<div class="input-group mb-3 d-none" id="ans-user">
+								<span class="input-group-text" id="basic-addon1">Tên</span>
+								<input type="text" class="form-control" placeholder="VD: Nguyễn Văn A" aria-label="Username" aria-describedby="basic-addon1">
+							</div>
+
 							<label class="button" for="fileElem">Nhấp để chọn tệp tin</label>
 						</form>
 
@@ -184,6 +190,37 @@
 		</div>
 	</div>
 
+	{{-- Toast --}}
+	<div class="toast-container position-absolute p-3 end-0" id="toastPlacement" style="z-index: 99999">
+		{{-- Success Toast --}}
+		<div class="toast successToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-uploadSuccess text-white">
+				<i class="bi bi-check-circle-fill me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+
+		{{-- Error Toast --}}
+		<div class="toast errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-danger text-white">
+				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+
+		{{-- Warning Toast --}}
+		<div class="toast warningToast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-warning text-white">
+				<i class="bi bi-exclamation-circle me-2 toast-icon"></i>
+				<p class="me-auto toast-notifi"></p>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="js/user-function/shareFolder.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @endsection

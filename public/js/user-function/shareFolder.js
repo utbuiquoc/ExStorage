@@ -1,3 +1,21 @@
+function openToast(toast, notification) { //Hàm  mở toast
+	var myAlert = document.querySelector(toast);//select id of toast
+	var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+	myAlert.querySelector('.toast-notifi').innerHTML = notification;
+	bsAlert.show();//show it
+};
+
+let user__name = document.querySelector('.user__name').innerText;
+function randomStr(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+	    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 // Phần thu ra thu vào cho thanh sidebar
 var minisizeBtn = document.querySelector('.minisize');
 var sidebarMenu = document.querySelector('.sidebar-menu');
@@ -149,6 +167,8 @@ showFile();
 // Kiểm tra có phải là bài tập không
 const owner = window.location.pathname.split('/')[3];
 const rootDir = document.querySelector('#currentDir').value;
+const sendAnsBtn = document.querySelector('.exercise');
+const enterNameInput = document.querySelector('#ans-user');
 axios.get('confirm-ex-folder', {
 	params: {
 		'owner': owner,
@@ -157,13 +177,33 @@ axios.get('confirm-ex-folder', {
 })
 .then(response => {
 	console.log(response);
-	if (response.data == true) {
-		document.querySelector('.exercise').classList.replace('d-none', 'd-block');
+	const folderInfo = response.data;
+	// Xử lí nút hiện modal nộp ans
+	if (user__name === 'Khách') {
+		enterNameInput.classList.replace('d-none', 'd-flex');
+		enterNameInput.querySelector('.form-control').value = 'Khách';
+	}
+	if (folderInfo.allcanview == true) {
+		if (folderInfo.is_exercise == true) {
+			sendAnsBtn.classList.replace('d-none', 'd-block');
+		}
+	} else if (folderInfo.allowshare == true) {
+		console.log(folderInfo.viewer);
+		if (folderInfo.viewer.split('|').includes(user__name)) {
+			sendAnsBtn.classList.replace('d-none', 'd-block');
+		}
 	}
 })
 .catch(error => {
 	console.log(error);
 });
+
+// Nhập tên nếu link share được public
+enterNameInput.querySelector('.form-control').onkeyup = function() {
+	let newUserName = enterNameInput.querySelector('.form-control').value;
+	document.querySelector('.user__name').innerText = newUserName;
+	user__name = newUserName;
+}
 
 // ************************ Drag and drop ***************** //
 let dropArea = document.getElementById("drop-area");
@@ -177,11 +217,11 @@ let dropArea = document.getElementById("drop-area");
 // Highlight drop area when item is dragged over it
 ;['dragenter', 'dragover'].forEach(eventName => {
  	 dropArea.addEventListener(eventName, highlight, false);
-})
+});
 
 ;['dragleave', 'drop'].forEach(eventName => {
  	 dropArea.addEventListener(eventName, unhighlight, false);
-})
+});
 
 // Handle dropped files
 dropArea.addEventListener('drop', handleDrop, false);
@@ -217,8 +257,8 @@ function previewFile(file) {
 	console.log(fileType);
 	if (fileType === 'docx' || fileType == 'doc') {
 		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
-			<div class="doc-file">
-				<img src="./docx-icon-large.png" alt="doc-icon">
+			<div class="doc-file-uploading">
+				<img src="img/docs-icon/docx-icon-large.png" alt="doc-icon">
 
 				<div class="file-info-upload">
 					<h3 class="file-name-upload">${file.name}</h3>
@@ -227,8 +267,8 @@ function previewFile(file) {
 		`);
 	} else if (fileType == 'pdf') {
 		document.getElementById('gallery').insertAdjacentHTML('beforeend', `
-			<div class="doc-file">
-				<img src="./pdf-icon.png" alt="doc-icon">
+			<div class="doc-file-uploading">				
+				<img src="img/docs-icon/pdf-icon.png" alt="doc-icon">
 
 				<div class="file-info-upload">
 					<h3 class="file-name-upload">${file.name}</h3>
@@ -241,7 +281,7 @@ function previewFile(file) {
 		reader.onloadend = function() {
 			img = reader.result;
 			document.getElementById('gallery').insertAdjacentHTML('beforeend', `
-				<div class="doc-file">
+				<div class="doc-file-uploading">					
 					<img src="${img}" alt="img">
 
 					<div class="file-info-upload">
@@ -255,24 +295,158 @@ function previewFile(file) {
 
 function uploadFile(file, i) {
 	var formData = new FormData();
+	let fileType = file.name.split('.').slice(-1)[0];
 
-	// Update progress (can be used to show progress indicator)
-	// xhr.upload.addEventListener("progress", function(e) {;
-	// 	updateProgress(i, (e.loaded * 100.0 / e.total) || 100);
-	// });
+	console.log(file,i);
 
-	// xhr.addEventListener('readystatechange', function(e) {
-	// 	if (xhr.readyState == 4 && xhr.status == 200) {
-	// 		updateProgress(i, 100); // <- Add this
-	// 	}
-	// 	else if (xhr.readyState == 4 && xhr.status != 200) {
-	// 	// Error. Inform the user
-	// 	}
-	// })
+	let fileName = randomStr(40) + '.' + fileType;
+	pushObject(document.querySelector('.user__name').innerText, file.name, fileName);
 
-	formData.append('upload_preset', 'ujpu6gyk');
+	formData.append('dir', currentRootDir);
 	formData.append('file', file);
+	formData.append('fileName', fileName);
+	formData.append('answerUploadedFolderJson', JSON.stringify(sendedAnswerObj));
 
-	console.log(file);
+	axios.post('upload-answer-folder', formData, {
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		}
+	})
+	.then(response => {
+		console.log(response);
+		showFileUploaded(sendedAnswerObj[user__name]);
+		openToast('.successToast', 'Tải lên thành công!');
+	})
+	.catch(error => {
+		console.log(error);
+	})
 	// xhr.send(formData);
+}
+
+var sendedAnswerObj = {}
+function pushObject(username, nameFile, data) {
+	let newObj = {
+		[nameFile] : data
+	};
+
+	if (sendedAnswerObj[username] != null) {
+		sendedAnswerObj[username].push(newObj);
+	} else {
+		sendedAnswerObj[username] = [newObj];
+	}
+
+	return sendedAnswerObj;
+}
+
+// Lấy danh sách file đã tải lên.
+axios.get('get-list-folder-uploaded', {
+	params: {
+		dir: currentRootDir
+	}
+})
+.then(response => {
+	console.log(response);
+	if (response.data != '') {
+		sendedAnswerObj = response.data;
+		showFileUploaded(sendedAnswerObj[user__name]); // Hiển thị file đã upload
+	}
+})
+.catch(error => {
+	console.log(error);
+});
+
+function showFileUploaded(arrFileUser) {
+	if (arrFileUser != null) { // Nếu có
+		document.querySelector('#gallery').innerHTML = '';
+		arrFileUser.forEach(fileUser => {
+			Object.entries(fileUser).forEach(([fileUploadedName, fileLink]) => {
+				console.log(fileUploadedName , fileLink);
+
+				let fileTypeUploaded = fileLink.split('.').slice(-1)[0];
+				let fileLinkUploaded = 'fileUploaded/'+ fileLink;
+				console.log(fileTypeUploaded);
+
+				// Show file
+				if (fileTypeUploaded === 'docx' || fileTypeUploaded == 'doc') {
+					document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+						<div class="doc-file">
+							<input class="file-name-to-rm" type="hidden" value="${fileLink}" />
+							<div class="remove-file-uploaded-btn"><i class="bi bi-x"></i></div>
+
+							<img src="img/docs-icon/docx-icon-large.png" alt="doc-icon">
+
+							<div class="file-info-upload">
+								<h3 class="file-name-upload">${fileUploadedName}</h3>
+							</div>
+						</div>
+					`);
+				} else if (fileTypeUploaded == 'pdf') {
+					document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+						<div class="doc-file">
+							<input class="file-name-to-rm" type="hidden" value="${fileLink}" />
+							<div class="remove-file-uploaded-btn"><i class="bi bi-x"></i></div>
+
+							<img src="img/docs-icon/pdf-icon.png" alt="doc-icon">
+
+							<div class="file-info-upload">
+								<h3 class="file-name-upload">${fileUploadedName}</h3>
+							</div>
+						</div>
+					`);
+				} else {
+					document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+						<div class="doc-file">
+							<input class="file-name-to-rm" type="hidden" value="${fileLink}" />
+							<div class="remove-file-uploaded-btn"><i class="bi bi-x"></i></div>
+
+							<img src="${fileLinkUploaded}" alt="img">
+
+							<div class="file-info-upload">
+								<h3 class="file-name-upload">${fileUploadedName}</h3>
+							</div>
+						</div>
+					`);
+				}
+			});
+		});
+			
+		removeFileUpload();
+	} else {
+		console.log('have no file!');
+	}
+}
+
+
+// Hàm xóa file ans đã upload
+function dropFileEl(fileNameToRm) {
+	sendedAnswerObj[user__name].forEach((fileExData, index) => {
+		if (fileExData[Object.keys(fileExData)[0]] === fileNameToRm) {
+			sendedAnswerObj[user__name].splice(index, 1);
+		};
+	});
+}
+function removeFileUpload() {
+	let docFiles = document.querySelectorAll('.doc-file');
+	docFiles.forEach(docFile => {
+		let rmFileBtn = docFile.querySelector('.remove-file-uploaded-btn');
+		rmFileBtn.onclick = function () {
+			let formData = new FormData;
+
+			let fileNameToRm = docFile.querySelector('.file-name-to-rm').value;
+			dropFileEl(fileNameToRm);
+			
+			formData.append('dir', currentRootDir);
+			formData.append('fileExJSON', JSON.stringify(sendedAnswerObj));
+			
+			axios.post('remove-ans-folder', formData)
+			.then(response => {
+				console.log(response);
+				showFileUploaded(sendedAnswerObj[user__name]);
+				openToast('.successToast', 'Đã xóa tệp!');
+			})
+			.catch(error => {
+				console.log(error);
+			})
+		}
+	}) 
 }

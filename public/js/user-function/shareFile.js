@@ -5,7 +5,7 @@ function openToast(toast, notification) { //Hàm  mở toast
 	bsAlert.show();//show it
 };
 
-const user__name = document.querySelector('.user__name').innerText;
+let user__name = document.querySelector('.user__name').innerText;
 function randomStr(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -166,6 +166,9 @@ showFile();
 // Upload file
 // Kiểm tra có phải là bài tập không
 const owner = window.location.pathname.split('/')[3];
+const rootDir = document.querySelector('#currentDir').value;
+const sendAnsBtn = document.querySelector('.exercise');
+const enterNameInput = document.querySelector('#ans-user');
 const fileName = document.querySelector('#currentDir').value;
 axios.get('confirm-ex-file', {
 	params: {
@@ -175,13 +178,33 @@ axios.get('confirm-ex-file', {
 })
 .then(response => {
 	console.log(response);
-	if (response.data == true) {
-		document.querySelector('.exercise').classList.replace('d-none', 'd-block');
+	const folderInfo = response.data;
+	// Xử lí nút hiện modal nộp ans
+	if (user__name === 'Khách') {
+		enterNameInput.classList.replace('d-none', 'd-flex');
+		enterNameInput.querySelector('.form-control').value = 'Khách';
+	}
+	if (folderInfo.allcanview == true) {
+		if (folderInfo.is_exercise == true) {
+			sendAnsBtn.classList.replace('d-none', 'd-block');
+		}
+	} else if (folderInfo.allowshare == true) {
+		console.log(folderInfo.viewer);
+		if (folderInfo.viewer.split('|').includes(user__name)) {
+			sendAnsBtn.classList.replace('d-none', 'd-block');
+		}
 	}
 })
 .catch(error => {
 	console.log(error);
 });
+
+// Nhập tên nếu link share được public
+enterNameInput.querySelector('.form-control').onkeyup = function() {
+	let newUserName = enterNameInput.querySelector('.form-control').value;
+	document.querySelector('.user__name').innerText = newUserName;
+	user__name = newUserName;
+}
 
 // ************************ Drag and drop ***************** //
 let dropArea = document.getElementById("drop-area");

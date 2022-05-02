@@ -24,9 +24,22 @@ class ExerciseController extends FileController
         return $file->exFile;
     }
 
+    private function addFolder($ansJSON, $dir) {
+        $folder = Dir::find(Dir::where('dir', $dir)->get()[0]->id);
+        $folder->exFile = $ansJSON;
+        $folder->save();
+
+        return $folder->exFile;
+    }
+
     public function getListFileUploaded(Request $request) {
         $fileName = $request->fileName;
         return Files::find(Files::where('name', $fileName)->get()[0]->id)->exFile;
+    }
+    
+    public function getListFolderUploaded(Request $request) {
+        $dir = $request->dir;
+        return Dir::find(Dir::where('dir', $dir)->get()[0]->id)->exFile;
     }
 
     public function uploadAnswer(Request $request) {
@@ -38,6 +51,15 @@ class ExerciseController extends FileController
         return $this->addFile($ansJSON, $fileDir);
     }
 
+    public function uploadAnswerFolder(Request $request) {
+        $ansJSON  = $request->answerUploadedFolderJson;
+        $fileName = $request->fileName;
+        $dir      = $request->dir;
+        $request->file('file')->move('fileUploaded', $fileName);
+
+        return $this->addFolder($ansJSON, $dir);
+    }
+
     public function removeAnsFile(Request $request) {
         $fileExJSON = $request->fileExJSON;
         $fileDir  = $request->fileDir;
@@ -46,6 +68,17 @@ class ExerciseController extends FileController
         $file->exFile = $fileExJSON;
         $file->save();
         
+        return 'Thành công!';
+    }
+
+    public function removeAnsFolder(Request $request) {
+        $fileExJSON = $request->fileExJSON;
+        $dir  = $request->dir;
+
+        $folder = Dir::find(Dir::where('dir', $dir)->get()[0]->id);
+        $folder->exFile = $fileExJSON;
+        $folder->save();
+
         return 'Thành công!';
     }
 }
