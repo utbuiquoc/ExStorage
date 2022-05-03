@@ -286,6 +286,17 @@ class GroupsController extends Controller
         return $groups;
     }
 
+    public function getListViewerOfGroup(Request $request) {
+        $groupArr = $request->groupArr;
+        $groupMemArr = [];
+        foreach ($groupArr as $key => $groupName) {
+            $group = Groups::where('name', $groupName)->get()[0]->members;
+            $groupMemArr = array_merge($groupMemArr, explode(',', $group));
+        }
+        
+        return array_unique($groupMemArr);
+    }
+
     public function getListOwnershipGroup() {
         return Groups::where('owner', Auth::user()->name)->get();
     }

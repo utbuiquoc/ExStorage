@@ -61,7 +61,23 @@
 									</div>
 									<?php
 								} else if (count($arrayP) >= 2 && $value->allowshare == true && Auth::user() !== null) {
-									if (strpos($value->viewer, Auth::user()->name) !== false) {?>
+
+									$groupAllowed = $value->group_viewer;
+									$groupAllowedArr = [];
+									$group = new App\Groups;
+									if ($groupAllowed != null) {
+										foreach (explode('|', $groupAllowed) as $key => $groupEl) {
+											$groupArr = $group->where('name', $groupEl)->get()[0]->members;
+											$groupAllowedArr = array_merge($groupAllowedArr, explode(',', $groupArr));
+										}
+									}
+
+									$viewer = $value->viewer;
+								
+									$viewer = explode('|', $viewer);
+									$viewer = array_unique(array_merge($groupAllowedArr, $viewer));
+									
+									if (in_array(Auth::user()->name, $viewer)) {?>
 										<div class="dirItem folder-item d-none card mt-1">
 											<input type="hidden" class="folder-address" value="<?php echo $value->dir ?>">
 											<div class="file-type">
@@ -114,28 +130,44 @@
 										</div>
 									<?php 
 									} else if (Auth::user() != null) {
-											if ($value->allowshare == true && strpos($value->viewer, Auth::user()->name) !== false) {?>
-											<div class="dirItem file-item d-none card mt-1">
-												<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
-												<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
-												<div class="selector">
-													<div class="file-type">
-														<img src="img/docs-icon/<?php 
-														if ($value->type == 'docx') { echo 'docx-icon.png'; }
-														else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-														else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
-														?>" alt="">
-													</div>
-			
-													<div class="file-info">
-														<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
-														<div class="file-info__extends d-flex">
-															<p class="file-info__time"><?php echo $value->created_at; ?></p>
-															<p class="file-info__type">.<?php echo $value->type ?> file</p>
-														</div>
+										$groupAllowed = $value->group_viewer;
+										$groupAllowedArr = [];
+										$group = new App\Groups;
+										
+										if ($groupAllowed != null) {
+											foreach (explode('|', $groupAllowed) as $key => $groupEl) {
+												$groupArr = $group->where('name', $groupEl)->get()[0]->members;
+												$groupAllowedArr = array_merge($groupAllowedArr, explode(',', $groupArr));
+											}
+										}
+
+										$viewer = $value->viewer;
+									
+										$viewer = explode('|', $viewer);
+										$viewer = array_unique(array_merge($groupAllowedArr, $viewer));
+
+										if ($value->allowshare == true && in_array(Auth::user()->name, $viewer)) {?>
+										<div class="dirItem file-item d-none card mt-1">
+											<input type="hidden" class="file-address" value="<?php echo $value->name; ?>">
+											<input type="hidden" class="file-dir" value="<?php echo $value->dir; ?>">
+											<div class="selector">
+												<div class="file-type">
+													<img src="img/docs-icon/<?php 
+													if ($value->type == 'docx') { echo 'docx-icon.png'; }
+													else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
+													else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+													?>" alt="">
+												</div>
+		
+												<div class="file-info">
+													<h6 class="file-info__name"><?php echo $value->fileName; ?></h6>
+													<div class="file-info__extends d-flex">
+														<p class="file-info__time"><?php echo $value->created_at; ?></p>
+														<p class="file-info__type">.<?php echo $value->type ?> file</p>
 													</div>
 												</div>
 											</div>
+										</div>
 										<?php }
 									}
 								}

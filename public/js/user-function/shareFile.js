@@ -189,7 +189,22 @@ axios.get('confirm-ex-file', {
 			sendAnsBtn.classList.replace('d-none', 'd-block');
 		}
 	} else if (folderInfo.allowshare == true) {
-		console.log(folderInfo.viewer);
+		console.log(folderInfo.group_viewer);
+		axios.get('get-list-viewer-of-group', {
+			params: {
+				groupArr: folderInfo.group_viewer.split('|')
+			}
+		})
+		.then(response2 => {
+			console.log(response2);
+			if (response2.data.includes(user__name)) {
+				sendAnsBtn.classList.replace('d-none', 'd-block');
+			}
+		})
+		.catch(error2 => {
+			console.log(error2);
+		});
+		
 		if (folderInfo.viewer.split('|').includes(user__name)) {
 			sendAnsBtn.classList.replace('d-none', 'd-block');
 		}

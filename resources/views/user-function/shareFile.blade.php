@@ -39,6 +39,18 @@
 							$allcanview = $item->allcanview;
 							$allowshare = $item->allowshare;
 
+							$groupAllowed = $item->group_viewer;
+							$groupAllowedArr = [];
+							$group = new App\Groups;
+							
+							if ($groupAllowed != null) {
+								foreach (explode('|', $groupAllowed) as $key => $groupEl) {
+									$groupArr = $group->where('name', $groupEl)->get()[0]->members;
+									$groupAllowedArr = array_merge($groupAllowedArr, explode(',', $groupArr));
+								}
+							}
+
+
 							$limitedView = false;
 
 							if ($allowshare) $limitedView = true;
@@ -47,6 +59,7 @@
 								$viewer = $item->viewer;
 								
 								$viewer = explode('|', $viewer);
+								$viewer = array_unique(array_merge($groupAllowedArr, $viewer));
 								
 								if (Auth::user() !== null) {
 									foreach ($viewer as $key => $value) {
