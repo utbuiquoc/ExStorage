@@ -145,11 +145,8 @@
 
 				<div class="card-library d-flex option">
 					<div class="btn-group d-flex">
-						<div class="add-option col col-sm-6">
+						<div class="add-option col col-sm-12">
 							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-plus-lg"></i></button>
-						</div>
-						<div class="setting-option col col-sm-6">
-							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-gear-fill"></i></button>
 						</div>
 					</div>
 				</div>
@@ -157,7 +154,7 @@
 		</div>
 
 		<div class="col col-md-9 card-library preview-docs">
-			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
+			<iframe id="pdf-js-viewer" src="/viewer?file=blank.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 
 		<div class="cover-page d-none"></div>

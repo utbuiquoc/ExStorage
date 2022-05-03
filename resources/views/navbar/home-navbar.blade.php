@@ -1,10 +1,6 @@
 @extends('layouts.navbar')
 
 @section('center')
-	<form action="" method="POST" class="d-flex input-group search-form">
-		<div class="input-group-text"><i class="bi bi-search"></i></div>
-		<input class="form-control me-2" type="search" placeholder="Tìm kiếm tài liệu, bạn bè, nhóm,..." aria-label="Search">
-	</form>
 @endsection
 
 @section('right')

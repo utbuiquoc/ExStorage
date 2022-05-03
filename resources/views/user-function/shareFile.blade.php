@@ -50,7 +50,6 @@
 								}
 							}
 
-
 							$limitedView = false;
 
 							if ($allowshare) $limitedView = true;
@@ -96,6 +95,7 @@
 									<div class="dirItem file-item d-flex card mt-1">
 										<input type="hidden" class="file-address" value="<?php echo $item->name; ?>">
 										<input type="hidden" class="file-dir" value="<?php echo $item->dir; ?>">
+										<a href="fileUploaded/<?php echo $item->name ?>" class="download-doc" target="_blank"></a>
 										<div class="selector">
 											<div class="file-type">
 												<img src="img/docs-icon/<?php 
@@ -128,12 +128,12 @@
 		</div>
 
 		<div class="col col-md-9 card-library preview-docs">
-			<iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
+			<iframe id="pdf-js-viewer" src="/viewer?file=blank.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 	</div>
 
-	<div class="modal fade" tabindex='-1' id="uploadFileModal">
-		<div class="modal-dialog modal-dialog-centered">
+	<div class="modal fade overflow-hidden" tabindex='-1' id="uploadFileModal">
+		<div class="modal-dialog modal-dialog-centered modal-upload-asn" style="max-width: 100vw !important;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Nộp bài</h5>

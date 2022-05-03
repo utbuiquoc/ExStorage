@@ -13,7 +13,7 @@
 			</li>
 
 			<li id="folder-btn" class="item">
-				<a class="item-link" href="exercise"><i class="item__icon bi bi-folder"></i>
+				<a class="item-link" href="exercise"><i class="item__icon bi bi-book"></i>
 				<div class="file-btn--description">
 					<span>Quản lí file</span>
 				</div></a>

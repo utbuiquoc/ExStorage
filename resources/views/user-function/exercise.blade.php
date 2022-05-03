@@ -1,13 +1,14 @@
 @extends('layouts.index')
 
 @section('itemSidebarSelected')
-	<input type="hidden" id="itemSidebar-Selected" value="file-btn">
+	<input type="hidden" id="itemSidebar-Selected" value="folder-btn">
 @endsection
 
 @section('content')
 	@include('navbar.home-navbar')
 
-	<link rel="stylesheet" type="text/css" href="css/user-function/library.css">
+	<link rel="stylesheet" type="text/css" href="css/user-function/exercise.css">
+	<link rel="stylesheet" type="text/css" href="css/user-function/friend.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
@@ -82,7 +83,7 @@
 										</div>
 
 										<div class="file-share">
-											<i class="option-btn bi bi-three-dots-vertical"></i>
+											<i class="option-btn bi bi-book-half"></i>
 											<div class="option-dialog d-none">
 												<ul class="option-list">
 													<li class="option-list__item share-folder-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
@@ -128,7 +129,7 @@
 								</div>
 
 								<div class="file-share">
-									<i class="option-btn bi bi-three-dots-vertical"></i>
+									<i class="option-btn bi bi-book-half"></i>
 									<div class="option-dialog d-none">
 										<ul class="option-list">
 											<li class="option-list__item share-option"><i class="bi bi-share"></i><p class="option-text">Chia sẻ</p></li>
@@ -142,28 +143,28 @@
 						<?php } ?>
 					</span>
 				</div>
-
-				<div class="card-library d-flex option">
-					<div class="btn-group d-flex">
-						<div class="add-option col col-sm-6">
-							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-plus-lg"></i></button>
-						</div>
-						<div class="setting-option col col-sm-6">
-							<button class="btn btn-outline-primary w-100 rounded-0"><i class="bi bi-gear-fill"></i></button>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 
 		<div class="col col-md-9 card-library preview-docs flex-row">
 			<!-- <iframe id="pdf-js-viewer" src="/viewer?file=pdfFile/test2.pdf" title="webviewer" frameborder="0" width="100%" height="100%"></iframe> -->
-			<div class="col col-md-3 list-ans">
-				a
+			<div class="col col-md-3 list-ans p-1 d-flex flex-column">
+				<h4 class="badge bg-primary title-badge">Danh sách người nộp</h4>
+				
+				<div class="user-sended-list overflow-auto text-center">
+					<h3 class="text-center" style="opacity: 0.5">Trống</h3>
+				</div>
 			</div>
 
-			<div class="col col-md-9 user-ans-info card-library">
-				b
+			<div class="col col-md-9 user-ans-info card-library p-2">
+				<h3>Tài khoản: <span class="user-upload-selected"></span></h3>
+				<hr/>
+				<h4 class="badge bg-primary title-badge">File đã nộp:</h4>
+								
+				<div class="ans-file-list overflow-auto">
+					<h3 class="text-center" style="opacity: 0.5">Trống</h3>
+				</div>
+				
 			</div>
 		</div>
 
@@ -485,5 +486,5 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="js/user-function/library.js"></script>
+	<script type="text/javascript" src="js/user-function/exercise.js"></script>
 @endsection

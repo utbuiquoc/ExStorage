@@ -225,7 +225,8 @@ function getListGroupJoined() {
         console.log(response);
         joinedGroup.innerHTML = '';
         response.data.forEach(group => {
-            joinedGroup.insertAdjacentHTML('beforeend', `
+            if (group != null) {
+                joinedGroup.insertAdjacentHTML('beforeend', `
                 <div class="group-joined card p-1 d-flex flex-row w-100 mt-2">
                     <div class="friend-accept-item__avt">
                         <img src="img/avatar/default/default-group-avt.jpg" alt="avatar" class="avatar">
@@ -246,6 +247,7 @@ function getListGroupJoined() {
                     </div>
                 </div>
             `);
+            }
         });
         viewGroupJoined();
     })
@@ -262,27 +264,29 @@ function getListOwnershipGroup(create = false) {
         console.log(response);
         ownershipGroup.innerHTML = '';
         response.data.forEach(group => {
-            ownershipGroup.insertAdjacentHTML('beforeend', `
-                <div class="ownership-group card p-1 d-flex flex-row w-100 mt-2">
-                    <div class="friend-accept-item__avt">
-                        <img src="img/avatar/default/default-group-avt.jpg" alt="avatar" class="avatar">
-                    </div>
+            if (group != null) {
+                ownershipGroup.insertAdjacentHTML('beforeend', `
+                    <div class="ownership-group card p-1 d-flex flex-row w-100 mt-2">
+                        <div class="friend-accept-item__avt">
+                            <img src="img/avatar/default/default-group-avt.jpg" alt="avatar" class="avatar">
+                        </div>
 
-                    <div class="friend-accept-item__more w-100 p-1 justify-content-center d-flex flex-column">
-                        <div class="friend-accept-item__info d-flex flex-column">
-                            <h6 class="friend-accept-item__info--name"><strong>${group.name}</strong></h6>
-                            <div class="group-info d-flex justify-content-between">
-                            <p class="friend-accept-item__info--id text-primary">Số lượng thành viên: ${group.number_mem}</p>
-                                <p class="friend-accept-item__info--id">#<span class='groupId'>${group.id}</span></p>
+                        <div class="friend-accept-item__more w-100 p-1 justify-content-center d-flex flex-column">
+                            <div class="friend-accept-item__info d-flex flex-column">
+                                <h6 class="friend-accept-item__info--name"><strong>${group.name}</strong></h6>
+                                <div class="group-info d-flex justify-content-between">
+                                <p class="friend-accept-item__info--id text-primary">Số lượng thành viên: ${group.number_mem}</p>
+                                    <p class="friend-accept-item__info--id">#<span class='groupId'>${group.id}</span></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="friend-accept-item__setting  edit-ownership-group mt-1 d-flex flex-column justify-content-center">
-                        <i class="bi bi-pencil-square friend-accept-item__setting--icon" type="button" data-bs-toggle="modal" data-bs-target="#unfriend-modal"></i>
+                        <div class="friend-accept-item__setting  edit-ownership-group mt-1 d-flex flex-column justify-content-center">
+                            <i class="bi bi-pencil-square friend-accept-item__setting--icon" type="button" data-bs-toggle="modal" data-bs-target="#unfriend-modal"></i>
+                        </div>
                     </div>
-                </div>
-            `);
+                `);
+            }
         }); 
         viewOwnershipGroup();
         if (create) {
