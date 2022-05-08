@@ -70,9 +70,9 @@
 												<div class="selector">
 													<div class="file-type">
 														<img src="img/docs-icon/<?php 
-														if ($item->type == 'docx') { echo 'docx-icon.png'; }
+														if ($item->type == 'docx' || $item->type == 'doc') { echo 'docx-icon.png'; }
 														else if ($item->type == 'pdf') { echo 'pdf-icon.png'; }
-														else if ($item->type == 'xlsx') { echo 'xlsx-icon.png'; }
+														else if ($item->type == 'xlsx' || $item->type == 'xls') { echo 'xlsx-icon.png'; }
 														?>" alt="">
 													</div>
 
@@ -150,7 +150,7 @@
 								<input type="text" class="form-control" placeholder="VD: Nguyễn Văn A" aria-label="Username" aria-describedby="basic-addon1">
 							</div>
 
-							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.pdf" onchange="handleFiles(this.files)">
+							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.xls,.xlsx,.pdf" onchange="handleFiles(this.files)">
 							<label class="button" for="fileElem">Nhấp để chọn tệp tin</label>
 						</form>
 

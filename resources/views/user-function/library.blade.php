@@ -112,9 +112,9 @@
 								<div class="selector">
 									<div class="file-type">
 										<img src="img/docs-icon/<?php 
-										if ($value->type == 'docx') { echo 'docx-icon.png'; }
+										if ($value->type == 'docx' || $value->type == 'doc') { echo 'docx-icon.png'; }
 										else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-										else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+										else if ($value->type == 'xlsx' || $value->type == 'xls') { echo 'xlsx-icon.png'; }
 										 ?>" alt="">
 									</div>
 
@@ -261,7 +261,7 @@
 				    		<input type="hidden" class='selectValue currentDirUploadFile' name='currentDir'>
 				    		<input type="hidden" name='rootDir' class="rootDirUploadFile" value="<?php echo $typeDir; ?>">
 				    		<div class="input-group type-input mt-3">
-								<input type="file" class="form-control file-upload-input" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx">
+								<input type="file" class="form-control file-upload-input" name="fileUpload" accept=".xls,.xlsx,.pdf,.docx,.doc">
 							</div>
 
 							<div class="form-check mt-2">

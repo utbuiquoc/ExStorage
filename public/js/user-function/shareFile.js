@@ -404,7 +404,20 @@ function showFileUploaded(arrFileUser) {
 							<input class="file-name-to-rm" type="hidden" value="${fileLink}" />
 							<div class="remove-file-uploaded-btn"><i class="bi bi-x"></i></div>
 
-							<img src="img/docs-icon/pdf-icon.png" alt="doc-icon">
+							<img src="img/docs-icon/pdf-icon-large.png" alt="doc-icon">
+
+							<div class="file-info-upload">
+								<h3 class="file-name-upload">${fileUploadedName}</h3>
+							</div>
+						</div>
+					`);
+				} else if (fileTypeUploaded == 'xls' || fileTypeUploaded == 'xlsx') {
+					document.getElementById('gallery').insertAdjacentHTML('beforeend', `
+						<div class="doc-file">
+							<input class="file-name-to-rm" type="hidden" value="${fileLink}" />
+							<div class="remove-file-uploaded-btn"><i class="bi bi-x"></i></div>
+
+							<img src="img/docs-icon/xlsx-icon-large.png" alt="doc-icon">
 
 							<div class="file-info-upload">
 								<h3 class="file-name-upload">${fileUploadedName}</h3>

@@ -750,9 +750,9 @@ function uploadFile() {
 		var fileNameToSave = dataReturned[0];
 		var extension = dataReturned[1];
 		var fileIcon;
-		if (extension === 'docx') { fileIcon = 'docx-icon.png'; }
+		if (extension === 'docx' || extension === 'doc') { fileIcon = 'docx-icon.png'; }
 		else if (extension === 'pdf') { fileIcon = 'pdf-icon.png'; }
-		else if (extension === 'xlsx') { fileIcon = 'xlsx-icon.png'; }
+		else if (extension === 'xlsx' || extension === 'xls') { fileIcon = 'xlsx-icon.png'; }
 
 		var filename = dataReturned[2];
 		var currentTime = dataReturned[3];

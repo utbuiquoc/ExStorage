@@ -134,43 +134,16 @@ class UserController extends Controller
     }
 
     public function testGet() {
-        return view("test",  ['title' => 'Test']);
+        $output=null;
+        $retval=null;
+        exec('libreoffice --headless --convert-to pdf fileUploaded/165200382216_The le thi tin hoc tre khoi HS 2022 (ban ban hÃ nh) --outdir fileUploaded', $output, $retval);
+
+        echo $retval;
+        print_r($output);
     }
 
     public function testPost(Request $request) {
-        // $user = new User;
-        // $user->name = $request->name;
-        // $user->email = $request->email;
-        // $user->password = $request->password;
-        // $user->save();
-
-        // // return $request->name;
-        // echo 'Thành công';
-
-        $file = $request->file('fileUpload');
-
-        if ($request->docsName != '') {
-            $fileName = $request->docsName;
-        } else {
-            $fileName = $file->getClientOriginalName();
-        }
-
-        
-        $fileExtension = $file->getClientOriginalExtension();
-
-        // Tạo tên file
-        $pages = range(1,20);
-        shuffle($pages);
-        $prefix = array_shift($pages);
-        if ($request->docsName != '') {
-            $fileNameToSave = time() . Auth::user()->id . $prefix . '_' . $request->docsName;
-        } else {
-            $fileNameToSave = time() . Auth::user()->id . $prefix . '_' . $fileName;
-        }
-
-        $file->move('fileUploaded', $fileNameToSave);
-
-        echo "Thành công";
+        exec('libreoffice --headless --convert-to pdf file-sample.doc --outdir pdfFile');
     }
 
     public function findItem(Request $request) {

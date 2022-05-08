@@ -114,9 +114,9 @@
 											<div class="selector">
 												<div class="file-type">
 													<img src="img/docs-icon/<?php 
-													if ($value->type == 'docx') { echo 'docx-icon.png'; }
+													if ($value->type == 'docx' || $value->type == 'doc') { echo 'docx-icon.png'; }
 													else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-													else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+													else if ($value->type == 'xlsx' || $value->type == 'xls') { echo 'xlsx-icon.png'; }
 													?>" alt="">
 												</div>
 
@@ -200,7 +200,7 @@
 					<div id="drop-area">
 						<form class="my-form">
 							<p>Tải lên bài làm</p>
-							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.pdf" onchange="handleFiles(this.files)">
+							<input type="file" id="fileElem" multiple accept="image/*,.doc,.docx,.xls,.xlsx,.pdf" onchange="handleFiles(this.files)">
 							
 							<div class="input-group mb-3 d-none" id="ans-user">
 								<span class="input-group-text" id="basic-addon1">Tên</span>

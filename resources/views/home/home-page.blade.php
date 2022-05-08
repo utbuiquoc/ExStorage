@@ -48,9 +48,9 @@
 							<div class="file-item">
 								<div class="file-item__img">
 									<img src="img/docs-icon/<?php 
-									if ($value->type == 'docx') { echo 'docx-icon.png'; }
+									if ($value->type == 'docx' || $value->type == 'doc') { echo 'docx-icon.png'; }
 									else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-									else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+									else if ($value->type == 'xlsx' || $value->type == 'xls') { echo 'xlsx-icon.png'; }
 									?>" alt="docx-icon">
 								</div>
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Str;
 use App\Files;
 use App\Dir;
 use App\User;
@@ -102,9 +103,9 @@ class FileController extends Controller
     public function uploadFile(Request $request) {
         if ($request->hasFile('fileUpload')) {
             $this->validate($request, [
-                'fileUpload' => 'required|mimes:docx,xls,xlsx,pdf'
+                'fileUpload' => 'required|mimes:docx,doc,xls,xlsx,pdf'
             ], [
-                'fileUpload.mimes'     => 'Tệp tải lên phải là tệp: docx, xls, xlsx, pdf.',
+                'fileUpload.mimes'     => 'Tệp tải lên phải là tệp: docx, doc, xls, xlsx, pdf.',
                 'fileUpload.required'  => 'Không nhận được tệp tin'
             ]);
 
@@ -119,10 +120,20 @@ class FileController extends Controller
             $pages = range(1,20);
             shuffle($pages);
             $prefix = array_shift($pages);
-            $fileNameToSave = time() . Auth::user()->id . $prefix . '_' . $fileName;
+            $fileNameToSave = time() . Auth::user()->id . Str::random(15) . '.' . $fileExtension;
 
+
+            // return $fileNameToSave;
             $file->move('fileUploaded', $fileNameToSave);
-
+            
+            if ($fileExtension === 'doc' || $fileExtension === 'xls') {
+                exec("libreoffice --headless --convert-to pdf fileUploaded/$fileNameToSave --outdir fileUploaded");
+                $fileNameToSave = substr($fileNameToSave, 0, -3) . 'pdf';
+            } else if ($fileExtension === 'docx' || $fileExtension === 'xlsx') {
+                exec("libreoffice --headless --convert-to pdf fileUploaded/$fileNameToSave --outdir fileUploaded");
+                $fileNameToSave = substr($fileNameToSave, 0, -4) . 'pdf';
+            }
+            
             $dir = $request->currentDir;
 
             // Lưu thông tin file vào File database
