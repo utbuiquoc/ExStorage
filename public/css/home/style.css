@@ -1,7 +1,7 @@
 .home-page {
     margin-top: 60px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
 }
 
@@ -246,4 +246,24 @@
 .notificate h3 {
     margin: auto;
     opacity: 0.6;
+}
+
+.user-info__avt>img {
+    width: 100px;
+    height: 100px;
+}
+
+.group-joined,
+.group-created,
+.user-info {
+    flex: 1;
+}
+
+.user-info--id,
+.user-info--email {
+    opacity: 0.5;
+}
+
+.card {
+    border-radius: 18px;
 }

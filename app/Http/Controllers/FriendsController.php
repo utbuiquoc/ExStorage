@@ -38,6 +38,18 @@ class FriendsController extends Controller
         return $friend;
     }
 
+    public function getFriendList() {
+        $friendAddedId = explode('|', Friends::find(Auth::user()->id)->friends);
+        $friendsAdded = [];
+        
+        foreach ($friendAddedId as $key => $friendId) {
+            if ($friendId != '') {
+                $friendsAdded[] = User::find($friendId)->name;
+            }
+        }
+
+        return $friendsAdded;
+    }
     /*
 
         Cơ chế send request, accept request, cancel friend,...

@@ -50,6 +50,19 @@ var searchForm = document.querySelector('.search-form');
 
 var friendFindedList = document.querySelector('.friend__list');
 
+var friendAdded = [];
+function getFriendList() {
+	axios.get('get-friend-list')
+	.then(response => {
+		friendAdded = response.data;
+		console.log(friendAdded)
+	})
+	.catch(error => {
+		console.log(error);
+	});
+}
+getFriendList();
+
 function searchFriend() {
 	var friendInfo = searchBar.value;
 	var formData = new FormData;
@@ -61,18 +74,21 @@ function searchFriend() {
 	formData.append('friendInfo', friendInfo);
 	axios.post('find-friend', formData)
 	.then(function(response) {
-		console.log(response);
+		console.log(response.data);
 		friendFindedList.innerHTML = ''; //Xóa những item trước để in ra item mới
-		// In ra bạn tìm đc		
-		response.data.forEach(function(item) {
-			console.log(item);
+		// In ra bạn tìm đc
 
-			let isSended = false;
+		response.data.forEach(function(item) {
+			console.log(item.name, friendAdded);
+			console.log(friendAdded.includes(item.name));
+
+			if (!friendAdded.includes(item.name)) {
+				let isSended = false;
 			let isSendRequest = false;
 
-			if (item.request !== null) {
+			if (item.request != null) {
 				const request = item.request.split('|');
-
+				console.log(request);
 				request.forEach(function(item) {
 					if (item == userId) {
 						isSended = true;
@@ -126,6 +142,9 @@ function searchFriend() {
 			);
 
 			createSendFriendRequestAction();
+			getFriendList();
+			console.log('a');
+			}
 		});
 	})
 	.catch(function(error) {
@@ -340,7 +359,7 @@ function unfriend() {
 	let friendInListElement;
 
 	const allFriendAcceptedId = document.querySelectorAll('.friend-accept-item__info--id');
-	const allPeopleIdInList = document.querySelectorAll('.friend__info--id'); 
+	// const allPeopleIdInList = document.querySelectorAll('.friend__info--id'); 
 
 	allFriendAcceptedId.forEach(function(element) {
 		if (element.innerText === `#${friendIdToRemove}`) {
@@ -348,17 +367,18 @@ function unfriend() {
 		}
 	});
 
-	allPeopleIdInList.forEach(function(element) {
-		if (element.innerText === `#${friendIdToRemove}`) {
-			friendInListElement = element.parentElement.parentElement;
-		}
-	});
+	console.log(friendElement);
 
-	const friendStatus = friendInListElement.querySelector('.add-friend__btn');
-	const friendIconStatus = friendStatus.querySelector('.add-friend__btn--icon');
+	// allPeopleIdInList.forEach(function(element) {
+	// 	if (element.innerText === `#${friendIdToRemove}`) {
+	// 		friendInListElement = element.parentElement.parentElement;
+	// 	}
+	// });
 
-	console.log(friendStatus
-,friendIconStatus);
+	// const friendStatus = friendInListElement.querySelector('.add-friend__btn');
+	// const friendIconStatus = friendStatus.querySelector('.add-friend__btn--icon');
+
+	// console.log(friendStatus,friendIconStatus);
 
 	let formData = new FormData();
 
@@ -367,11 +387,12 @@ function unfriend() {
 	.then(function(response) {
 		console.log(response);
 
-		friendStatus.classList.replace('accepted', 'send');
-		friendIconStatus.classList.replace('bi-person-check-fill', 'bi-person-plus-fill');
+		// friendStatus.classList.replace('accepted', 'send');
+		// friendIconStatus.classList.replace('bi-person-check-fill', 'bi-person-plus-fill');
 
 		friendElement.remove();
 		closeYnModal.click();
+		getFriendList();
 	})
 	.catch(function(error) {
 		console.log(error);

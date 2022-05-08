@@ -58,14 +58,6 @@
 		<hr class="bar"/>
 
 		<ul class="sidebar-items user__option" <?php if (!Auth::check()) { ?> style='display: none' <?php } ?>>
-
-			<li id="user-btn" class="item">
-				<a class="item-link" href=""><i class="item__icon bi bi-person-circle"></i>
-				<div class="file-btn--description">
-					<span>Cá nhân</span>
-				</div></a>
-			</li>
-
 			<li id="logout-btn" class="item">
 				<a class="item-link" href="logout"><svg class="item__icon" width="30px" height="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
 				    <path fill="white" style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Sans" d="M 24.90625 0.96875 A 1.0001 1.0001 0 0 0 24.78125 1 A 1.0001 1.0001 0 0 0 24.15625 1.4375 L 16.28125 9.28125 A 1.016466 1.016466 0 1 0 17.71875 10.71875 L 24 4.4375 L 24 26 A 1.0001 1.0001 0 1 0 26 26 L 26 4.4375 L 32.28125 10.71875 A 1.016466 1.016466 0 1 0 33.71875 9.28125 L 25.84375 1.4375 A 1.0001 1.0001 0 0 0 25.375 1.0625 A 1.0001 1.0001 0 0 0 25.1875 1 A 1.0001 1.0001 0 0 0 24.90625 0.96875 z M 38.875 5.71875 A 1.0001 1.0001 0 0 0 38.40625 7.59375 C 43.636229 11.609302 47 17.892396 47 25 C 47 37.162603 37.162603 47 25 47 C 12.837397 47 3 37.162603 3 25 C 3 17.892396 6.3637708 11.609302 11.59375 7.59375 A 1.0001 1.0001 0 0 0 11 5.78125 A 1.0001 1.0001 0 0 0 10.40625 6 C 4.7062292 10.376448 1 17.257604 1 25 C 1 38.243397 11.756603 49 25 49 C 38.243397 49 49 38.243397 49 25 C 49 17.257604 45.293771 10.376448 39.59375 6 A 1.0001 1.0001 0 0 0 38.875 5.71875 z" overflow="visible" font-family="Sans"/>

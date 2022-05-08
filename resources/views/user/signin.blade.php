@@ -11,7 +11,7 @@
 
 	<div class="col col-md-7 d-flex">
 		<div class="description-text">
-			<h1 class="description-text__title">Docs Storage</h1>
+			<h1 class="description-text__title">Ex Storage</h1>
 
 			<h3>Website giúp bạn lưu trữ, chia sẻ, xem tài liệu trực tuyến, hỗ trợ giáo viên và học sinh chuyển đổi số trong học tập, giảng dạy.</h3>
 		</div>

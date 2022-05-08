@@ -16,8 +16,8 @@ class CreateFriendsTable extends Migration
         Schema::create('friends', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('user')->unique();
-            $table->string('friends')->nullable();
-            $table->string('request')->nullable();
+            $table->string('friends')->nullable()->default('');
+            $table->string('request')->nullable()->default('');
             $table->string('invitation')->nullable();
             $table->timestamps();
         });

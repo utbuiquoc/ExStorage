@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>DocsStorage - {{$title}}</title>
+	<title>ExStorage - {{$title}}</title>
 	<!-- CSS only -->
 	<base href="{{asset('')}}">
 	<!-- CSS only (bootstrap 5) -->

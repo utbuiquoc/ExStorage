@@ -39,7 +39,7 @@
 
 						<?php 
 							$folder = new App\Dir;
-							$item = $folder->where('owner', $owner)->where('parent', $folderParent)->get();
+							$item = $folder->where('owner', $owner)->where('dir', 'like', "%$folderInfo%")->get();
 							
 							foreach ($item as $key => $value) {
 								$arrayP = explode('/', $value->dir);
@@ -102,7 +102,7 @@
 						<?php 
 							$file = new App\Files;
 
-							$item = $file->where('parent', $folderParent)->where('owner', $owner)->get();
+							$item = $file->where('dir', 'like', "%$folderInfo%")->where('owner', $owner)->get();
 
 							if (count($item) > 0) {
 								foreach ($item as $key => $value) { 

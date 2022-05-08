@@ -236,7 +236,7 @@
 		</div>
 	</div>
 
-	<div id='unfriend-modal' class="modal fade" tabindex="-1">
+	<div id='unfriend-modal' class="modal fade" tabindex="-1" style="z-index: 99999;">
 		<input type="hidden" id="friend-info--id">
 		<div class="modal-dialog">
 			<div class="modal-content">

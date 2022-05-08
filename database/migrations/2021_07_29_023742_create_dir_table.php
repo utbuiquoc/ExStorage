@@ -19,7 +19,7 @@ class CreateDirTable extends Migration
             $table->string('parent')->default('root');
             $table->string('owner');
             $table->string('viewer');
-            $table->string('group_viewer')->nullable();
+            $table->string('group_viewer')->nullable()->default('');
             $table->boolean('allowshare')->default(false);
             $table->boolean('allcanview')->default(false);
             $table->boolean('is_exercise')->default(true);

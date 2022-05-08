@@ -17,6 +17,8 @@ Route::group(['middleware' => 'login'], function() {
     })->middleware('login');
     Route::post('/', 'FileController@upload');
 
+    Route::get('friend-table-info', 'HomeController@friendTableInfo');
+
     Route::get('library', 'FileController@library');
     Route::get('library/{type?}', 'FileController@typeData');
         Route::post('createType', 'FileController@createType');
@@ -55,6 +57,7 @@ Route::group(['middleware' => 'login'], function() {
         // Route::post('accept-friend-request', 'FriendsController@acceptFriendRequest');
         Route::post('cancel-friend-requested', 'FriendsController@cancelFriendRequested');
         Route::post('unfriend-accepted', 'FriendsController@unfriendAccepted');
+        Route::get('get-friend-list', 'FriendsController@getFriendList');
 
     
     Route::get('group', 'GroupsController@group');

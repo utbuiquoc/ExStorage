@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="css/user-function/inviteLink.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <div class="wrapper">
+    <div class="wrapper" id="wrapper=in">
         <div class="col col-md-5 d-flex flex-column justify-content-center">
             <div class="invite text-center p-5">
                 <div class="invite__icon pb-3">

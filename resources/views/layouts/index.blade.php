@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>DocsStorage - {{$title}}</title>
+	<title>ExStorage - {{$title}}</title>
 	<!-- CSS only -->
 	<base href="{{asset('')}}">
 	<!-- CSS only (bootstrap 5) -->
@@ -16,7 +16,7 @@
 		@yield('itemSidebarSelected')
 	@include('layouts.sidebar', ['bien' => 'test'])
 
-		<div class="wrapper-in">
+		<div id="wrapper-in" class="wrapper-in">
 			@yield('content')
 		</div>
 	</div>
