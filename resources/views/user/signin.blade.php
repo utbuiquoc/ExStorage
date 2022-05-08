@@ -13,7 +13,7 @@
 		<div class="description-text">
 			<h1 class="description-text__title">Ex Storage</h1>
 
-			<h3>Website hỗ trợ dạy học online cho học sinh phổ thông</h3>
+			<h3>Website hỗ trợ dạy học online cho học sinh phổ thông.</h3>
 		</div>
 	</div>
 
