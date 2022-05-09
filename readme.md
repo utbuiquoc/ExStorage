@@ -40,6 +40,9 @@ Phần mềm được viết trên Visual Studio Code, chạy trên hệ điều
 - **[Libreoffice](https://www.libreoffice.org/)**
 - **[PDF.js](https://github.com/mozilla/pdf.js)**
 
+## Cảm ơn
+- **[Province Open API](https://provinces.open-api.vn/)** của tác giả Nguyễn Hồng Quân.
+
 ## Tác giả
 - Nhóm trưởng: Bùi Cường Quốc.
 - Thành viên: Hoàng Việt Nhân.
