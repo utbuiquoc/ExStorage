@@ -99,9 +99,9 @@
 										<div class="selector">
 											<div class="file-type">
 												<img src="img/docs-icon/<?php 
-												if ($item->type == 'docx') { echo 'docx-icon.png'; }
+												if ($item->type == 'docx' || $item->type == 'doc') { echo 'docx-icon.png'; }
 												else if ($item->type == 'pdf') { echo 'pdf-icon.png'; }
-												else if ($item->type == 'xlsx') { echo 'xlsx-icon.png'; }
+												else if ($item->type == 'xlsx' || $item->type == 'xls') { echo 'xlsx-icon.png'; }
 												?>" alt="">
 											</div>
 

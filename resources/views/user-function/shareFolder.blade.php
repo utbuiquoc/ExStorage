@@ -155,9 +155,9 @@
 											<div class="selector">
 												<div class="file-type">
 													<img src="img/docs-icon/<?php 
-													if ($value->type == 'docx') { echo 'docx-icon.png'; }
-													else if ($value->type == 'pdf') { echo 'pdf-icon.png'; }
-													else if ($value->type == 'xlsx') { echo 'xlsx-icon.png'; }
+													if ($item->type == 'docx' || $item->type == 'doc') { echo 'docx-icon.png'; }
+													else if ($item->type == 'pdf') { echo 'pdf-icon.png'; }
+													else if ($item->type == 'xlsx' || $item->type == 'xls') { echo 'xlsx-icon.png'; }
 													?>" alt="">
 												</div>
 		
